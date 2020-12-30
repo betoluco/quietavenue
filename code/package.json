@@ -1,0 +1,46 @@
+{
+  "name": "quietavenue",
+  "version": "1.0.0",
+  "description": "react serverside rendering website with hydration",
+  "main": "lambda.js",
+  "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
+  "author": "betoluco",
+  "license": "MIT",
+  "dependencies": {
+    "aws-serverless-express": "^3.4.0",
+    "axios": "^0.18.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-redux": "^7.2.2",
+    "react-router-config": "^5.1.1",
+    "react-router-dom": "^5.2.0",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+    "serialize-javascript": "^5.0.1"
+  },
+  "scripts": {
+    "build": "npm run build-client && npm run transform-scss && npm run copy-images-to-client-build && npm run transpile-for-server && npm run assets-to-s3",
+    "build-client": "webpack --config webpack.client.js",
+    "transform-scss": "node-sass src/assets/styles/index.scss client_build/style.css",
+    "copy-images-to-client-build": "copyfiles -f src/assets/images/* out client_build/images",
+    "transpile-for-server": "babel src --out-dir ./",
+    "assets-to-s3": "aws s3 cp client_build s3://quietavenue.com --recursive",
+    "test": "mocha tests/unit/"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.10",
+    "@babel/preset-react": "^7.12.10",
+    "babel-loader": "^8.2.2",
+    "chai": "^4.2.0",
+    "copyfiles": "^2.4.1",
+    "core-js": "^3.8.1",
+    "mocha": "^6.1.4",
+    "node-sass": "^5.0.0",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12"
+  }
+}

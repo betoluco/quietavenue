@@ -1,0 +1,24 @@
+.Header {
+    border-bottom: 1px solid var(--neutral-dark-color);
+    margin-left: var(--cards-spacing);
+    margin-right: var(--cards-spacing); 
+    height: 6rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    
+    &__name {
+        @media only screen and (max-width: 48em) {
+            display: none;
+        }
+    }
+    
+    &__logo {
+        width: auto;
+        height: 3rem;
+        display: none;
+        @media only screen and (max-width: 48em) {
+            display: inline-block;
+        }
+    }
+}

@@ -1,0 +1,20 @@
+.Video {
+  margin-top: 4vh;
+  position: relative;
+  padding-bottom: var(--aspect-ratio);
+  width: 100%;
+  grid-column: col-start 2 / col-end -2;
+  
+  &__vimeo {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    height: 100%;
+    transform: translate(-50%, 0);
+    width: 100%;
+  } 
+  
+  @media only screen and (max-width: 100em) {
+      grid-column: col-start 1 / col-end -1;     
+  }
+}

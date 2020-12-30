@@ -1,0 +1,10 @@
+.Results{
+  grid-column: col-start 1 / grid-end;
+  margin-top: var(--cards-spacing);
+  margin-left: var(--cards-spacing);
+  margin-right: var(--cards-spacing); 
+  
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(32.2rem, 1fr));
+  gap: var(--cards-spacing) var(--cards-spacing);
+}

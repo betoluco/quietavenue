@@ -1,0 +1,19 @@
+.Graph{
+    margin-top: 4vh;
+    justify-self: center;
+    position: relative;
+    // padding-bottom: 1.7777;
+    width: 100%;
+    height: 1500px;
+    grid-column: col-start 2 / col-end -2;
+
+    &__svg {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        height: 100%;
+        transform: translate(-50%, 0);
+        width: 100%;
+    }
+}
+
