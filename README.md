@@ -1,3 +1,14 @@
+# quietavenue.com
+
+quietavenue.com is a serverless side rendering react web app with hydration. The web app is a catalogue of properties for sale and details of it like video of the street 
+in front and interactive graphs of the audio recorded in the property
+
+The web app has the following features
+-	Search bar were you can find a property by number or street name or get all the properties in a city
+
+Quietvenue.com is deployed in aws lambda and uses the following services
+
+
 # quietavenueSSR
 
 This project contains source code and supporting files for quietavenue.com serverless application that you can deploy with the SAM CLI. It includes the following files and folders.

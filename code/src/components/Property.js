@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch} from "react-redux";
+import path from "path";
 
 import { fetchProperty } from "../redux/asyncActions";
 import { 
@@ -11,7 +12,10 @@ import PropertyTemplate from "./stateless/PropertyTemplate";
 import FetchFail from "./stateless/FetchFail";
 import NotFound  from "./stateless/NotFound";
 
+const PropertyNotFound = NotFound.component;
+
 const Property = (props) =>{
+   
     const dispatch = useDispatch();
     const id = props.match.params.id;
     const property = useSelector( (state) => state[id] );
@@ -19,31 +23,32 @@ const Property = (props) =>{
     
     useEffect( () => {
         if ( property === undefined ) dispatch( fetchProperty(id) );
-    }, []);
+    });
     
 
-    if ( fetchPropertyStatus == PROPERTY_NOT_FOUND) {
-        console.log("NotFound", NotFound.component)
-        return <NotFound.component />;
+    if ( fetchPropertyStatus === PROPERTY_NOT_FOUND) {
+        return <PropertyNotFound  staticContext={props.staticContext}/>;
     }
     
-    if ( fetchPropertyStatus == FETCH_PROPERTY_FAILED) {
+    if ( fetchPropertyStatus === FETCH_PROPERTY_FAILED) {
         return <FetchFail />;
     }
     
-    if ( fetchPropertyStatus == FETCH_PROPERTY_SUCCEEDED && property != undefined) {
+    if ( fetchPropertyStatus === FETCH_PROPERTY_SUCCEEDED && property !== undefined) {
         return <PropertyTemplate property={property} />;
     }
     
     return <div className="loader">Loading...</div>; 
 };
 
-const loadData = (store, path) => {
-    const id = path.split("/").pop();
+const loadData = (store, req) => {
+    const id = path.basename(req.path);
     return store.dispatch( fetchProperty(id) );
 };
 
-export default {
+const propertyExport = {
     loadData,
     component: Property
 };
+
+export default propertyExport;

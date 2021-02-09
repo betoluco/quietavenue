@@ -1,5 +1,6 @@
 import { 
-    FETCH_PROPERTIES_SUCCEEDED, 
+    FETCH_PROPERTIES_SUCCEEDED,
+    PROPERTIES_NOT_FOUND,
     FETCH_PROPERTIES_FAILED,
     FETCH_PROPERTY_SUCCEEDED,
     PROPERTY_NOT_FOUND,
@@ -7,10 +8,17 @@ import {
 } from "./actionTypes";
 
 
-export const fetchPropertiesSucceeded = (properties) => {
+export const fetchPropertiesSucceeded = (properties, city) => {
     return {
       type: FETCH_PROPERTIES_SUCCEEDED,
-      properties: properties
+      properties:properties,
+      city: city
+    };
+};
+
+export const propertiesNotFound = () => {
+    return {
+      type: PROPERTIES_NOT_FOUND
     };
 };
 

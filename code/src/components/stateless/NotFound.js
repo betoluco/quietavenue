@@ -5,6 +5,8 @@ const NotFoundPage = ({ staticContext = {} }) => {
     return <h1 className="NotFound">Ooops!, not found</h1>;
 };
 
-export default {
+const notFoundExport = {
     component: NotFoundPage
 };
+
+export default notFoundExport;

@@ -2,23 +2,25 @@ import React, { Fragment } from "react";
 import { renderRoutes } from "react-router-config";
 import { Link } from "react-router-dom";
 
-// const Search = require('../Search');
+import Search from "../Search";
 
 const Header = ({ route }) =>{
   return(
     <Fragment>
       <header className="Header">
-        <Link to="/"><h1 className="Header__name">Quietavenue.com</h1></Link>
-        <Link to="/">
-          <img src="https://s3-us-west-1.amazonaws.com/quietavenue.com/images/quietavenue_logo_bold.svg" className="Header__logo" />
+        <Link className="Header__link" to="/">
+          <h1 className="Header__name">QuietAvenue.com</h1>
         </Link>
-        {/*<Search />*/}
+        <h3 className="Header__text">See and hear what goes on in front <br /> of your future home</h3>
+        <Search />
       </header>
       { renderRoutes(route.routes) }
     </Fragment>
   );
-};
+}; 
 
-export default {
+const headerExport = {
   component: Header
 };
+
+export default headerExport;

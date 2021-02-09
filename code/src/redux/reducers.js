@@ -1,5 +1,6 @@
 import { 
-    FETCH_PROPERTIES_SUCCEEDED, 
+    FETCH_PROPERTIES_SUCCEEDED,
+    PROPERTIES_NOT_FOUND,
     FETCH_PROPERTIES_FAILED,
     FETCH_PROPERTY_SUCCEEDED,
     PROPERTY_NOT_FOUND,
@@ -12,7 +13,14 @@ const reducers = (state, action) => {
             return {
                 ...state,
                 fetchPropertiesStatus: FETCH_PROPERTIES_SUCCEEDED,
-                properties: [...state.properties, ...action.properties]
+                [action.city]: [...action.properties]
+                
+            };
+        }
+        case PROPERTIES_NOT_FOUND: {
+            return {
+                ...state,
+                fetchPropertyStatus: PROPERTIES_NOT_FOUND
             };
         }
         case FETCH_PROPERTIES_FAILED: {

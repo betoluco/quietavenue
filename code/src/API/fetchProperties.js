@@ -1,65 +1,58 @@
-import axios from "axios";
+import AWS from "aws-sdk";
 
-const host = "vpc-quietavenue-25aox5ugu2rpwy26vrkozq2zk4.us-west-1.es.amazonaws.com";
-const index = "properties";
-const url = "https://" + host + "/" + index + "/_search";
-const query = {"query": {"match_all": {}}};
-    
 const fetchProperties = async (req, res) =>{
-    if (req.hasOwnProperty("query")){
-        const query = {
-            "query": {
-                "wildcard": {
-                    "city": {
-                    "value": req.query.city
-                    }
-                }
-            }
-        };
-    }else{
-        const query = {
-            "query":{
-                "match_all": {}
-            }
-        };
-    }
-        
-    try {
-        const results = await axios.get(url,{ 
-            params:{
-                source: JSON.stringify(query),
-                source_content_type: "application/json"
-            }
-        });
-        const response = results.data.hits.hits.map((property) => {
+    const ALL = "ALL_PROPERTIES";
+    
+    const resultsParser = properties =>{
+        const propertiesArray = properties.Items.map( property => {
             return {
-                id: property._id,
-                number: property._source.number,
-                city: property._source.city,
-                street: property._source.street,
-                state: property._source.state,
-                zip_code: property._source.zip_code,
-                profile_picture: property._source.profile_picture
+                id: property.PK,
+                city: property.Data.city,
+                state: property.Data.state,
+                number: property.Data.number,
+                street: property.Data.street,
+                zip_code: property.Data.zip_code,
+                profile_picture: property.Data.profile_picture
             };
         });
-    return response;
+        return propertiesArray;
+    };
     
-    }catch (error) {
-        if (error.hasOwnProperty("response")) {
-            // Request made and server responded
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-        } else if (error.hasOwnProperty("request")) {
-            // The request was made but no response was received
-            console.log(error.request);
-        } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log("Error", error.message);
+    const city = req.query.city || ALL;
+    AWS.config.update({region: 'us-west-1'});
+    const docClient = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
+    
+    try {
+        if (city === ALL) {
+            const params = {TableName: "quietavenue"};
+            const propertiesPromise = docClient.scan(params).promise();
+            const propertiesArray = await propertiesPromise;
+            return( resultsParser(propertiesArray) );
+        }else{
+            const params = {
+                TableName: "quietavenue",
+                IndexName: "PK1-index",
+                KeyConditionExpression: "PK1 = :city",
+                ExpressionAttributeValues: {
+                    ":city": city
+                }
+            };
+            
+            const propertiesPromise = docClient.query(params).promise();
+            const propertiesArray = await propertiesPromise;
+            
+            if (propertiesArray.Items.length > 0){
+                return( resultsParser(propertiesArray) );
+            }else{
+                res.status(404);
+                return;
+            }
         }
-        res.status(500);
-        return;
-    }
+    }catch (error) {
+            console.log("Error", error.message);
+            res.status(500);
+            return;
+        }
 };
 
 export default fetchProperties;

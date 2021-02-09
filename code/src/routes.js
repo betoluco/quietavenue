@@ -3,7 +3,7 @@ import Header from "./components/stateless/Header";
 import NotFound from "./components/stateless/NotFound";
 import Property from "./components/Property";
 
-export default [
+const Routes = [
     {
         ...Header,
         routes:[
@@ -11,6 +11,10 @@ export default [
                 ...Properties,
                 path: "/",
                 exact: true
+            },
+            {
+                ...Properties,
+                path: "/filter/:city"
             },
             {
                 ...Property,
@@ -23,5 +27,7 @@ export default [
     }
    
 ];
+
+export default Routes;
 
  

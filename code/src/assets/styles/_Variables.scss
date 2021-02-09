@@ -1,7 +1,4 @@
-:root {
-    --neutral-light-color: #fff;
-    --neutral-dark-color: #000;
-    --cards-spacing: 4vw;
-    --box-shadow: 0 0 5px 0 rgba(0,0,0,.15);
-    --aspect-ratio: 56.25%; //aspect ratio of vimeo video
-}
+$neutral-light-color: #fff;
+$neutral-dark-color: #000;
+$box-shadow: 0 0 5px 0 rgba(0,0,0,.15);
+$aspect-ratio: 56.25%; //aspect ratio of vimeo video

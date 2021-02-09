@@ -22,7 +22,7 @@ const search = async (req, res) =>{
         }
     };
     
-    let response = { city_suggest: [] };
+    let response = { city_suggest: [], street_suggest: [] };
     try {
         const suggest_results = await axios.get(url,{ 
             params:{
@@ -30,12 +30,9 @@ const search = async (req, res) =>{
                 source_content_type: "application/json"
             }
         });
-        
         const street_suggest = suggest_results.data.suggest.street_suggest[0].options;
-        console.log(street_suggest);
-        if (street_suggest.length != 0){
+        if (street_suggest.length > 0){
             response.street_suggest = street_suggest.map((property) => {
-                console.log(property);
                 return {
                     id: property._source.id,
                     address: property._source.number + " " +
@@ -48,10 +45,9 @@ const search = async (req, res) =>{
         }
         
         const city_suggest = suggest_results.data.suggest.city_suggest[0].options;
-        console.log(city_suggest);
-        if (city_suggest.length != 0){
+        if (city_suggest.length > 0){
             for ( let i=0; i<city_suggest.length; i++ ){
-                let city = city_suggest[i]._source.address.city;
+                let city = city_suggest[i]._source.city;
                 if (!response.city_suggest.includes(city)){
                     response.city_suggest.push(city);
                 }

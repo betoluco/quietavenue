@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 
 const Card = props =>{
   return (
-    <Link to={"property/" + props.property.id} className="Card">
-      <img src={props.property.profile_picture} alt="Place image" className="Card__image"/>
+    <Link to={"/property/" + props.property.id} className="Card">
+      <img className="Card__image" src={props.property.profile_picture} alt="Property" />
       <span className="Card__text">
         <h2>
           {props.property.number + " " + props.property.street}

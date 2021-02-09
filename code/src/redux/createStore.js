@@ -5,9 +5,7 @@ import reducers from "./reducers";
 import { FETCH_STARTED } from "./actionTypes";
 
 
-const initialState = {
-    properties: [],
-};
+const initialState = {};
 
 const store = () => {
     const store = createStore(reducers, initialState, applyMiddleware(ReduxThunk));

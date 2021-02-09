@@ -18,7 +18,9 @@ app.get("/favicon.ico", (req, res) =>{
     res.redirect("https://s3-us-west-1.amazonaws.com/quietavenue.com/images/favicon.ico");
 });
 
-app.get("/api/all", cors({origin: "*"}), async (req, res) =>{
+// Backend
+
+app.get("/api/city/", cors({origin: "*"}), async (req, res) =>{
     const response = await fetchProperties(req, res);
     res.send(JSON.stringify(response));
 });
@@ -33,6 +35,8 @@ app.get("/api/search", cors({origin: "*"}), async (req, res) =>{
     res.send(JSON.stringify(response));
 });
 
+//Frontend
+
 app.get("*", async (req, res) =>{
     const store = createStore();
     
@@ -40,7 +44,7 @@ app.get("*", async (req, res) =>{
 
     const promises = matchRoutes(Routes, path).map(({ route }) => {
         if (route.loadData){
-            return route.loadData(store, path);
+            return route.loadData(store, req);
         }else{
             return Promise.resolve(null);
         }

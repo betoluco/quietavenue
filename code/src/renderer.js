@@ -19,6 +19,7 @@ const renderer = (req, store, context) => {
     return `
         <html>
             <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1">
                 <link rel="stylesheet" href="https://s3-us-west-1.amazonaws.com/quietavenue.com/style.css">  
                 <script>
                     window.__PRELOADED_STATE__ = ${serializer(store.getState())}

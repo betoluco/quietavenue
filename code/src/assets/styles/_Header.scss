@@ -1,24 +1,28 @@
+@import 'Variables';
+
 .Header {
-    border-bottom: 1px solid var(--neutral-dark-color);
-    margin-left: var(--cards-spacing);
-    margin-right: var(--cards-spacing); 
-    height: 6rem;
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+    height: 35vh;
+    background-image: url("https://s3-us-west-1.amazonaws.com/quietavenue.com/images/header_image.jpeg");
+    background-size: cover;
+    background-position: 50% 75%;
+    &__link {
+        text-decoration: none;
+        margin-top: 3rem;
+    }
     
     &__name {
-        @media only screen and (max-width: 48em) {
-            display: none;
-        }
+        color: $neutral-light-color;
+        line-height: 100%;
+        letter-spacing: .5rem;
     }
     
-    &__logo {
-        width: auto;
-        height: 3rem;
-        display: none;
-        @media only screen and (max-width: 48em) {
-            display: inline-block;
-        }
+    &__text {
+        color: $neutral-light-color;
+        text-align: center;
     }
 }
+    

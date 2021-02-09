@@ -2,12 +2,11 @@ import React from "react";
 import Vimeo from "./Vimeo";
 
 const PropertyTemplate = (props) => {
-    console.log("Property template", props.property)
     return (
         <React.Fragment>
             <div className="Address">
                 <div className="Address__image_cropper">
-                    <img src={props.property.profile_picture} alt="place image" className="Address__image"/>
+                    <img src={props.property.profile_picture} alt="Property" className="Address__image"/>
                 </div>
                 <h2 className="Address__text">
                     {props.property.number + " " + props.property.street + " "

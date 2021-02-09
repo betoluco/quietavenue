@@ -2,22 +2,34 @@ import axios from"axios";
 
 import { 
     fetchPropertiesSucceeded,
+    propertiesNotFound,
     fetchPropertiesFailed,
     fetchPropertySucceeded,
     propertyNotFound,
     fetchPropertyFailed
 } from "./actions";
 
-export const fetchProperties = () => { 
+export const fetchProperties = (city) => { 
     return async (dispatch) => {
         try {
             const response = await axios.get(
-                "https://a7etb0iz5f.execute-api.us-west-1.amazonaws.com/Prod/api/all"
+                "https://a7etb0iz5f.execute-api.us-west-1.amazonaws.com/Prod/api/city?city=" +
+                city
             );
-            dispatch(fetchPropertiesSucceeded(response.data));
+            if (response.data.graph_data !== undefined) {
+                response.graph_data = await axios.get(response.graph_data);
+            }
+            
+            dispatch(fetchPropertiesSucceeded(response.data, city));
         }
         catch(error) {
-            dispatch(fetchPropertiesFailed(error));
+            if (error.hasOwnProperty("response")){
+                if (error.response.status === 404) {
+                    dispatch(propertiesNotFound());
+                }
+            }else{
+                dispatch(fetchPropertiesFailed(error));
+            }
         }
     };
 };
@@ -33,7 +45,7 @@ export const fetchProperty = (id) => {
         }
         catch(error) {
             if (error.hasOwnProperty("response")){
-                if (error.response.status == 404) {
+                if (error.response.status === 404) {
                     dispatch(propertyNotFound());
                 }
             }else{
