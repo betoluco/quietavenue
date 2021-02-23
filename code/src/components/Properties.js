@@ -11,6 +11,7 @@ import {
 import FetchFail from "./stateless/FetchFail";
 import Card from "./stateless/Card";
 import NotFound  from "./stateless/NotFound";
+import PropertiesTemplate from "./stateless/PropertiesTemplate";
 
 const PropertiesNotFound = NotFound.component;
 
@@ -18,14 +19,11 @@ const Properties = (props) =>{
     const dispatch = useDispatch();
     let city = props.match.params.city ||"ALL_PROPERTIES";
     
-    console.log('city porperties', city);
-    
     const properties = useSelector( (state) => state[city] );
-    console.log('Properties', properties)
+    
     const fetchPropertiesStatus = useSelector( state => state.fetchPropertiesStatus );
     
     useEffect( () => {
-        console.log('useEffect')
         if ( properties === undefined) dispatch( fetchProperties(city) );
     }, []);
     
@@ -42,9 +40,7 @@ const Properties = (props) =>{
             <Card property={property} key={property.id}/>
         );
         return (
-            <div className="Properties">
-                {listCards}
-            </div>
+            <PropertiesTemplate listCards={listCards} />
         );
     }
     

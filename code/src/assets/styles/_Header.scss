@@ -2,27 +2,18 @@
 
 .Header {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    height: 35vh;
-    background-image: url("https://s3-us-west-1.amazonaws.com/quietavenue.com/images/header_image.jpeg");
-    background-size: cover;
-    background-position: 50% 75%;
+    height: 9rem;
+
     &__link {
         text-decoration: none;
-        margin-top: 3rem;
     }
     
     &__name {
-        color: $neutral-light-color;
+        color: $neutral-dark-color;
         line-height: 100%;
         letter-spacing: .5rem;
-    }
-    
-    &__text {
-        color: $neutral-light-color;
-        text-align: center;
     }
 }
     

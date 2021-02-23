@@ -23,10 +23,10 @@
   "scripts": {
     "build": "npm run build-client && npm run transform-scss && npm run copy-images-to-client-build && npm run transpile-for-server && npm run assets-to-s3",
     "build-client": "webpack --config webpack.client.js",
-    "transform-scss": "node-sass src/assets/styles/index.scss client_build/style.css",
-    "copy-images-to-client-build": "copyfiles -f src/assets/images/* out client_build/images",
+    "transform-scss": "node-sass src/assets/styles/index.scss clientBuild/style.css",
+    "copy-images-to-client-build": "copyfiles -f src/assets/images/* out clientBuild/images",
     "transpile-for-server": "babel src --out-dir ./",
-    "assets-to-s3": "aws s3 cp client_build s3://quietavenue.com --recursive",
+    "assets-to-s3": "aws s3 cp clientBuild s3://quietavenue.com --recursive",
     "test": "mocha tests/unit/"
   },
   "devDependencies": {

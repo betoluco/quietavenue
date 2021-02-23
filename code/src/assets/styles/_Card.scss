@@ -1,8 +1,8 @@
 .Card {
-    box-shadow: var(--box-shadow);
+    box-shadow: $box-shadow;
     border-radius: 4px;
     text-decoration: none;
-    color: var(--neutral-dark-color);
+    color: $neutral-dark-color;
     
     display: flex;
     flex-direction: column;

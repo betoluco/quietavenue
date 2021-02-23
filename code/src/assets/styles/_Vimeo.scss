@@ -1,7 +1,7 @@
 .Video {
   margin-top: 4vh;
   position: relative;
-  padding-bottom: var(--aspect-ratio);
+  padding-bottom: $aspect-ratio;
   width: 100%;
   grid-column: col-start 2 / col-end -2;
   

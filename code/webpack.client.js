@@ -1,16 +1,16 @@
 const path = require("path");
 
 module.exports = {
+    // Client side bundle for hydration
 
-    // Tell webpack the root file of our
-    // server application
+    // Tell webpack the entry file of our application
     entry: "./src/client",
     
     // Tell webpack where to put the output file
     // that is generated
     output: {
         filename: "bundle.js",
-        path: path.resolve(__dirname, "client_build")
+        path: path.resolve(__dirname, "clientBuild")
     },
     
     //Change to production or development

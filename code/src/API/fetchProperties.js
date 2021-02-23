@@ -4,15 +4,15 @@ const fetchProperties = async (req, res) =>{
     const ALL = "ALL_PROPERTIES";
     
     const resultsParser = properties =>{
-        const propertiesArray = properties.Items.map( property => {
+        const propertiesArray = properties.Items.map( item => {
             return {
-                id: property.PK,
-                city: property.Data.city,
-                state: property.Data.state,
-                number: property.Data.number,
-                street: property.Data.street,
-                zip_code: property.Data.zip_code,
-                profile_picture: property.Data.profile_picture
+                id: item.PK,
+                city: item.property.city,
+                state: item.property.state,
+                number: item.property.number,
+                street: item.property.street,
+                zip_code: item.property.zip_code,
+                profile_picture: item.property.profile_picture
             };
         });
         return propertiesArray;

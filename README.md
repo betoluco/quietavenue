@@ -1,27 +1,27 @@
 # quietavenue.com
 
-quietavenue.com is a serverless side rendering react web app with hydration. The web app is a catalogue of properties for sale and details of it like video of the street 
-in front and interactive graphs of the audio recorded in the property
+quietavenue.com is a website that consist in a catalogue of real estate properties and details about them, like audio and video
 
-The web app has the following features
--	Search bar were you can find a property by number or street name or get all the properties in a city
+The website is deployed on Amazon Web Services (AWS) and uses the following services.
 
-Quietvenue.com is deployed in aws lambda and uses the following services
-
-
-# quietavenueSSR
-
-This project contains source code and supporting files for quietavenue.com serverless application that you can deploy with the SAM CLI. It includes the following files and folders.
-
-- hello-world - Code for the application's Lambda function.
-- events - Invocation events that you can use to invoke the function.
-- hello-world/tests - Unit tests for the application code. 
-- template.yaml - A template that defines the application's AWS resources.
-
-The application uses several AWS resources, including Lambda functions and an API Gateway API. These resources are defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
+- S3: quietavenue S3 bucket is used to store resources like: images, audios, json files, and webpack bundles
+- DynamoDB: quietavenue DynamoDB table stores data of the properties and links to resources like images, stored on S3
+- Elasticsearch Service: quietavenue domain is used for suggesters when looking for a property or a city
+- Lambda: quietavenue lambda function executes the server side code
+- API Gateway: as trigger for quietavenue lambda function
+- Cloud9: quietavenue Cloud9 as development environment
 
 
-## Deploy the sample application
+## quietavenue Cloud9
+The project consist of a serverless side rendering React app with hydration and a REST API. The  server side rendering and the API are run in a lambda function that is created
+by SAM using a template (quietavenue/template.yaml). The function is triggered by an API Gateway event. The event, passed to the function is handled by Express.js (framework)
+
+
+## Deploy the application
+The deployment process has the following steps:
+
+The source code (quietavenue/code/src) is transpiled and bundled with the help of webpack, to build a bundle for client side hydration. The configuration for webpack can be found on src/webpack.client.js 
+
 
 To build and deploy your application for the first time, run the following in your shell:
 

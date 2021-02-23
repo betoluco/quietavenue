@@ -1,5 +1,10 @@
+.PropertyTemplate{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .Address {
-  grid-column: col-start 1 / grid-end;
   margin-top: 3rem;
   
   display: flex;

@@ -12,20 +12,20 @@ const fetchProperty = async (req, res) =>{
     };
     
     const propertyPromise = docClient.get(params).promise();
-    
+    console.log("FectProperty", propertyPromise)
     try {
         const property = await propertyPromise;
         if (property.hasOwnProperty("Item")){
             return {
                 id: property.Item.PK,
-                city: property.Item.Data.city,
-                state: property.Item.Data.state,
-                number: property.Item.Data.number,
-                street: property.Item.Data.street,
-                zip_code: property.Item.Data.zip_code,
-                profile_picture: property.Item.Data.profile_picture,
-                video_link: property.Item.Data.video_link,
-                graph_data: property.Item.Data.graph_data
+                city: property.Item.property.city,
+                state: property.Item.property.state,
+                number: property.Item.property.number,
+                street: property.Item.property.street,
+                zip_code: property.Item.property.zip_code,
+                profile_picture: property.Item.property.profile_picture,
+                video_link: property.Item.property.video_link,
+                graph_data: property.Item.property.graph_data
             };
         }else{
             res.status(404);
