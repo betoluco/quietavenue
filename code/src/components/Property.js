@@ -12,8 +12,6 @@ import PropertyTemplate from "./stateless/PropertyTemplate";
 import FetchFail from "./stateless/FetchFail";
 import NotFound  from "./stateless/NotFound";
 
-const PropertyNotFound = NotFound.component;
-
 const Property = (props) =>{
    
     const dispatch = useDispatch();
@@ -27,7 +25,7 @@ const Property = (props) =>{
     
 
     if ( fetchPropertyStatus === PROPERTY_NOT_FOUND) {
-        return <PropertyNotFound  staticContext={props.staticContext}/>;
+        return <NotFound  staticContext={props.staticContext}/>;
     }
     
     if ( fetchPropertyStatus === FETCH_PROPERTY_FAILED) {

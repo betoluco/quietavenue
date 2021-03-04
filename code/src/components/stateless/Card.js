@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 
 const Card = props =>{
   return (
-    <Link to={"/property/" + props.property.id} className="Card">
-      <img className="Card__image" src={props.property.profile_picture} alt="Property" />
+    <Link to={"/property/" + props.property.PK} className="Card">
+      <img className="Card__image" src={props.property.profilePicture} alt="Property" />
       <span className="Card__text">
         <h2>
-          {props.property.number + " " + props.property.street}
+          {props.property.address1}
         </h2>
         <h3>
-          {props.property.city + ", " + props.property.zip_code + ", " + props.property.state}
+          {props.property.address2}
         </h3>
       </span>
     </Link>

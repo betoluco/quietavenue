@@ -16,9 +16,6 @@ export const fetchProperties = (city) => {
                 "https://a7etb0iz5f.execute-api.us-west-1.amazonaws.com/Prod/api/city?city=" +
                 city
             );
-            if (response.data.graph_data !== undefined) {
-                response.graph_data = await axios.get(response.graph_data);
-            }
             
             dispatch(fetchPropertiesSucceeded(response.data, city));
         }
@@ -41,6 +38,11 @@ export const fetchProperty = (id) => {
                 "https://a7etb0iz5f.execute-api.us-west-1.amazonaws.com/Prod/api/property/" + 
                 id
             );
+            console.log(response)
+            if (response.data.graph_data !== undefined) {
+                response.graph_data = await axios.get(response.graph_data);
+            }
+            
             dispatch(fetchPropertySucceeded(response.data, id));
         }
         catch(error) {

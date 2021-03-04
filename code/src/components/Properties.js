@@ -13,8 +13,6 @@ import Card from "./stateless/Card";
 import NotFound  from "./stateless/NotFound";
 import PropertiesTemplate from "./stateless/PropertiesTemplate";
 
-const PropertiesNotFound = NotFound.component;
-
 const Properties = (props) =>{
     const dispatch = useDispatch();
     let city = props.match.params.city ||"ALL_PROPERTIES";
@@ -28,7 +26,7 @@ const Properties = (props) =>{
     }, []);
     
     if ( fetchPropertiesStatus === PROPERTIES_NOT_FOUND) {
-        return <PropertiesNotFound  staticContext={props.staticContext}/>;
+        return <NotFound  staticContext={props.staticContext}/>;
     }
     
     if ( fetchPropertiesStatus === FETCH_PROPERTIES_FAILED) {
@@ -44,7 +42,7 @@ const Properties = (props) =>{
         );
     }
     
-    return <div className="loader">Loading...</div>; 
+    return <div className="loader">Loading...</div>;
     
 };
 

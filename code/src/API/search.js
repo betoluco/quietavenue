@@ -1,58 +1,72 @@
 const axios = require("axios");
 
-const host = "vpc-quietavenue-25aox5ugu2rpwy26vrkozq2zk4.us-west-1.es.amazonaws.com";
-const index = "properties";
-const url = "https://" + host + "/" + index + "/_search";
+const host = "https://vpc-quietavenue-25aox5ugu2rpwy26vrkozq2zk4.us-west-1.es.amazonaws.com/";
+
 
 const search = async (req, res) =>{
-    const query = {
+    const propertyQuery = {
         "suggest": {
-            "street_suggest" : {
+            "propertySuggest" : {
                 "prefix" : req.query.search, 
                 "completion": { 
-                    "field" : "street_suggest" 
+                    "field" : "propertySuggest" 
                 }
             },
-            "city_suggest" : {
-                "prefix" : req.query.search, 
-                "completion": { 
-                    "field" : "city_suggest" 
-                }
-            }
         }
     };
     
-    let response = { city_suggest: [], street_suggest: [] };
+    let response = {propertySuggest:[], citySuggest:[]};
+    
     try {
-        const suggest_results = await axios.get(url,{ 
+        const propertySuggestResults = await axios.get( host + "properties/_search",{ 
             params:{
-                source: JSON.stringify(query),
+                source: JSON.stringify(propertyQuery),
                 source_content_type: "application/json"
             }
         });
-        const street_suggest = suggest_results.data.suggest.street_suggest[0].options;
-        if (street_suggest.length > 0){
-            response.street_suggest = street_suggest.map((property) => {
+        
+        const propertySuggest = propertySuggestResults.data.suggest.propertySuggest[0].options;
+        console.log("Poreperty Suggest", propertySuggest)
+        if (propertySuggest.length > 0){
+            response.propertySuggest = propertySuggest.map((property) => {
                 return {
-                    id: property._source.id,
-                    address: property._source.number + " " +
-                    property._source.street + ", " +
-                    property._source.city + ", " +
-                    property._source.state + ", " +
-                    property._source.zip_code
+                    PK: property._source._id,
+                    address: property._source.address1 + " " + property._source.address2 
                 };
             });
         }
         
-        const city_suggest = suggest_results.data.suggest.city_suggest[0].options;
-        if (city_suggest.length > 0){
-            for ( let i=0; i<city_suggest.length; i++ ){
-                let city = city_suggest[i]._source.city;
-                if (!response.city_suggest.includes(city)){
-                    response.city_suggest.push(city);
+        
+        const cityQuery = {
+            "suggest": {
+                "citySuggest" : {
+                    "prefix" : req.query.search, 
+                    "completion": { 
+                        "field" : "citySuggest" 
+                    }
                 }
             }
-        } 
+        };
+        
+        const citySuggestResults = await axios.get( host + "city/_search",{ 
+            params:{
+                source: JSON.stringify(cityQuery),
+                source_content_type: "application/json"
+            }
+        });
+        
+        
+        
+        const citySuggest = citySuggestResults.data.suggest.citySuggest[0].options;
+        console.log("CitySuggest",citySuggest)
+            if (citySuggest.length > 0){
+                response.citySuggest = citySuggest.map((property) => {
+                    return {
+                        PK1: citySuggest._source.PK1
+                    };
+                });
+            }
+                    
         
         return response;
     

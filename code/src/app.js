@@ -7,6 +7,7 @@ import renderer from "./renderer";
 import Routes from "./routes";
 import createStore from "./redux/createStore";
 import fetchProperties from "./API/fetchProperties";
+import filterProperties from "./API/filterProperties";
 import fetchProperty from "./API/fetchProperty";
 import search from "./API/search";
 
@@ -20,8 +21,13 @@ app.get("/favicon.ico", (req, res) =>{
 
 // API
 
-app.get("/api/city/", cors({origin: "*"}), async (req, res) =>{
+app.get("/api/all/", cors({origin: "*"}), async (req, res) =>{
     const response = await fetchProperties(req, res);
+    res.send(JSON.stringify(response));
+});
+
+app.get("/api/filter", cors({origin: "*"}), async (req, res) =>{
+    const response = await filterProperties(req, res);
     res.send(JSON.stringify(response));
 });
 
