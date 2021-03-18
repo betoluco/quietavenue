@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Card = props =>{
   return (
-    <Link to={"/property/" + props.property.PK} className="Card">
+    <Link to={"/property/" + props.property.PK} key={props.property.PK} className="Card">
       <img className="Card__image" src={props.property.profilePicture} alt="Property" />
       <span className="Card__text">
         <h2>

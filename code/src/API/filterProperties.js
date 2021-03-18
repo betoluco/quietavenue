@@ -25,7 +25,7 @@ const filterPorperties = async (req, res) =>{
                     PK: item.PK,
                     address1: item.property.address1,
                     address2: item.property.address2,
-                    profilePicture: item.property.profile_picture
+                    profilePicture: item.property.profilePicture
                 };
             });
             return properties;

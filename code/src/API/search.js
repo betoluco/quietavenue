@@ -11,11 +11,24 @@ const search = async (req, res) =>{
                 "completion": { 
                     "field" : "propertySuggest" 
                 }
-            },
+            }
         }
     };
     
-    let response = {propertySuggest:[], citySuggest:[]};
+    let response = {
+        propertySuggest:[
+            {
+                PK: "no_property",
+                address: "no resulst"
+            }
+        ], 
+        citySuggest:[
+            {
+                PK1: "no_city",
+                city: "no resulst"
+            }
+        ]
+    };
     
     try {
         const propertySuggestResults = await axios.get( host + "properties/_search",{ 
@@ -26,11 +39,10 @@ const search = async (req, res) =>{
         });
         
         const propertySuggest = propertySuggestResults.data.suggest.propertySuggest[0].options;
-        console.log("Poreperty Suggest", propertySuggest)
         if (propertySuggest.length > 0){
             response.propertySuggest = propertySuggest.map((property) => {
                 return {
-                    PK: property._source._id,
+                    PK: property._id,
                     address: property._source.address1 + " " + property._source.address2 
                 };
             });
@@ -58,11 +70,12 @@ const search = async (req, res) =>{
         
         
         const citySuggest = citySuggestResults.data.suggest.citySuggest[0].options;
-        console.log("CitySuggest",citySuggest)
             if (citySuggest.length > 0){
-                response.citySuggest = citySuggest.map((property) => {
+                response.citySuggest = citySuggest.map((city) => {
+                    
                     return {
-                        PK1: citySuggest._source.PK1
+                        PK1: city._id,
+                        city: city.text
                     };
                 });
             }

@@ -1,43 +1,26 @@
 import { 
     FETCH_PROPERTIES_SUCCEEDED,
-    PROPERTIES_NOT_FOUND,
-    FETCH_PROPERTIES_FAILED,
+    FETCH_FILTER_PROPERTIES_SUCCEEDED,
     FETCH_PROPERTY_SUCCEEDED,
-    PROPERTY_NOT_FOUND,
-    FETCH_PROPERTY_FAILED
+    FETCH_SEARCH_INPUT_SUCCEDED,
+    FETCH_STARTED,
+    FETCH_FAILED,
+    INPUT_CHANGED
 } from "./actionTypes";
 
 
-export const fetchPropertiesSucceeded = (properties, city) => {
+export const fetchPropertiesSucceeded = (properties) => {
     return {
       type: FETCH_PROPERTIES_SUCCEEDED,
       properties:properties,
+    };
+};
+
+export const fetchFilterPropertiesSucceeded = (properties, city) => {
+    return {
+      type: FETCH_FILTER_PROPERTIES_SUCCEEDED,
+      properties:properties,
       city: city
-    };
-};
-
-export const propertiesNotFound = () => {
-    return {
-      type: PROPERTIES_NOT_FOUND
-    };
-};
-
-export const fetchPropertiesFailed = (error) =>{
-    if (error.hasOwnProperty("response")) {
-        // Request made and server responded
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-    } else if (error.hasOwnProperty("request")) {
-        // The request was made but no response was received
-        console.log(error.request);
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.log('Error', error.message);
-    }
-    
-    return {
-        type: FETCH_PROPERTIES_FAILED
     };
 };
 
@@ -49,27 +32,37 @@ export const fetchPropertySucceeded = (property, id) => {
     };
 };
 
-export const propertyNotFound = () => {
+export const fetchSearchInputSucceded = (suggests) => {
     return {
-      type: PROPERTY_NOT_FOUND
-    };
+        type: FETCH_SEARCH_INPUT_SUCCEDED,
+        suggests: suggests
+    }
+}
+
+export const fetchStarted = () => {
+    return { type: FETCH_STARTED };
 };
 
-export const fetchPropertyFailed = (error) =>{
+export const fetchFailed = (error) => {
     if (error.hasOwnProperty("response")) {
-        // Request made and server responded
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
+        return {
+            type: FETCH_FAILED,
+            statusCode: error.response.status
+        };
+        
     } else if (error.hasOwnProperty("request")) {
-        // The request was made but no response was received
-        console.log(error.request);
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.log('Error', error.message);
+        return {
+            type: FETCH_FAILED,
+            statusCode: 500
+        };
+    }else{
+        console.log('Error', error.message);
     }
-    
+};
+
+export const inputChanged = text => {
     return {
-        type: FETCH_PROPERTY_FAILED
+        type: INPUT_CHANGED,
+        text: text
     };
 };

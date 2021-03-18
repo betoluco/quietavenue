@@ -1,42 +1,53 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Fragment } from "react";
 import { useSelector, useDispatch} from "react-redux";
 import path from "path";
 
 import { fetchProperty } from "../redux/asyncActions";
-import { 
-    FETCH_PROPERTY_SUCCEEDED, 
-    PROPERTY_NOT_FOUND,
-    FETCH_PROPERTY_FAILED
-} from "../redux/actionTypes";
 import PropertyTemplate from "./stateless/PropertyTemplate";
 import FetchFail from "./stateless/FetchFail";
 import NotFound  from "./stateless/NotFound";
+import Header from "./stateless/Header";
+import PropertyHeader from "./stateless/PropertyHeader"
+
 
 const Property = (props) =>{
    
     const dispatch = useDispatch();
     const id = props.match.params.id;
-    const property = useSelector( (state) => state[id] );
-    const fetchPropertyStatus = useSelector( state => state.fetchPropertyStatus );
+    const property = useSelector( (state) => state.properties.[id]);
+    const statusCode = useSelector( state => state.statusCode );
     
     useEffect( () => {
         if ( property === undefined ) dispatch( fetchProperty(id) );
-    });
+    }, []);
     
-
-    if ( fetchPropertyStatus === PROPERTY_NOT_FOUND) {
-        return <NotFound  staticContext={props.staticContext}/>;
+    if (statusCode !== undefined) {
+        if( statusCode === 404){
+            return (
+                <Fragment>
+                    <Header />
+                    <NotFound />
+                </Fragment>
+            );
+        }
+        return (
+            <Fragment>
+                <Header />
+                <FetchFail />
+            </Fragment>
+        );
     }
     
-    if ( fetchPropertyStatus === FETCH_PROPERTY_FAILED) {
-        return <FetchFail />;
-    }
-    
-    if ( fetchPropertyStatus === FETCH_PROPERTY_SUCCEEDED && property !== undefined) {
+    if (property !== undefined) {
         return <PropertyTemplate property={property} />;
     }
     
-    return <div className="loader">Loading...</div>; 
+    return (
+        <Fragment>
+            <PropertyHeader />
+            <div className="loader">Loading...</div>
+        </Fragment>
+    );
 };
 
 const loadData = (store, req) => {

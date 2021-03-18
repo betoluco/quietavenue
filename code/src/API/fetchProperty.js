@@ -22,7 +22,7 @@ const fetchProperty = async (req, res) =>{
                 address2: property.Item.property.address2,
                 profilePicture: property.Item.property.profilePicture,
                 videoLink: property.Item.property.videoLink,
-                graphData: property.Item.property.graphData
+                graphDataLink: property.Item.property.graphDataLink
             };
         }else{
             res.status(404);

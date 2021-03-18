@@ -1,54 +1,113 @@
 import { 
     FETCH_PROPERTIES_SUCCEEDED,
-    PROPERTIES_NOT_FOUND,
-    FETCH_PROPERTIES_FAILED,
+    FETCH_FILTER_PROPERTIES_SUCCEEDED,
     FETCH_PROPERTY_SUCCEEDED,
-    PROPERTY_NOT_FOUND,
-    FETCH_PROPERTY_FAILED
+    FETCH_SEARCH_INPUT_SUCCEDED,
+    FETCH_STARTED,
+    FETCH_FAILED,
+    INPUT_CHANGED
 } from "./actionTypes";
 
 const reducers = (state, action) => {
+    
+    const listOfObjects = list => {
+        const newList = list.map( (obj) =>{
+            return {
+                ...obj
+            };
+        });
+        return newList;
+    };
+    
+    const cities = Object.fromEntries(
+        Object.entries(state.cities).map( ([key, value], i) =>{
+            return [key, listOfObjects(value)];
+        })
+    );
+            
+    const properties = Object.fromEntries(
+        Object.entries(state.properties).map( ([key, value], i) =>{
+            if(value.hasOwnProperty("dataPoints")){
+                return [
+                    key,
+                    {
+                    ...value,
+                    dataPoints:listOfObjects(value.dataPoints),
+                    recodredDays:[ ...value.recodredDays ]
+                    }
+                ];
+            }else{
+                return [key, {...value}];
+                
+            }
+        })
+    );
+    
+    const newState = {
+        ... state,
+        ALL_PROPERTIES: listOfObjects(state.ALL_PROPERTIES),
+        cities: cities,
+        properties: properties,
+        citySuggest: listOfObjects(state.citySuggest),
+        propertySuggest: listOfObjects(state.propertySuggest)
+    };
+    
+    
     switch (action.type) {
         case FETCH_PROPERTIES_SUCCEEDED: {
+            
+            
             return {
-                ...state,
-                fetchPropertiesStatus: FETCH_PROPERTIES_SUCCEEDED,
-                [action.city]: [...action.properties]
-                
+                ...newState,
+                ALL_PROPERTIES: [...action.properties]
             };
         }
-        case PROPERTIES_NOT_FOUND: {
+        
+        case FETCH_FILTER_PROPERTIES_SUCCEEDED: {
             return {
-                ...state,
-                fetchPropertyStatus: PROPERTIES_NOT_FOUND
+                ...newState,
+                cities: {...state.cities, [action.city]: [...action.properties]}
             };
         }
-        case FETCH_PROPERTIES_FAILED: {
-            return {
-                ...state,
-                fetchPropertiesStatus: FETCH_PROPERTIES_FAILED
-            };
-        }
+        
         case FETCH_PROPERTY_SUCCEEDED: {
             return {
-                ...state,
-                fetchPropertyStatus: FETCH_PROPERTY_SUCCEEDED,
-                [action.id]: action.property
+                ...newState,
+                properties:{...state.properties, [action.id]: action.property
+                    
+                }
             };
         }
-        case PROPERTY_NOT_FOUND: {
+        
+        case FETCH_SEARCH_INPUT_SUCCEDED :{
             return {
-                ...state,
-                fetchPropertyStatus: PROPERTY_NOT_FOUND
+                ...newState,
+                citySuggest: [...action.suggests.citySuggest],
+                propertySuggest: [...action.suggests.propertySuggest]
             };
         }
-        case FETCH_PROPERTY_FAILED: {
+        
+        case FETCH_STARTED: {
             return {
-                ...state,
-                fetchPropertyStatus: FETCH_PROPERTY_FAILED
-              
+                ...newState,
+                statusCode: undefined
             };
         }
+        
+        case FETCH_FAILED: {
+            return {
+                ...newState,
+                statusCode: action.statusCode
+            };
+        }
+        
+        case INPUT_CHANGED: {
+            return {
+                ...newState,
+                searchInput: action.searchInput
+            };
+        }
+        
         default:
             return state;
     }

@@ -1,44 +1,71 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import SearchInput from "./stateless/SearchInput";
+import { fetchSearchInput } from "../redux/asyncActions";
+import { inputChanged, fetchSearchInputSucceded } from "../redux/actions";
 
 const Search = props =>{
-  const [userInput, setUserInput] = useState("");
-  const [streetSuggest, setStreetSuggest] = useState([]);
-  const [citySuggest, setCitySuggest] = useState([]);
+  const dispatch = useDispatch();
+  const searchInput = useSelector( state => state.searchInput );
+  const citySuggest = useSelector( state => state.citySuggest );
+  const propertySuggest = useSelector( state => state.propertySuggest );
   
-  useEffect(() => {
-    async function fetchData(){
-      try{
-        const response = await axios.get(
-          "https://a7etb0iz5f.execute-api.us-west-1.amazonaws.com/Prod/api/search?search=" +
-          userInput
+  let suggestsList = [];
+  
+  if(citySuggest.length !== 0 && propertySuggest.length !== 0){
+  
+    if (searchInput.length > 0){
+      suggestsList.push(<li className="" id="city">City</li>);
+      
+      citySuggest.forEach(city =>{
+        suggestsList.push(
+          <li className="" id="city" onClick={() => onClickHandler(city.city)}>
+            <Link to={"/filter?city=" + city.PK1}>
+              <h3>{city.city}</h3>
+            </Link>
+          </li>
         );
-        
-        setCitySuggest(response.data.city_suggest);
-        setStreetSuggest(response.data.street_suggest);
-        
-      }catch(error) {console.log(error)}
+      });
+      
+      suggestsList.push(<li className="" id="porperty">Property</li>);
+      
+      propertySuggest.forEach(property =>{
+        suggestsList.push(
+          <li className="" id="city" onClick={() => onClickHandler(property.address)}>
+            <Link to={"/property/" + property.PK}>
+              <h3>{property.address}</h3>
+            </Link>
+          </li>
+        );
+      });
+    }else{
+      dispatch(fetchSearchInputSucceded({ //resets results
+        citySuggest: [],
+        propertySuggest: [] 
+      }));
     }
-    
-    fetchData();
-  }, [userInput]);
-
+  }
+  
   const onChangeHandler = event =>{
-    setUserInput(event.target.value);
+    dispatch( fetchSearchInput(event.target.value) );
   };
   
   const onClickHandler = (selectedItem) =>{
-    setUserInput(selectedItem);
+    dispatch(inputChanged(selectedItem));
+    dispatch(fetchSearchInputSucceded({
+      citySuggest: [],
+      propertySuggest: [] 
+    }));
   };
   
   return <SearchInput
-    userInput={userInput}
+    userInput={searchInput}
     onChangeHandler={onChangeHandler}
-    onClickHandler={onClickHandler}
-    propertySuggest={streetSuggest}
-    citySuggest={citySuggest}/>;
+    suggest={suggestsList}
+  />;
+  
 };
 
 export default Search;
