@@ -1,5 +1,5 @@
 import Properties from "./components/Properties";
-import Header from "./components/stateless/Header";
+import PropertiesHeader from "./components/stateless/PropertiesHeader";
 import Property from "./components/Property";
 import filterProperties from "./components/filterProperties";
 import Root from "./components/stateless/Root";
@@ -13,7 +13,7 @@ const Routes = [
                 path: "/property/:id"
             },
             {
-                component: Header,
+                component: PropertiesHeader,
                 path:"/",
                 routes:[
                     {

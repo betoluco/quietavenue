@@ -5,7 +5,7 @@ import {
     FETCH_SEARCH_INPUT_SUCCEDED,
     FETCH_STARTED,
     FETCH_FAILED,
-    INPUT_CHANGED
+    SEARCH_INPUT_CHANGED
 } from "./actionTypes";
 
 
@@ -60,9 +60,9 @@ export const fetchFailed = (error) => {
     }
 };
 
-export const inputChanged = text => {
+export const searchInputChanged = text => {
     return {
-        type: INPUT_CHANGED,
-        text: text
+        type: SEARCH_INPUT_CHANGED,
+        searchInputText: text
     };
 };

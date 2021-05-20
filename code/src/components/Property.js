@@ -6,7 +6,7 @@ import { fetchProperty } from "../redux/asyncActions";
 import PropertyTemplate from "./stateless/PropertyTemplate";
 import FetchFail from "./stateless/FetchFail";
 import NotFound  from "./stateless/NotFound";
-import Header from "./stateless/Header";
+import PropertiesHeader from "./stateless/PropertiesHeader";
 import PropertyHeader from "./stateless/PropertyHeader"
 
 
@@ -25,14 +25,14 @@ const Property = (props) =>{
         if( statusCode === 404){
             return (
                 <Fragment>
-                    <Header />
+                    <PropertiesHeader />
                     <NotFound />
                 </Fragment>
             );
         }
         return (
             <Fragment>
-                <Header />
+                <PropertiesHeader />
                 <FetchFail />
             </Fragment>
         );

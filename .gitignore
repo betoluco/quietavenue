@@ -136,7 +136,7 @@ code/API
 code/components
 code/redux
 code/app.js
-code/client.js
+code/clientBuild/*
 code/lambda.js
 code/renderer.js
 code/routes.js

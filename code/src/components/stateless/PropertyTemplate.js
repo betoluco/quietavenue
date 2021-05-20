@@ -1,7 +1,7 @@
 import React from "react";
 import Vimeo from "./Vimeo";
 import PropertyHeader from "./PropertyHeader";
-import Graph from "./Graph";
+import Graph from "../Graph";
 
 const PropertyTemplate = (props) => {
     return (
@@ -15,7 +15,18 @@ const PropertyTemplate = (props) => {
                     {props.property.address1+ " " + props.property.address2}
                 </h2>
             </div>
-            <Vimeo iframeSRC={props.property.videoLink} />
+            {props.property.hasOwnProperty("videoLink") &&
+                <Vimeo iframeSRC={props.property.videoLink} />
+            }
+            
+            <p>Noise Score {props.property.noiseScore}/100</p>
+            
+            
+            
+            {props.property.dataPoints !== undefined &&
+                <Graph dataPoints={props.property.dataPoints} />
+            }
+            
         </React.Fragment>
     );
 };

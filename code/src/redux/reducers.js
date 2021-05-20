@@ -5,7 +5,7 @@ import {
     FETCH_SEARCH_INPUT_SUCCEDED,
     FETCH_STARTED,
     FETCH_FAILED,
-    INPUT_CHANGED
+    SEARCH_INPUT_CHANGED
 } from "./actionTypes";
 
 const reducers = (state, action) => {
@@ -44,7 +44,7 @@ const reducers = (state, action) => {
     );
     
     const newState = {
-        ... state,
+        ...state,
         ALL_PROPERTIES: listOfObjects(state.ALL_PROPERTIES),
         cities: cities,
         properties: properties,
@@ -101,10 +101,10 @@ const reducers = (state, action) => {
             };
         }
         
-        case INPUT_CHANGED: {
+        case SEARCH_INPUT_CHANGED: {
             return {
                 ...newState,
-                searchInput: action.searchInput
+                searchInputText: action.searchInputText
             };
         }
         

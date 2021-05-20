@@ -10,7 +10,7 @@ const initialState = {
     properties: {},
     citySuggest: [],
     propertySuggest: [],
-    searchInput: ""
+    searchInputText: ""
 };
 
 const store = () => {

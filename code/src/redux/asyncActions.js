@@ -7,10 +7,10 @@ import {
     fetchSearchInputSucceded,
     fetchStarted,
     fetchFailed,
-    inputChanged
+    searchInputChanged
 } from "./actions";
 
-const api = "https://a7etb0iz5f.execute-api.us-west-1.amazonaws.com/Prod/api/";
+const api = "https://quietavenue.com/api/";
 
 export const fetchProperties = () => { 
     return async (dispatch) => {
@@ -43,13 +43,9 @@ export const fetchProperty = (id) => {
         dispatch(fetchStarted());
         try {
             const response = await axios.get(api + "property/" + id );
-            console.log("response", response.data)
             if (response.data.hasOwnProperty("graphDataLink")) {
-                console.log("Data Link", response.data.graphDataLink)
-                const graphData = await axios.get(response.data.graphData);
-                console.log(graphData.data)
-                response.data.dataPoints = graphData.data.dataPoints
-                response.data.recordedDays = graphData.data.recordedDays
+                const graphData = await axios.get(response.data.graphDataLink);
+                response.data.dataPoints = graphData.data;
             }
             
             dispatch(fetchPropertySucceeded(response.data, id));
@@ -63,7 +59,7 @@ export const fetchProperty = (id) => {
 export const fetchSearchInput = (text) =>{
     return async (dispatch) => {
         dispatch(fetchStarted());
-        dispatch( inputChanged(text));
+        dispatch(searchInputChanged(text));
         try {
             const response = await axios.get( api + "search?search=" + text );
             dispatch(fetchSearchInputSucceded(response.data));

@@ -1,6 +1,6 @@
-@import 'General';
+@import 'normalize';
 @import 'Properties';
-@import 'Header';
+@import 'PropertiesHeader'; //used 20/04/21
 @import 'Card';
 @import 'PropertyTemplate';
 @import 'Vimeo';
@@ -9,4 +9,5 @@
 @import 'NotFound';
 @import 'FetchFail';
 @import 'PropertiesTemplate';
-@import 'Spinner'
+@import 'Spinner';
+@import 'HeaderMenu'

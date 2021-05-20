@@ -4,11 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 
 import SearchInput from "./stateless/SearchInput";
 import { fetchSearchInput } from "../redux/asyncActions";
-import { inputChanged, fetchSearchInputSucceded } from "../redux/actions";
+import { searchInputChanged, fetchSearchInputSucceded } from "../redux/actions";
 
 const Search = props =>{
   const dispatch = useDispatch();
-  const searchInput = useSelector( state => state.searchInput );
+  const searchInputText = useSelector( state => state.searchInputText );
   const citySuggest = useSelector( state => state.citySuggest );
   const propertySuggest = useSelector( state => state.propertySuggest );
   
@@ -16,7 +16,7 @@ const Search = props =>{
   
   if(citySuggest.length !== 0 && propertySuggest.length !== 0){
   
-    if (searchInput.length > 0){
+    if (searchInputText.length > 0){
       suggestsList.push(<li className="" id="city">City</li>);
       
       citySuggest.forEach(city =>{
@@ -53,7 +53,7 @@ const Search = props =>{
   };
   
   const onClickHandler = (selectedItem) =>{
-    dispatch(inputChanged(selectedItem));
+    dispatch(searchInputChanged(selectedItem));
     dispatch(fetchSearchInputSucceded({
       citySuggest: [],
       propertySuggest: [] 
@@ -61,7 +61,7 @@ const Search = props =>{
   };
   
   return <SearchInput
-    userInput={searchInput}
+    userInput={searchInputText}
     onChangeHandler={onChangeHandler}
     suggest={suggestsList}
   />;
