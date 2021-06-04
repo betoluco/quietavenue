@@ -2,10 +2,8 @@ import {
     FETCH_PROPERTIES_SUCCEEDED,
     FETCH_FILTER_PROPERTIES_SUCCEEDED,
     FETCH_PROPERTY_SUCCEEDED,
-    FETCH_SEARCH_INPUT_SUCCEDED,
     FETCH_STARTED,
-    FETCH_FAILED,
-    SEARCH_INPUT_CHANGED
+    FETCH_FAILED
 } from "./actionTypes";
 
 const reducers = (state, action) => {
@@ -47,16 +45,11 @@ const reducers = (state, action) => {
         ...state,
         ALL_PROPERTIES: listOfObjects(state.ALL_PROPERTIES),
         cities: cities,
-        properties: properties,
-        citySuggest: listOfObjects(state.citySuggest),
-        propertySuggest: listOfObjects(state.propertySuggest)
+        properties: properties
     };
-    
     
     switch (action.type) {
         case FETCH_PROPERTIES_SUCCEEDED: {
-            
-            
             return {
                 ...newState,
                 ALL_PROPERTIES: [...action.properties]
@@ -79,14 +72,6 @@ const reducers = (state, action) => {
             };
         }
         
-        case FETCH_SEARCH_INPUT_SUCCEDED :{
-            return {
-                ...newState,
-                citySuggest: [...action.suggests.citySuggest],
-                propertySuggest: [...action.suggests.propertySuggest]
-            };
-        }
-        
         case FETCH_STARTED: {
             return {
                 ...newState,
@@ -98,13 +83,6 @@ const reducers = (state, action) => {
             return {
                 ...newState,
                 statusCode: action.statusCode
-            };
-        }
-        
-        case SEARCH_INPUT_CHANGED: {
-            return {
-                ...newState,
-                searchInputText: action.searchInputText
             };
         }
         

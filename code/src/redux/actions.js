@@ -2,10 +2,8 @@ import {
     FETCH_PROPERTIES_SUCCEEDED,
     FETCH_FILTER_PROPERTIES_SUCCEEDED,
     FETCH_PROPERTY_SUCCEEDED,
-    FETCH_SEARCH_INPUT_SUCCEDED,
     FETCH_STARTED,
-    FETCH_FAILED,
-    SEARCH_INPUT_CHANGED
+    FETCH_FAILED
 } from "./actionTypes";
 
 
@@ -32,12 +30,6 @@ export const fetchPropertySucceeded = (property, id) => {
     };
 };
 
-export const fetchSearchInputSucceded = (suggests) => {
-    return {
-        type: FETCH_SEARCH_INPUT_SUCCEDED,
-        suggests: suggests
-    }
-}
 
 export const fetchStarted = () => {
     return { type: FETCH_STARTED };
@@ -58,11 +50,4 @@ export const fetchFailed = (error) => {
     }else{
         console.log('Error', error.message);
     }
-};
-
-export const searchInputChanged = text => {
-    return {
-        type: SEARCH_INPUT_CHANGED,
-        searchInputText: text
-    };
 };

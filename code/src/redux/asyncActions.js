@@ -4,10 +4,8 @@ import {
     fetchPropertiesSucceeded,
     fetchFilterPropertiesSucceeded,
     fetchPropertySucceeded,
-    fetchSearchInputSucceded,
     fetchStarted,
-    fetchFailed,
-    searchInputChanged
+    fetchFailed
 } from "./actions";
 
 const api = "https://quietavenue.com/api/";
@@ -52,20 +50,6 @@ export const fetchProperty = (id) => {
         }
         catch(error) {
            dispatch(fetchFailed(error));
-        }
-    };
-};
-
-export const fetchSearchInput = (text) =>{
-    return async (dispatch) => {
-        dispatch(fetchStarted());
-        dispatch(searchInputChanged(text));
-        try {
-            const response = await axios.get( api + "search?search=" + text );
-            dispatch(fetchSearchInputSucceded(response.data));
-        }
-        catch(error) {
-            dispatch(fetchFailed(error));
         }
     };
 };

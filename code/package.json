@@ -24,14 +24,13 @@
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "serialize-javascript": "^5.0.1"
+    "serialize-javascript": "^5.0.1",
+    "webpack-node-externals": "^3.0.0"
   },
   "scripts": {
-    "build": "npm run build-client && npm run transform-scss && npm run copy-images-to-client-build && npm run transpile-for-server && npm run assets-to-s3",
-    "build-client": "webpack --config webpack.client.js",
-    "transform-scss": "node-sass src/assets/styles/index.scss clientBuild/style.css",
+    "start": "webpack && npm run copy-images-to-client-build && npm run assets-to-s3",
+    "build": "webpack --env production && npm run copy-images-to-client-build && npm run assets-to-s3",
     "copy-images-to-client-build": "copyfiles -f src/assets/images/* out clientBuild/images",
-    "transpile-for-server": "babel src --out-dir ./",
     "assets-to-s3": "aws s3 cp clientBuild s3://quietavenue.com --recursive",
     "test": "mocha tests/unit/"
   },
@@ -46,10 +45,15 @@
     "core-js": "^3.8.1",
     "css-loader": "^5.0.1",
     "cypress": "^6.2.0",
+    "mini-css-extract-plugin": "^1.6.0",
     "mocha": "^6.1.4",
-    "node-sass": "^5.0.0",
+    "postcss": "^8.3.0",
+    "postcss-loader": "^5.3.0",
+    "postcss-preset-env": "^6.7.0",
     "style-loader": "^2.0.0",
-    "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12"
+    "tailwindcss": "^2.1.2",
+    "webpack": "^5.37.1",
+    "webpack-cli": "^4.7.0",
+    "webpack-merge": "^5.7.3"
   }
 }

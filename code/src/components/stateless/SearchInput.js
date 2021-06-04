@@ -10,7 +10,7 @@ const SearchInput = props =>{
         onChange={props.onChangeHandler} 
         value={props.userInput}/>
         <img 
-        src="https://s3-us-west-1.amazonaws.com/quietavenue.com/images/search_button_icon.svg"
+        src={"https://s3-us-west-1.amazonaws.com/quietavenue.com/images/search_button_icon.svg"}
         alt="search_button"
         className="Suggest__image"/>
       </form>

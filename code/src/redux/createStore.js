@@ -7,10 +7,7 @@ import { FETCH_STARTED } from "./actionTypes";
 const initialState = {
     ALL_PROPERTIES: [],
     cities: {},
-    properties: {},
-    citySuggest: [],
-    propertySuggest: [],
-    searchInputText: ""
+    properties: {}
 };
 
 const store = () => {

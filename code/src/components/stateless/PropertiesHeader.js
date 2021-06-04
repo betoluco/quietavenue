@@ -2,8 +2,8 @@ import React, { Fragment } from "react";
 import { renderRoutes } from "react-router-config";
 import { Link } from "react-router-dom";
 
-
 import Search from "../Search";
+import logo from "../../images/quietavenue_logo_bold_white.svg"
 
 const PropertiesHeader = ({ route }) =>{
   
@@ -13,7 +13,7 @@ const PropertiesHeader = ({ route }) =>{
         <div className="PropertiesHeader__flexbox">
           <Link className="PropertiesHeader__link" to="/">
             <img 
-              src="https://s3-us-west-1.amazonaws.com/quietavenue.com/images/quietavenue_logo_bold_white.svg"
+              src={logo}
               alt="logo"
               className="PropertiesHeader__logo"/>
            

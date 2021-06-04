@@ -20,14 +20,14 @@ const renderer = (req, store, context) => {
         <html>
             <head>
                 <meta name="viewport" content="width=device-width, initial-scale=1">
-                <link rel="stylesheet" href="https://s3-us-west-1.amazonaws.com/quietavenue.com/style.css">  
+                <link rel="stylesheet" href="https://s3-us-west-1.amazonaws.com/quietavenue.com/main.css">  
                 <script>
                     window.__PRELOADED_STATE__ = ${serializer(store.getState())}
                 </script>
             </head>
             <body>
                 <div id="root">${content}</div>
-                <script src="https://s3-us-west-1.amazonaws.com/quietavenue.com/bundle.js"></script>
+                <script src="https://s3-us-west-1.amazonaws.com/quietavenue.com/serverBundle.js"></script>
             </body>
         </html>
     `;
