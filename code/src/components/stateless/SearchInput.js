@@ -1,23 +1,24 @@
-import React from "react";
+import React, { Fragment } from "react";
+import searchButton from "../../images/searchButtonIcon.svg"
 
 const SearchInput = props =>{
   return (
-    <div className="Suggest">
-      <form className="Suggest__form Suggest__form--small">
+    <Fragment>
+      <form className="flex flex-row justify-center pb-6 ">
         <input 
         className="Suggest__input"
         type="search" 
         onChange={props.onChangeHandler} 
         value={props.userInput}/>
         <img 
-        src={"https://s3-us-west-1.amazonaws.com/quietavenue.com/images/search_button_icon.svg"}
-        alt="search_button"
+        src={searchButton}
+        alt="search button"
         className="Suggest__image"/>
       </form>
       <ul className="Suggest__list">
         {props.suggest}
       </ul>
-    </div>
+    </Fragment>
   );
 };
 

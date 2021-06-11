@@ -10,13 +10,14 @@ import fetchProperties from "./API/fetchProperties";
 import filterProperties from "./API/filterProperties";
 import fetchProperty from "./API/fetchProperty";
 import search from "./API/search";
+import favicon from "./images/favicon.ico"
 
 const app = express();
 
 app.use(awsServerlessExpressMiddleware.eventContext());
 
 app.get("/favicon.ico", (req, res) =>{
-    res.redirect("https://s3-us-west-1.amazonaws.com/quietavenue.com/images/favicon.ico");
+    res.redirect(favicon);
 });
 
 // API

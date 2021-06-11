@@ -129,16 +129,8 @@ $RECYCLE.BIN/
 .aws-sam/
 
 # Webpack generated
-code/client_build
-
-# Traspiled from the source
-code/API
-code/components
-code/redux
-code/app.js
-code/clientBuild/*
-code/lambda.js
-code/renderer.js
-code/routes.js
+code/clientBuild/
+code/dist/
+code/serverBundle.js
 
 # End of https://www.gitignore.io/api/osx,node,linux,windows

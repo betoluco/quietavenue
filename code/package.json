@@ -28,10 +28,12 @@
     "webpack-node-externals": "^3.0.0"
   },
   "scripts": {
-    "start": "webpack && npm run copy-images-to-client-build && npm run assets-to-s3",
-    "build": "webpack --env production && npm run copy-images-to-client-build && npm run assets-to-s3",
-    "copy-images-to-client-build": "copyfiles -f src/assets/images/* out clientBuild/images",
-    "assets-to-s3": "aws s3 cp clientBuild s3://quietavenue.com --recursive",
+    "start": "NODE_ENV=development npm run client-build && npm run server-build && npm run assets-to-s3",
+    "build": "NODE_ENV=production npm run client-build && npm run server-build && npm run lear-dist-folder && npm run assets-to-s3",
+    "client-build": "webpack --config webpack.client.js",
+    "server-build": "webpack --config webpack.server.js",
+    "clear-dist-folder": "aws s3 rm s3://quietavenue.com/dist --recursive",
+    "assets-to-s3": "aws s3 cp dist s3://quietavenue.com/dist --recursive",
     "test": "mocha tests/unit/"
   },
   "devDependencies": {

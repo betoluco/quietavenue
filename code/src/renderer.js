@@ -6,6 +6,8 @@ import serializer from "serialize-javascript";
 import { Provider } from "react-redux";
 
 import routes from "./routes";
+import rehydrationBundle from "../clientBuild/clientBundle.js"
+import css from "../clientBuild/main.css"
 
 const renderer = (req, store, context) => {
     const content = ReactDOMServer.renderToString(
@@ -20,14 +22,14 @@ const renderer = (req, store, context) => {
         <html>
             <head>
                 <meta name="viewport" content="width=device-width, initial-scale=1">
-                <link rel="stylesheet" href="https://s3-us-west-1.amazonaws.com/quietavenue.com/main.css">  
+                <link rel="stylesheet" href="${css}">  
                 <script>
                     window.__PRELOADED_STATE__ = ${serializer(store.getState())}
                 </script>
             </head>
             <body>
                 <div id="root">${content}</div>
-                <script src="https://s3-us-west-1.amazonaws.com/quietavenue.com/serverBundle.js"></script>
+                <script src="${rehydrationBundle}"></script>
             </body>
         </html>
     `;

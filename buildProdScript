@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-cd code
-npm run build-prod
-cd ..
-sam deploy
