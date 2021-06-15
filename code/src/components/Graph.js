@@ -70,9 +70,6 @@ const Graph = props =>{
         const yStopPosition = yScale(today);
         let height = yStartPosition - yStopPosition;
         height = Math.ceil(height);
-        if( height == 0){
-            height = 1;
-        }
         
         return <rect 
         key={point.mp3Link}

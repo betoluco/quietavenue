@@ -29,7 +29,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=development npm run client-build && npm run server-build && npm run assets-to-s3",
-    "build": "NODE_ENV=production npm run client-build && npm run server-build && npm run lear-dist-folder && npm run assets-to-s3",
+    "build": "NODE_ENV=production npm run client-build && npm run server-build && npm run clear-dist-folder && npm run assets-to-s3",
     "client-build": "webpack --config webpack.client.js",
     "server-build": "webpack --config webpack.server.js",
     "clear-dist-folder": "aws s3 rm s3://quietavenue.com/dist --recursive",
