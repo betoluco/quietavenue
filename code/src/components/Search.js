@@ -9,7 +9,7 @@ const Search = props =>{
   const suggestsList = [];
 
   useEffect(async () => {
-    if (searchInputText.length > 1){
+    if (searchInputText.length > 1 && searchInputText.length < 100){ //avoid attacks by input overload
       const response = await axios(
         "https://quietavenue.com/api/search?search=" + searchInputText 
       );
@@ -48,7 +48,7 @@ const Search = props =>{
         suggestsList.push(<li className="" id="city">No sugesstions</li>);
       }
     }  
-  });
+  }, []);
   
   const onChangeHandler = event =>{
     setSearchInputText(event.target.value);

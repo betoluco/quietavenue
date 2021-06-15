@@ -1,10 +1,12 @@
-import React, { useRef, useEffect, useState, Fragment } from 'react';
-import { scaleBand, scaleTime, scaleLinear} from 'd3-scale';
+import React, { useRef, useEffect, useState, Fragment } from "react";
+import { scaleBand, scaleTime, scaleLinear} from "d3-scale";
 import { timeDay } from "d3-time";
 import { axisBottom, axisLeft} from "d3-axis";
 import { select } from "d3-selection";
 import { timeFormat } from "d3-time-format";
 import { zoom } from "d3-zoom";
+
+import AudioPlayer from "./stateless/AudioPlayer";
 
 const Graph = props =>{
     const margin = { top: 10, right: 10, bottom: 30, left: 100 },
@@ -17,6 +19,7 @@ const Graph = props =>{
     const graph = useRef();
     
     const [{ x, y, k }, setTransform] = useState({ x: 0, y: 0, k: 1 });
+    const [mp3Link, setmp3Link] = useState("");
     
     useEffect(() =>{
         select(xAxisRef.current).call(xAxis);
@@ -31,7 +34,7 @@ const Graph = props =>{
         });
         
         select(graph.current).call(graphZoom);
-    }, []);
+    },);
     
         
     const firstDay = timeDay.floor(new Date(props.dataPoints[0].StartTime));
@@ -56,7 +59,6 @@ const Graph = props =>{
     const colorScale = scaleLinear()
         .domain([0, 1])
         .range(colorRange);
-        
     
     const rects = props.dataPoints.map( point =>{
         const startTime = new Date(point.StartTime);
@@ -73,12 +75,13 @@ const Graph = props =>{
         }
         
         return <rect 
+        key={point.mp3Link}
         width={xScale.bandwidth()}
         height={height}
         x={xPosition} 
         y={yStopPosition}
         fill={colorScale(point.maxLoudness)}
-        link={point.mp3Link}/>;
+        onClick={() => setmp3Link(point.mp3Link)}/>;
     });
     
     return (
@@ -106,6 +109,7 @@ const Graph = props =>{
                 </g>
                 <g className="Graph__Axis" ref={xAxisRef} transform={`translate(0, ${height - margin.bottom})`}/>
             </svg>
+            <AudioPlayer audioFile={mp3Link}/>
         </Fragment>
     );
 };
