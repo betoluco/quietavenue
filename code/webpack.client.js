@@ -3,6 +3,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 // Client side bundle for hydration
 module.exports = function(env, argv) {
+
     
     return {
         mode: process.env.NODE_ENV ? 'production' : 'development',
