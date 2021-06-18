@@ -33,11 +33,11 @@
     "build": "npm run client-build && npm run server-build"
     "client-build": "webpack --config webpack.client.js",
     "server-build": "webpack --config webpack.server.js",
-    "clear-assets": "aws s3 rm s3://quietavenue.com/dist --recursive",
-    "upload-assets": "aws s3 cp dist s3://quietavenue.com/dist --recursive",
+    "clear-assets": "aws s3 rm s3://quietavenue.com/assets/dist --recursive",
+    "upload-assets": "aws s3 cp dist s3://quietavenue.com/assets/dist --recursive",
     "clientBuild": "npm run clear-old-clientBuild && npm run upload-clientBuild",
-    "clear-old-clientBuild":"aws s3 rm s3://quietavenue/dist --recursive",
-    "upload-clientBuild": "aws s3 cp clientBuild s3://quietavenue/dist --recursive",
+    "clear-old-clientBuild":"aws s3 rm s3://quietavenue.com/resources/dist --recursive",
+    "upload-clientBuild": "aws s3 cp clientBuild s3://quietavenue.com/resources/dist --recursive",
     "remove-old-files": "rm -r clientBuild dist",
     "test": "mocha tests/unit/"
   },

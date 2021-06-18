@@ -10,15 +10,10 @@ import fetchProperties from "./API/fetchProperties";
 import filterProperties from "./API/filterProperties";
 import fetchProperty from "./API/fetchProperty";
 import search from "./API/search";
-import favicon from "./images/favicon.ico"
 
 const app = express();
 
 app.use(awsServerlessExpressMiddleware.eventContext());
-
-app.get("/favicon.ico", (req, res) =>{
-    res.redirect(favicon);
-});
 
 // API
 

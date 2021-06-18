@@ -13,7 +13,7 @@ module.exports = function(env, argv) {
         output: {
             filename: "clientBundle.js",
             path: path.resolve(__dirname, "clientBuild"),
-            publicPath: "https://s3-us-west-1.amazonaws.com/quietavenue.com/dist/"
+            publicPath: "https://quietavenue.com/assets/dist/"
         },
         
         module: {
