@@ -29,8 +29,8 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development npm run build && npm run upload-assets && npm run remove-old-files",
-    "prod": "NODE_ENV=production npm run build && npm run clear-dist-folder && npm run upload-assets && npm run clientBuild && npm run remove-old-files",
-    "build": "npm run client-build && npm run server-build"
+    "prod": "NODE_ENV=production npm run build && npm run clear-assets && npm run upload-assets && npm run clientBuild && npm run remove-old-files",
+    "build": "npm run client-build && npm run server-build",
     "client-build": "webpack --config webpack.client.js",
     "server-build": "webpack --config webpack.server.js",
     "clear-assets": "aws s3 rm s3://quietavenue.com/assets/dist --recursive",
@@ -38,7 +38,7 @@
     "clientBuild": "npm run clear-old-clientBuild && npm run upload-clientBuild",
     "clear-old-clientBuild":"aws s3 rm s3://quietavenue.com/resources/dist --recursive",
     "upload-clientBuild": "aws s3 cp clientBuild s3://quietavenue.com/resources/dist --recursive",
-    "remove-old-files": "rm -r clientBuild dist",
+    "remove-old-files": "rm -r clientBuild dist serverBundle.js.LICENSE.txt",
     "test": "mocha tests/unit/"
   },
   "devDependencies": {

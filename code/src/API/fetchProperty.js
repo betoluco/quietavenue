@@ -1,5 +1,7 @@
 import AWS from "aws-sdk";
-import path from "path"
+import path from "path";
+
+import domainName from "./domainName";
 
 const fetchProperty = async (req, res) =>{
     const PK = path.basename(req.path);
@@ -20,9 +22,9 @@ const fetchProperty = async (req, res) =>{
                 PK: property.Item.PK,
                 address1: property.Item.property.address1,
                 address2: property.Item.property.address2,
-                profilePicture: property.Item.property.profilePicture,
+                profilePicture: new URL(property.Item.property.profilePicture, domainName),
                 videoLink: property.Item.property.videoLink,
-                graphDataLink: property.Item.property.graphDataLink
+                graphDataLink: new URL(property.Item.property.graphDataLink, domainName)
             };
         }else{
             res.status(404);

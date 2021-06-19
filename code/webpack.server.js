@@ -14,7 +14,7 @@ module.exports = function(env, argv) {
             path: path.resolve(__dirname, "./"),
             libraryTarget: "commonjs2",
             assetModuleFilename: 'dist/[hash][ext][query]',
-            publicPath: "quietavenue.com/assets/"
+            publicPath: "https://quietavenue.com/assets/"
         },
         
         module: {

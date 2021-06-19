@@ -1,5 +1,7 @@
 import AWS from "aws-sdk";
 
+import domainName from "./domainName";
+
 const fetchProperties = async (req, res) =>{
     
     AWS.config.update({region: 'us-west-1'});
@@ -14,7 +16,7 @@ const fetchProperties = async (req, res) =>{
                 PK: item.PK,
                 address1: item.property.address1,
                 address2: item.property.address2,
-                profilePicture: item.property.profilePicture
+                profilePicture: new URL(item.property.profilePicture, domainName)
             };
         });
         

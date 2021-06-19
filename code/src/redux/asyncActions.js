@@ -41,10 +41,10 @@ export const fetchProperty = (id) => {
         dispatch(fetchStarted());
         try {
             const response = await axios.get(api + "property/" + id );
-            if (response.data.hasOwnProperty("graphDataLink")) {
+            try{
                 const graphData = await axios.get(response.data.graphDataLink);
                 response.data.dataPoints = graphData.data;
-            }
+            }catch(error){}
             
             dispatch(fetchPropertySucceeded(response.data, id));
         }
