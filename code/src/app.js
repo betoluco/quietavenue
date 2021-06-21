@@ -17,22 +17,24 @@ app.use(awsServerlessExpressMiddleware.eventContext());
 
 // API
 
-app.get("/api/all/", cors({origin: "*"}), async (req, res) =>{
+const corsDev = "https://8ef2832e749e4b0e8eb0dafdb5d7df96.vfs.cloud9.us-west-1.amazonaws.com"; //Allow request from Cloud 9 development machine
+
+app.get("/api/all/", cors({origin: corsDev}), async (req, res) =>{
     const response = await fetchProperties(req, res);
     res.send(JSON.stringify(response));
 });
 
-app.get("/api/filter", cors({origin: "*"}), async (req, res) =>{
+app.get("/api/filter", cors({origin: corsDev}), async (req, res) =>{
     const response = await filterProperties(req, res);
     res.send(JSON.stringify(response));
 });
 
-app.get("/api/property/*", cors({origin: "*"}), async (req, res) =>{
+app.get("/api/property/*", cors({origin: corsDev}), async (req, res) =>{
     const response = await fetchProperty(req, res);
     res.send(JSON.stringify(response));
 });
 
-app.get("/api/search", cors({origin: "*"}), async (req, res) =>{
+app.get("/api/search", cors({origin: corsDev}), async (req, res) =>{
     const response = await search(req, res);
     res.send(JSON.stringify(response));
 });

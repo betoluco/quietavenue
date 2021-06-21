@@ -61,8 +61,8 @@ const Graph = props =>{
         .range(colorRange);
     
     const rects = props.dataPoints.map( point =>{
-        const startTime = new Date(point.StartTime);
-        const stopTime = new Date(point.StopTime);
+        const startTime = new Date(point.startTime);
+        const stopTime = new Date(point.stopTime);
         const xPosition = xScale(timeDay.floor(startTime));
         today.setHours(startTime.getHours(), startTime.getMinutes(), startTime.getSeconds(), 0);
         const yStartPosition = yScale(today);
