@@ -1,9 +1,14 @@
-const axios = require("axios");
+import axios from "axios";
 
-const host = "https://vpc-quietavenue-25aox5ugu2rpwy26vrkozq2zk4.us-west-1.es.amazonaws.com/";
-
+import {domainName, elasticSearch} from "./urls";
 
 const search = async (req, res) =>{
+    let response = {
+        propertySuggest:[], 
+        citySuggest:[],
+        zipCodeSuggest:[]
+    };
+    
     const propertyQuery = {
         "suggest": {
             "propertySuggest" : {
@@ -15,23 +20,32 @@ const search = async (req, res) =>{
         }
     };
     
-    let response = {
-        propertySuggest:[
-            {
-                PK: "no_property",
-                address: "no resulst"
+    const cityQuery = {
+        "suggest": {
+            "citySuggest" : {
+                "prefix" : req.query.search, 
+                "completion": { 
+                    "field" : "citySuggest",
+                    "skip_duplicates": true
+                }
             }
-        ], 
-        citySuggest:[
-            {
-                PK1: "no_city",
-                city: "no resulst"
+        }
+    };
+    
+    const zipCodeQuery = {
+        "suggest": {
+            "zipCodeSuggest" : {
+                "prefix" : req.query.search, 
+                "completion": { 
+                    "field" : "zipCodeSuggest",
+                    "skip_duplicates": true
+                }
             }
-        ]
+        }
     };
     
     try {
-        const propertySuggestResults = await axios.get( host + "properties/_search",{ 
+        const propertySuggestResults = await axios.get( elasticSearch + "estate/_search",{ 
             params:{
                 source: JSON.stringify(propertyQuery),
                 source_content_type: "application/json"
@@ -39,66 +53,52 @@ const search = async (req, res) =>{
         });
         
         const propertySuggest = propertySuggestResults.data.suggest.propertySuggest[0].options;
-        if (propertySuggest.length > 0){
-            response.propertySuggest = propertySuggest.map((property) => {
-                return {
-                    PK: property._id,
-                    address: property._source.address1 + " " + property._source.address2 
-                };
-            });
-        }
+        response.propertySuggest = propertySuggest.map((property) => {
+            return {
+                PK: new URL("property/" + property._id, domainName),
+                address: property._source.address1 + " " + property._source.address2 
+            };
+        });
         
         
-        const cityQuery = {
-            "suggest": {
-                "citySuggest" : {
-                    "prefix" : req.query.search, 
-                    "completion": { 
-                        "field" : "citySuggest" 
-                    }
-                }
-            }
-        };
-        
-        const citySuggestResults = await axios.get( host + "city/_search",{ 
+        const citySuggestResults = await axios.get( elasticSearch + "estate/_search",{ 
             params:{
                 source: JSON.stringify(cityQuery),
                 source_content_type: "application/json"
             }
         });
         
-        
-        
         const citySuggest = citySuggestResults.data.suggest.citySuggest[0].options;
-            if (citySuggest.length > 0){
-                response.citySuggest = citySuggest.map((city) => {
-                    
-                    return {
-                        PK1: city._id,
-                        city: city.text
-                    };
-                });
+        response.citySuggest = citySuggest.map((city) => {
+            return {
+                cityId: new URL("filter/" + city._source.cityId, domainName),
+                city: city._source.city
+            };
+        });
+            
+        const zipCodeSuggestResults = await axios.get( elasticSearch + "estate/_search",{ 
+            params:{
+                source: JSON.stringify(zipCodeQuery),
+                source_content_type: "application/json"
             }
-                    
+        });
         
+        const zipCodeSuggest = zipCodeSuggestResults.data.suggest.zipCodeSuggest[0].options;
+        response.zipCodeSuggest = zipCodeSuggest.map((zipCode) => {
+            return{
+                zipCodeId: new URL("filter/" + zipCode._source.zipCode, domainName),
+                zipCode: zipCode._source.zipCode
+            }
+        });
+        
+        res.status(200)
         return response;
     
     }catch (error) {
-        if (error.hasOwnProperty("response")) {
-            // Request made and server responded
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-        } else if (error.hasOwnProperty("request")) {
-            // The request was made but no response was received
-            console.log(error.request);
-        } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log("Error", error.message);
-        }
+        console.log(error);
         res.status(500);
         return;
     }
 };
 
-module.exports = search;
+export default search;
