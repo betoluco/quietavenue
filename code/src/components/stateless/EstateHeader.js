@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Search from "../Search";
 
-const PropertyHeader = ({ route }) =>{
+const EstateHeader = ({ route }) =>{
   return(
       <header className="">
         <Link className="" to="/">
@@ -14,4 +14,4 @@ const PropertyHeader = ({ route }) =>{
 }; 
 
 
-export default PropertyHeader;
+export default EstateHeader;

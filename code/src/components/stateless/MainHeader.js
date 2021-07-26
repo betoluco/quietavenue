@@ -3,10 +3,10 @@ import { renderRoutes } from "react-router-config";
 import { Link } from "react-router-dom";
 
 import Search from "../Search";
-import logo from "../../images/quietavenueLogo.svg"
-import headerImage from  "../../images/headerImage.jpeg"
+import logo from "../../images/quietavenueLogo.svg";
+import headerImage from  "../../images/headerImage.jpeg";
 
-const PropertiesHeader = ({ route }) =>{
+const MainHeader = ({ route }) =>{
   
   return(
     <Fragment>
@@ -27,4 +27,4 @@ const PropertiesHeader = ({ route }) =>{
 }; 
 
 
-export default PropertiesHeader;
+export default MainHeader;

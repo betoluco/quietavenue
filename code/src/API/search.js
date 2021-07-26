@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import {domainName, elasticSearch} from "./urls";
+import { domainName, elasticSearch} from "./urls";
 
 const search = async (req, res) =>{
     let response = {
@@ -9,31 +9,21 @@ const search = async (req, res) =>{
         zipCodeSuggest:[]
     };
     
-    const propertyQuery = {
+    const suggesters ={
         "suggest": {
             "propertySuggest" : {
                 "prefix" : req.query.search, 
                 "completion": { 
                     "field" : "propertySuggest" 
                 }
-            }
-        }
-    };
-    
-    const cityQuery = {
-        "suggest": {
+            },
             "citySuggest" : {
                 "prefix" : req.query.search, 
                 "completion": { 
                     "field" : "citySuggest",
                     "skip_duplicates": true
                 }
-            }
-        }
-    };
-    
-    const zipCodeQuery = {
-        "suggest": {
+            },
             "zipCodeSuggest" : {
                 "prefix" : req.query.search, 
                 "completion": { 
@@ -45,53 +35,41 @@ const search = async (req, res) =>{
     };
     
     try {
-        const propertySuggestResults = await axios.get( elasticSearch + "estate/_search",{ 
+        const results = await axios.get( elasticSearch, { 
             params:{
-                source: JSON.stringify(propertyQuery),
+                source: JSON.stringify(suggesters),
                 source_content_type: "application/json"
             }
         });
         
-        const propertySuggest = propertySuggestResults.data.suggest.propertySuggest[0].options;
+        const propertyURL = new URL("property", domainName);
+        const propertySuggest = results.data.suggest.propertySuggest[0].options;
         response.propertySuggest = propertySuggest.map((property) => {
             return {
-                PK: new URL("property/" + property._id, domainName),
+                PK: new URL(property._id, propertyURL),
                 address: property._source.address1 + " " + property._source.address2 
             };
         });
         
-        
-        const citySuggestResults = await axios.get( elasticSearch + "estate/_search",{ 
-            params:{
-                source: JSON.stringify(cityQuery),
-                source_content_type: "application/json"
-            }
-        });
-        
-        const citySuggest = citySuggestResults.data.suggest.citySuggest[0].options;
+        const cityURL = new URL("city", domainName);
+        const citySuggest = results.data.suggest.citySuggest[0].options;
         response.citySuggest = citySuggest.map((city) => {
             return {
-                cityId: new URL("filter/" + city._source.cityId, domainName),
+                cityId: new URL(city._source.cityId, cityURL),
                 city: city._source.city
             };
         });
-            
-        const zipCodeSuggestResults = await axios.get( elasticSearch + "estate/_search",{ 
-            params:{
-                source: JSON.stringify(zipCodeQuery),
-                source_content_type: "application/json"
-            }
-        });
         
-        const zipCodeSuggest = zipCodeSuggestResults.data.suggest.zipCodeSuggest[0].options;
+        const zipCodeURL = new URL("zipCode", domainName);
+        const zipCodeSuggest = results.data.suggest.zipCodeSuggest[0].options;
         response.zipCodeSuggest = zipCodeSuggest.map((zipCode) => {
             return{
-                zipCodeId: new URL("filter/" + zipCode._source.zipCode, domainName),
+                zipCodeId: new URL(zipCode._source.zipCode, zipCodeURL),
                 zipCode: zipCode._source.zipCode
-            }
+            };
         });
-        
-        res.status(200)
+            
+        res.status(200);
         return response;
     
     }catch (error) {

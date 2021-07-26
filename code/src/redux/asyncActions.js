@@ -1,21 +1,19 @@
 import axios from"axios";
 
 import { 
-    fetchPropertiesSucceeded,
-    fetchFilterPropertiesSucceeded,
-    fetchPropertySucceeded,
+    fetchEstatesSucceeded,
+    fetchEstateSucceeded,
     fetchStarted,
     fetchFailed
 } from "./actions";
 
-const api = "https://quietavenue.com/api/";
-
-export const fetchProperties = () => { 
+export const fetchEstates = (endPoint, groupId) => {
+    const endPointURL = new URL("api/query/" + endPoint, "https://quietavenue.com");
     return async (dispatch) => {
         dispatch(fetchStarted());
         try {
-            const response = await axios.get( api + "all" );
-            dispatch(fetchPropertiesSucceeded(response.data));
+            const response = await axios.get( endPointURL.href );
+            dispatch(fetchEstatesSucceeded(dispatch, groupId, response));
         }
         catch(error) {
             dispatch(fetchFailed(error));
@@ -23,30 +21,13 @@ export const fetchProperties = () => {
     };
 };
 
-export const fetchFilteredProperties = (city) => { 
+export const fetchEstate = (estateId) => {
+    const endPointURL = new URL("api/estate/" + estateId, "https://quietavenue.com");
     return async (dispatch) => {
         dispatch(fetchStarted());
         try {
-            const response = await axios.get( api + "filter?city=" + city );
-            dispatch(fetchFilterPropertiesSucceeded(response.data, city));
-        }
-        catch(error) {
-            dispatch(fetchFailed(error));
-        }
-    };
-};
-
-export const fetchProperty = (id) => {
-    return async (dispatch) => {
-        dispatch(fetchStarted());
-        try {
-            const response = await axios.get(api + "property/" + id );
-            try{
-                const graphData = await axios.get(response.data.graphDataLink);
-                response.data.dataPoints = graphData.data;
-            }catch(error){}
-            
-            dispatch(fetchPropertySucceeded(response.data, id));
+            const response = await axios.get( endPointURL.href );
+            dispatch(fetchEstateSucceeded(estateId, response.data, response.status));
         }
         catch(error) {
            dispatch(fetchFailed(error));

@@ -1,27 +1,39 @@
-import Properties from "./components/Properties";
-import PropertiesHeader from "./components/stateless/PropertiesHeader";
-import Property from "./components/Property";
-import filterProperties from "./components/filterProperties";
 import Root from "./components/stateless/Root";
+import Estate from "./components/Estate";
+import MainHeader from "./components/stateless/MainHeader";
+import Estates from "./components/Estates";
+import FilteredEstates from "./components/FilteredEstates";
+import FetchFail from "./components/stateless/FetchFail";
+import NotFound from "./components/stateless/NotFound";
 
 const Routes = [
     {
         component: Root,
         routes:[
             {
-                ...Property,
-                path: "/property/:id"
+                ...Estate,
+                path: "/estate/:estateId"
             },
             {
-                component: PropertiesHeader,
+                component: MainHeader,
                 path:"/",
                 routes:[
                     {
-                        ...filterProperties,
-                        path: "/filter"
+                        ...Estates,
+                        path: "/",
+                        exact: true
                     },
                     {
-                        ...Properties
+                        ...FilteredEstates,
+                        path: "/filter/:filter/:groupId"
+                    },
+                    {
+                        component: FetchFail,
+                        path: "/fetchFail"
+                    },
+                    
+                    {
+                        component: NotFound
                     }
                 ]
             }
@@ -30,5 +42,3 @@ const Routes = [
 ];
 
 export default Routes;
-
- 

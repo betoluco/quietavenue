@@ -1,75 +1,56 @@
 import { 
-    FETCH_PROPERTIES_SUCCEEDED,
-    FETCH_FILTER_PROPERTIES_SUCCEEDED,
-    FETCH_PROPERTY_SUCCEEDED,
+    FETCH_ESTATES_SUCCEEDED,
+    FETCH_ESTATE_SUCCEEDED,
     FETCH_STARTED,
     FETCH_FAILED
 } from "./actionTypes";
 
 const reducers = (state, action) => {
+    function copy (obj) {
+    // Get object type
+        let type = Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
     
-    const listOfObjects = list => {
-        const newList = list.map( (obj) =>{
-            return {
-                ...obj
-            };
-        });
-        return newList;
-    };
-    
-    const cities = Object.fromEntries(
-        Object.entries(state.cities).map( ([key, value], i) =>{
-            return [key, listOfObjects(value)];
-        })
-    );
-            
-    const properties = Object.fromEntries(
-        Object.entries(state.properties).map( ([key, value], i) =>{
-            if(value.hasOwnProperty("dataPoints")){
-                return [
-                    key,
-                    {
-                    ...value,
-                    dataPoints:listOfObjects(value.dataPoints),
-                    recodredDays:[ ...value.recodredDays ]
-                    }
-                ];
-            }else{
-                return [key, {...value}];
-                
+        function cloneObj () {
+            let clone = {};
+            for (let key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    clone[key] = copy(obj[key]);
+                }
             }
-        })
-    );
+            return clone;
+        }
     
-    const newState = {
-        ...state,
-        ALL_PROPERTIES: listOfObjects(state.ALL_PROPERTIES),
-        cities: cities,
-        properties: properties
-    };
+        function cloneArr () {
+            return obj.map(function (item) {
+                return copy(item);
+            });
+        }
+
+        if (type === 'object') return cloneObj();
+        if (type === 'array') return cloneArr();
+        return obj;
+    }
+    
+    const newState = copy(state);
     
     switch (action.type) {
-        case FETCH_PROPERTIES_SUCCEEDED: {
+        case FETCH_ESTATES_SUCCEEDED: {
             return {
                 ...newState,
-                ALL_PROPERTIES: [...action.properties]
+                [action.groupId]:action.data,
+                statusCode: action.statusCode
             };
         }
         
-        case FETCH_FILTER_PROPERTIES_SUCCEEDED: {
-            return {
-                ...newState,
-                cities: {...state.cities, [action.city]: [...action.properties]}
-            };
-        }
-        
-        case FETCH_PROPERTY_SUCCEEDED: {
-            return {
-                ...newState,
-                properties:{...state.properties, [action.id]: action.property
-                    
-                }
-            };
+        case FETCH_ESTATE_SUCCEEDED: {
+            if (!state.hasOwnProperty(action.estateId)){
+                return {
+                    ...newState,
+                    [action.estateId]: action.data,
+                    statusCode: action.statusCode
+                };
+            }
+            return state;
         }
         
         case FETCH_STARTED: {

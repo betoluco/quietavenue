@@ -1,35 +1,34 @@
 import { 
-    FETCH_PROPERTIES_SUCCEEDED,
-    FETCH_FILTER_PROPERTIES_SUCCEEDED,
-    FETCH_PROPERTY_SUCCEEDED,
-    FETCH_STARTED,
-    FETCH_FAILED
+    FETCH_ESTATES_SUCCEEDED,
+    FETCH_ESTATE_SUCCEEDED,
+    FETCH_GRAPH_SUCCEEDED,
+    FETCH_FAILED,
+    FETCH_STARTED
 } from "./actionTypes";
 
 
-export const fetchPropertiesSucceeded = (properties) => {
+export const fetchEstatesSucceeded = (dispatch, groupId, response) => {
+    const estatesArray = response.data.map( estate =>{
+        dispatch(fetchEstateSucceeded(estate.id, estate));
+        return estate.id;
+    });
+    
     return {
-      type: FETCH_PROPERTIES_SUCCEEDED,
-      properties:properties,
+        type: FETCH_ESTATES_SUCCEEDED,
+        groupId: groupId,
+        data: estatesArray,
+        statusCode: response.status
     };
 };
 
-export const fetchFilterPropertiesSucceeded = (properties, city) => {
+export const fetchEstateSucceeded = (estateId, data, status=200) => {
     return {
-      type: FETCH_FILTER_PROPERTIES_SUCCEEDED,
-      properties:properties,
-      city: city
+      type: FETCH_ESTATE_SUCCEEDED,
+      estateId: estateId,
+      data: data,
+      statusCode: status
     };
 };
-
-export const fetchPropertySucceeded = (property, id) => {
-    return {
-      type: FETCH_PROPERTY_SUCCEEDED,
-      property: property,
-      id: id
-    };
-};
-
 
 export const fetchStarted = () => {
     return { type: FETCH_STARTED };
@@ -51,3 +50,4 @@ export const fetchFailed = (error) => {
         console.log('Error', error.message);
     }
 };
+

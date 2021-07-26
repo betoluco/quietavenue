@@ -12,4 +12,4 @@ const FetchFail = props =>{
     );
 };
 
-export default FetchFail
+export default FetchFail;
