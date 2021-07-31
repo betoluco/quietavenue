@@ -1,24 +1,27 @@
-import React, { Fragment } from "react";
-import searchButton from "../../images/searchButtonIcon.svg"
+import React from "react";
+import searchButton from "../../images/searchButtonIcon.svg";
 
 const SearchInput = props =>{
   return (
-    <Fragment>
-      <form className="flex flex-row justify-center pb-6 ">
+    <div className="flex flex-row justify-center">
+      <form className="flex flex-row w-4/5 md:w-3/6 lg:w-2/5 pb-6">
         <input 
-        className="Suggest__input"
-        type="search" 
-        onChange={props.onChangeHandler} 
+        className="w-full p-2 rounded "
+        onChange={props.onChangeHandler}
+        onBlur={props.onBlurHandler}
+        onFocus={props.onFocusHandler}
         value={props.userInput}/>
         <img 
         src={searchButton}
         alt="search button"
-        className="Suggest__image"/>
+        className="-ml-5"/>
       </form>
-      <ul className="Suggest__list">
-        {props.suggest}
+      <ul 
+      style={{backgroundImage: `url(${headerImage})`}}
+      className="absolute w-4/5 md:w-3/6 lg:w-2/5 bg-white rounded">
+        {props.suggests}
       </ul>
-    </Fragment>
+    </div>
   );
 };
 

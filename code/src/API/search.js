@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { domainName, elasticSearch} from "./urls";
+import { elasticSearch } from "./urls";
 
 const search = async (req, res) =>{
     let response = {
@@ -42,29 +42,26 @@ const search = async (req, res) =>{
             }
         });
         
-        const propertyURL = new URL("property", domainName);
         const propertySuggest = results.data.suggest.propertySuggest[0].options;
         response.propertySuggest = propertySuggest.map((property) => {
             return {
-                PK: new URL(property._id, propertyURL),
+                PK: "/estate/" + property._id,
                 address: property._source.address1 + " " + property._source.address2 
             };
         });
         
-        const cityURL = new URL("city", domainName);
         const citySuggest = results.data.suggest.citySuggest[0].options;
         response.citySuggest = citySuggest.map((city) => {
             return {
-                cityId: new URL(city._source.cityId, cityURL),
+                cityId: "/filter/cityId/" + city._source.cityId,
                 city: city._source.city
             };
         });
         
-        const zipCodeURL = new URL("zipCode", domainName);
         const zipCodeSuggest = results.data.suggest.zipCodeSuggest[0].options;
         response.zipCodeSuggest = zipCodeSuggest.map((zipCode) => {
             return{
-                zipCodeId: new URL(zipCode._source.zipCode, zipCodeURL),
+                zipCodeId: "/filter/zipCode/" + zipCode._source.zipCode,
                 zipCode: zipCode._source.zipCode
             };
         });

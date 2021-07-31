@@ -16,7 +16,9 @@ const MainHeader = ({ route }) =>{
           <h1 className="text-2xl text-white pl-2">QuietAvenue</h1>
         </Link>
           
-        <h2 className="flex flex-row justify-center text-center text-white mb-16">
+        <h2 
+        className="flex flex-row justify-center text-center text-white mb-16 text-lg"
+        style={{textShadow: "2px 2px 4px #000000"}}>
           See and hear what goes on in front <br /> of your future home
         </h2>
         <Search />

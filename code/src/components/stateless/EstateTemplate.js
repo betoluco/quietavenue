@@ -4,11 +4,6 @@ import EstateHeader from "./EstateHeader";
 import Graph from "../Graph";
 
 const EstateTemplate = (props) => {
-    let graph = <p>No graph</p>
-    if( props.estate.hasOwnProperty("graphData")){
-        console.log(props.estate)
-        graph = <Graph dataPoints={props.estate.graphData} />
-    }
     return (
         <React.Fragment>
             <EstateHeader />
@@ -23,7 +18,9 @@ const EstateTemplate = (props) => {
             {props.estate.videoLink &&
                 <Vimeo iframeSRC={props.estate.videoLink} />
             }
-            {graph}
+            {props.estate.graphData &&
+                <Graph dataPoints={props.estate.graphData} />
+            }
         </React.Fragment>
     );
 };
