@@ -2,8 +2,8 @@ import React from "react";
 
 const Vimeo = props => {
   return(
-    <div>
-      <div className="md:w-3/4" style={{padding:"56.25% 0 0 0", position:"relative"}}>
+    <div className="flex flex-row justify-center">
+      <div className="w-full" style={{padding:"56.25% 0 0 0", position:"relative"}}>
         <iframe 
           src={props.iframeSRC} 
           frameBorder="0" 

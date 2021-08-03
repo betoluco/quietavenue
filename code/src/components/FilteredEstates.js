@@ -5,6 +5,8 @@ import { Redirect } from "react-router-dom";
 
 import { fetchEstates } from "../redux/asyncActions";
 import EstatesTemplate from "./stateless/EstatesTemplate";
+import InternalServerError from "./stateless/InternalServerError";
+import Spinner from "./stateless/Spinner";
 
 const Estates = (props) =>{
     const groupId = props.match.params.groupId;
@@ -19,13 +21,7 @@ const Estates = (props) =>{
     }, []);
     
     if (statusCode === 500 ) {
-        return (
-            <div className="flex flex-col items-center">
-                <h1 className="text-2xl mb-2">Something went wrong!</h1>
-                <h2 className="text-lg">Check your internet connection</h2>
-                <h2 className="text-lg">try refreshing the page</h2>
-            </div>
-        );
+        return <InternalServerError />;
     }
     
     if (statusCode === 404 ) {
@@ -36,7 +32,7 @@ const Estates = (props) =>{
         return <EstatesTemplate estates={estates} filter={filter}/>;
     }
     
-    return <div className="">Loading...</div>;
+    return <Spinner/>;
 };
 
 const loadData = (store, req) => {

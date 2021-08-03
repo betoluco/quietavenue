@@ -10,7 +10,7 @@ import Graph from "../Graph";
 const EstateTemplate = (props) => {
   return (
     <React.Fragment>
-      <header className="border-b border-gray-300 m-2 mb-10">
+      <header className="border-b border-green-100 m-2 mb-10">
         <div className="flex flex-row justify-between mb-6">
           <BackArrow />
           <Link className="flex flex-row items-center" to="/">
@@ -21,7 +21,7 @@ const EstateTemplate = (props) => {
         </div>
         <Search />
       </header>
-      <div className="flex flex-row flex-wrap items-center justify-center mb-10">
+      <div className="flex flex-row flex-wrap items-center justify-center mb-6">
         <img 
         src={props.estate.profilePicture} 
         alt="Property" 
