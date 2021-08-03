@@ -7,9 +7,7 @@ const getGraphData = async (graphDataLink) =>{
         Bucket: "quietavenue.com", 
         Key: graphDataLink, 
     };
-    console.log("getGraphData");
     const response = await s3.getObject(s3params).promise();
-    console.log("response", response)
     return JSON.parse(response.Body.toString('utf-8'));
 };
 

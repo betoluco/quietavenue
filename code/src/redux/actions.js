@@ -35,7 +35,7 @@ export const fetchStarted = () => {
 };
 
 export const fetchFailed = (error) => {
-    if (error.hasOwnProperty("response")) {
+    if (error.response) {
         return {
             type: FETCH_FAILED,
             statusCode: error.response.status

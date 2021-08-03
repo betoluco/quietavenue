@@ -3,7 +3,7 @@ import { renderRoutes } from "react-router-config";
 import { Link } from "react-router-dom";
 
 import Search from "../Search";
-import logo from "../../images/quietavenueLogo.svg";
+import logo from "../../images/quietavenueLogoWhite.svg";
 import headerImage from  "../../images/headerImage.jpeg";
 
 const MainHeader = ({ route }) =>{
@@ -12,8 +12,8 @@ const MainHeader = ({ route }) =>{
     <Fragment>
       <header className="mb-6" style={{backgroundImage: `url(${headerImage})`}}>
         <Link className="flex flex-row items-center p-2 mb-16" to="/">
-          <img src={logo} alt="logo" className="h-8"/>
-          <h1 className="text-2xl text-white pl-2">QuietAvenue</h1>
+          <img src={logo} alt="logo" className="h-10"/>
+          <h1 className="text-3xl text-white pl-2">QuietAvenue</h1>
         </Link>
           
         <h2 

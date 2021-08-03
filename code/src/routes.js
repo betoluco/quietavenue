@@ -3,7 +3,6 @@ import Estate from "./components/Estate";
 import MainHeader from "./components/stateless/MainHeader";
 import Estates from "./components/Estates";
 import FilteredEstates from "./components/FilteredEstates";
-import FetchFail from "./components/stateless/FetchFail";
 import NotFound from "./components/stateless/NotFound";
 
 const Routes = [
@@ -25,13 +24,9 @@ const Routes = [
                     },
                     {
                         ...FilteredEstates,
-                        path: "/filter/:filter/:groupId"
+                        path: "/filter/:filter/:groupId",
+                        exact: true
                     },
-                    {
-                        component: FetchFail,
-                        path: "/fetchFail"
-                    },
-                    
                     {
                         component: NotFound
                     }
