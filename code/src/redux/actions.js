@@ -1,7 +1,6 @@
 import { 
     FETCH_ESTATES_SUCCEEDED,
     FETCH_ESTATE_SUCCEEDED,
-    FETCH_GRAPH_SUCCEEDED,
     FETCH_FAILED,
     FETCH_STARTED
 } from "./actionTypes";

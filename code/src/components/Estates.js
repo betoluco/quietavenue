@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect } from "react-router-dom";
 
 import { fetchEstates } from "../redux/asyncActions";
 import EstatesTemplate from "./stateless/EstatesTemplate";

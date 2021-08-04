@@ -5,7 +5,6 @@ import leftArrow from "../../images/leftArrow.svg";
 
 const BackArrow = (props) => {
     const history = useHistory();
-    console.log(history)
     
     const onClickHandler = event =>{
         if(history.length > 0){
