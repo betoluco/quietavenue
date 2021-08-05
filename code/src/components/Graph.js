@@ -26,7 +26,7 @@ const Graph = props =>{
         .style("font-size","1.4rem")
         .call(xAxis);
         const gY = select(yAxisRef.current)
-        .style("font-size","1.6")
+        .style("font-size","1.7rem")
         .call(yAxis);
         
         const graphZoom = zoom()
@@ -38,7 +38,7 @@ const Graph = props =>{
         });
         
         select(graph.current).call(graphZoom);
-    },);
+    }, []);
     
         
     const firstDay = timeDay.floor(new Date(props.dataPoints[0].startTime));
