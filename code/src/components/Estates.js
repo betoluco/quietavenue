@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import ReactGA from "react-ga";
 
 import { fetchEstates } from "../redux/asyncActions";
 import EstatesTemplate from "./stateless/EstatesTemplate";
@@ -7,13 +8,14 @@ import InternalServerError from "./stateless/InternalServerError";
 import Spinner from "./stateless/Spinner";
 
 const Estates = (props) =>{
-    const groupId = "allProperties";
+    const groupId = "allEstates";
     const endPoint = "match_all/" + groupId; 
     const dispatch = useDispatch();
     const estates = useSelector( state => state.[groupId] );
     const statusCode = useSelector( state => state.statusCode );
     
     useEffect( () => {
+        ReactGA.pageview(window.location.pathname);
         if ( estates === undefined ) dispatch( fetchEstates(endPoint, groupId) );
     }, []);
     
@@ -29,7 +31,7 @@ const Estates = (props) =>{
 };
 
 const loadData = (store, req) => {
-    const groupId = "allProperties";
+    const groupId = "allEstates";
     const endPoint =  "match_all/" + groupId;
     return store.dispatch( fetchEstates(endPoint, groupId) );
 };

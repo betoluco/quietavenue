@@ -19,6 +19,7 @@
     "express": "^4.17.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-ga": "^3.3.0",
     "react-redux": "^7.2.2",
     "react-router-config": "^5.1.1",
     "react-router-dom": "^5.2.0",
@@ -36,7 +37,7 @@
     "clear-assets": "aws s3 rm s3://quietavenue.com/assets/dist --recursive",
     "upload-assets": "aws s3 cp dist s3://quietavenue.com/assets/dist --recursive",
     "clientBuild": "npm run clear-old-clientBuild && npm run upload-clientBuild",
-    "clear-old-clientBuild":"aws s3 rm s3://quietavenuerawfiles/!quietavenueAssets/dist/ --recursive",
+    "clear-old-clientBuild": "aws s3 rm s3://quietavenuerawfiles/!quietavenueAssets/dist/ --recursive",
     "upload-clientBuild": "aws s3 cp clientBuild s3://quietavenuerawfiles/!quietavenueAssets/dist/ --recursive",
     "remove-old-files": "rm -r clientBuild dist serverBundle.js.LICENSE.txt",
     "test": "mocha tests/unit/"
