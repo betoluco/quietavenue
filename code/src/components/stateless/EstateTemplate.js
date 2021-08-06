@@ -21,7 +21,7 @@ const EstateTemplate = (props) => {
         </div>
         <Search />
       </header>
-      <div className="bg-gray-100 p-2 pt-7 mb-8" >
+      <div className="bg-gray-300 border-t-2 border-green-400 p-2 pt-7 mb-8" >
         <div className="flex flex-row flex-wrap items-center justify-center mb-4">
           <img 
           src={props.estate.profilePicture} 

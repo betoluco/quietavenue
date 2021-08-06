@@ -114,8 +114,10 @@ const Graph = props =>{
                     <g ref={xAxisRef} transform={`translate(0, ${height - margin.bottom})`}/>
                 </svg>
             </div>
-            <div className="flex flex-row justify-center m-2 mb-8">
-                <AudioPlayer  audioFile={mp3Link}/>
+            <div className="flex flex-row justify-center  mb-8">
+                <div className="border-4 border-gray-800 rounded-full">
+                    <AudioPlayer audioFile={mp3Link}/>
+                </div>
             </div>
         </Fragment>
     );

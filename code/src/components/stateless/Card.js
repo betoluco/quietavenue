@@ -10,7 +10,7 @@ const Card = props =>{
     <div className="shadow-md border-b-2 border-green-600" key={estate.id}>
       <Link to={link}>
         <img 
-        className="w-full h-4/5 object-cover" 
+        className="w-full h-64 object-cover" 
         src={estate.profilePicture} 
         alt="Estate" />
         <div className="m-2">
