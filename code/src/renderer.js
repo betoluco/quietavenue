@@ -6,8 +6,8 @@ import serializer from "serialize-javascript";
 import { Provider } from "react-redux";
 
 import routes from "./routes";
-import rehydrationBundle from "../clientBuild/clientBundle.js"
-import css from "../clientBuild/main.css"
+import rehydrationBundle from "../clientBuild/clientBundle.js";
+import css from "../clientBuild/main.css";
 
 const renderer = (req, store, context) => {
     const content = ReactDOMServer.renderToString(

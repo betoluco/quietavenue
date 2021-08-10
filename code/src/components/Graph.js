@@ -9,7 +9,7 @@ import { zoom } from "d3-zoom";
 import AudioPlayer from "./stateless/AudioPlayer";
 
 const Graph = props =>{
-    const margin = { top: 10, right: 10, bottom: 35, left: 100 },
+    const margin = { top: 10, right: 10, bottom: 35, left: 98},
     width = 843, //16:9 screen ratio
     height = 1500,
     colorRange = ["#005bab", "#ff1100"];
@@ -89,8 +89,40 @@ const Graph = props =>{
     });
     
     return (
-        <Fragment>
-            <div className="flex flex-row justify-center mb-8">
+        <div className="">
+            <div className="flex flex-row justify-center mb-5">
+                <div 
+                style={{width:"320px"}}
+                className="flex flex-col">
+                    <div className="flex flex-row">
+                        <div 
+                        className="w-full" 
+                        style={{backgroundColor: "#2A00D5", height:"20px"}}>
+                        </div>
+                        <div
+                        className="w-full"
+                        style={{backgroundColor: "#63009E", height:"20px"}}>
+                        </div>
+                        <div
+                        className="w-full"
+                        style={{backgroundColor: "#A1015D", height:"20px"}}>
+                        </div>
+                        <div 
+                        className="w-full"
+                        style={{backgroundColor: "#D80027", height:"20px"}}>
+                        </div>
+                        <div 
+                        className="w-full"
+                        style={{backgroundColor: "#FE0002", height:"20px"}}>
+                        </div>
+                    </div>
+                    <div className="flex flex-row justify-between">
+                        <h4 className="">low</h4>
+                        <h4 className="">High</h4>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-row justify-center mb-5">
                 <svg 
                 ref={graph}
                 height="95vh"
@@ -114,12 +146,12 @@ const Graph = props =>{
                     <g ref={xAxisRef} transform={`translate(0, ${height - margin.bottom})`}/>
                 </svg>
             </div>
-            <div className="flex flex-row justify-center  mb-8">
+            <div className="flex flex-row justify-center">
                 <div className="border-4 border-gray-800 rounded-full">
                     <AudioPlayer audioFile={mp3Link}/>
                 </div>
             </div>
-        </Fragment>
+        </div>
     );
 };
 
