@@ -19,7 +19,7 @@ const SearchInput = props =>{
         className="-ml-6"/>
       </form>
       <ul 
-      style={{marginTop: "41px"}}
+      style={{marginTop: "45px"}}
       className="absolute w-4/5 md:w-3/6 lg:w-2/5 bg-white rounded">
         {props.suggests}
       </ul>

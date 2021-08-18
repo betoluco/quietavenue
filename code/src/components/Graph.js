@@ -69,21 +69,16 @@ const Graph = props =>{
     // Creates the rectagles used in the graph
     const rects = props.dataPoints.map( (point, index) =>{
         const startTime = new Date(point.startTime);
-        const stopTime = new Date(point.stopTime);
         const xPosition = xScale(timeDay.floor(startTime));
         today.setHours(startTime.getHours(), startTime.getMinutes(), startTime.getSeconds(), 0);
-        const yStartPosition = yScale(today);
-        today.setHours(stopTime.getHours(), stopTime.getMinutes(), stopTime.getSeconds(), 0);
-        const yStopPosition = yScale(today);
-        let height = yStartPosition - yStopPosition;
-        height = Math.ceil(height);
+        const yPosition = yScale(today);
         
         return <rect 
         key={point.mp3Link}
         width={xScale.bandwidth()}
-        height={height}
+        height="1"
         x={xPosition} 
-        y={yStopPosition}
+        y={yPosition}
         fill={colorScale(point.maxLoudness)}
         onClick={() => setmp3Link(point.mp3Link)}/>;
     });

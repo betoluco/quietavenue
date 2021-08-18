@@ -23,7 +23,7 @@ const Search = props =>{
         const zipCodeSuggest = response.data.zipCodeSuggest;
         
         suggestsList.push(
-          <li className="text-sm mx-2 border-b-2 border-green-600" 
+          <li className="text-sm mx-2 border-b-2 border-green-600 border-opacity-50" 
           key="porperty">
             Property
           </li>
@@ -44,7 +44,7 @@ const Search = props =>{
         }
         
         suggestsList.push(
-          <li className="text-sm mx-2 border-b-2 border-green-600" 
+          <li className="text-sm mx-2 border-b-2 border-green-600 border-opacity-50" 
           key="city">
             City
           </li>
@@ -65,7 +65,7 @@ const Search = props =>{
         }
         
         suggestsList.push(
-          <li className="text-sm mx-2 border-b-2 border-green-600" 
+          <li className="text-sm mx-2 border-b-2 border-green-600 border-opacity-50" 
           key="zipCode">
             zip code
           </li>

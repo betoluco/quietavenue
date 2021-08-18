@@ -8,6 +8,26 @@ const formatResults = async (estate, data) =>{
     estate.cityId = data.cityId || "NO-CITY";
     estate.zipCode = data.zipCode || "NO-ZIPCODE";
     
+    if (data.hasOwnProperty("audioDescription")) {
+        estate.audioDescription = data.audioDescription;
+    }
+    
+    if (data.hasOwnProperty("bathroom")) {
+        estate.bathroom = data.bathroom;
+    }
+    
+    if (data.hasOwnProperty("bedroom")) {
+        estate.bedroom = data.bedroom;
+    }
+    
+    if (data.hasOwnProperty("lotArea")) {
+        estate.lotArea = data.lotArea;
+    }
+    
+    if (data.hasOwnProperty("soundScore")) {
+        estate.soundScore = data.soundScore;
+    }
+    
     if (data.hasOwnProperty("profilePicture")) {
         const profilePicture = data.profilePicture || "assets/NoPicture.jpg";
         estate.profilePicture = new URL(profilePicture, domainName);
