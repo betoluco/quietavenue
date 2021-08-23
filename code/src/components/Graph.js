@@ -7,6 +7,7 @@ import { timeFormat } from "d3-time-format";
 import { zoom } from "d3-zoom";
 
 import AudioPlayer from "./stateless/AudioPlayer";
+import ColorScale from "./stateless/ColorScale";
 
 const Graph = props =>{
     const margin = { top: 10, right: 10, bottom: 35, left: 98},
@@ -21,6 +22,10 @@ const Graph = props =>{
     const [{ x, y, k }, setTransform] = useState({ x: 0, y: 0, k: 1 });
     const [mp3Link, setmp3Link] = useState("");
     
+    const onClickHandler = (link) =>{
+        setmp3Link(link);
+    };
+    
     useEffect(() =>{
         select(xAxisRef.current)
         .style("font-size","1.4rem")
@@ -30,7 +35,7 @@ const Graph = props =>{
         .call(yAxis);
         
         const graphZoom = zoom()
-        .scaleExtent([1, 9])
+        .scaleExtent([1, 18])
         .translateExtent([[0, 0], [width, height]])
         .on("zoom", (event) => {
             gY.call(yAxis.scale(event.transform.rescaleY(yScale)));
@@ -40,9 +45,12 @@ const Graph = props =>{
         select(graph.current).call(graphZoom);
     }, []);
     
+    const colorScale = scaleLinear()
+        .domain([0, 1])
+        .range(colorRange);
         
-    const firstDay = timeDay.floor(new Date(props.dataPoints[0].startTime));
-    const lastDay = timeDay.ceil(new Date(props.dataPoints[props.dataPoints.length - 1].startTime));
+    const firstDay = timeDay.floor(new Date(props.dataPoints[0].time));
+    const lastDay = timeDay.ceil(new Date(props.dataPoints[props.dataPoints.length - 1].time));
     const domainDays = timeDay.range(firstDay, lastDay);
     
     const xScale = scaleBand()
@@ -61,62 +69,42 @@ const Graph = props =>{
         .range([height - margin.bottom, margin.top]);
     
     const yAxis = axisLeft(yScale).tickFormat(timeFormat("%H:%M"));
-        
-    const colorScale = scaleLinear()
-        .domain([0, 1])
-        .range(colorRange);
-        
+    
     // Creates the rectagles used in the graph
     const rects = props.dataPoints.map( (point, index) =>{
-        const startTime = new Date(point.startTime);
-        const xPosition = xScale(timeDay.floor(startTime));
-        today.setHours(startTime.getHours(), startTime.getMinutes(), startTime.getSeconds(), 0);
+        const time = new Date(point.time);
+        const xPosition = xScale(timeDay.floor(time));
+        today.setHours(time.getHours(), time.getMinutes(), time.getSeconds(), 0);
         const yPosition = yScale(today);
         
-        return <rect 
-        key={point.mp3Link}
-        width={xScale.bandwidth()}
-        height="1"
-        x={xPosition} 
-        y={yPosition}
-        fill={colorScale(point.maxLoudness)}
-        onClick={() => setmp3Link(point.mp3Link)}/>;
+        if(mp3Link === point.mp3Link){
+            return <rect 
+            key={point.mp3Link}
+            width={xScale.bandwidth()}
+            height="1"
+            x={xPosition}
+            y={yPosition}
+            fill="green"
+            
+            onClick={() => onClickHandler(point.mp3Link)}
+            />
+        }else{
+            return <rect 
+            key={point.mp3Link}
+            width={xScale.bandwidth()}
+            height="1"
+            x={xPosition}
+            y={yPosition}
+            fill={colorScale(point.maxLoudness)}
+            onClick={() => onClickHandler(point.mp3Link)}
+            />;
+        }
+        
     });
     
     return (
         <div className="">
-            <div className="flex flex-row justify-center mb-5">
-                <div 
-                style={{width:"320px"}}
-                className="flex flex-col">
-                    <div className="flex flex-row">
-                        <div 
-                        className="w-full" 
-                        style={{backgroundColor: "#2A00D5", height:"20px"}}>
-                        </div>
-                        <div
-                        className="w-full"
-                        style={{backgroundColor: "#63009E", height:"20px"}}>
-                        </div>
-                        <div
-                        className="w-full"
-                        style={{backgroundColor: "#A1015D", height:"20px"}}>
-                        </div>
-                        <div 
-                        className="w-full"
-                        style={{backgroundColor: "#D80027", height:"20px"}}>
-                        </div>
-                        <div 
-                        className="w-full"
-                        style={{backgroundColor: "#FE0002", height:"20px"}}>
-                        </div>
-                    </div>
-                    <div className="flex flex-row justify-between">
-                        <h4 className="">low</h4>
-                        <h4 className="">High</h4>
-                    </div>
-                </div>
-            </div>
+            <ColorScale />
             <div className="flex flex-row justify-center mb-5">
                 <svg 
                 ref={graph}

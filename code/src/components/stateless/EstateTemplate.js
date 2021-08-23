@@ -31,9 +31,29 @@ const EstateTemplate = (props) => {
             {props.estate.address1+ " " + props.estate.address2}
           </h2>
         </div>
+        
         {props.estate.videoLink &&
           <Vimeo iframeSRC={props.estate.videoLink} />
         }
+        
+        {props.estate.soundScore &&
+          <div div className="flex flex-col items-center mb-4">
+            <h2 className="text-2xl">Noise Score</h2>
+            <h2 className="text-4xl bg-green-400 p-2 rounded-full">{props.estate.soundScore}</h2>
+          </div>
+        }
+          
+          {props.estate.audioDescription &&
+            <div div className="flex flex-col">
+              <h3>{props.estate.audioDescription}</h3>
+            </div>
+          }
+        
+        <ul>
+          {props.estate.audio &&
+            <li></li>
+          }
+        </ul>
         {props.estate.graphData &&
           <Graph dataPoints={props.estate.graphData} />
         }
