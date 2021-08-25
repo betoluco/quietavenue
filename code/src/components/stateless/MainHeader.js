@@ -23,7 +23,7 @@ const MainHeader = ({ route }) =>{
             <img src={logo} alt="logo" className="h-10"/>
             <h1 className="text-3xl text-white pl-2">QuietAvenue</h1>
           </Link>
-          <HamburgerMenu icon="#ffffff"/>
+          <HamburgerMenu color="#ffffff"/>
         </div>
         
         <h2 

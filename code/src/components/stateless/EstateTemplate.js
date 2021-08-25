@@ -6,6 +6,7 @@ import BackArrow from "./BackArrow";
 import Search from "../Search";
 import Vimeo from "./Vimeo";
 import Graph from "../Graph";
+import HamburgerMenu from "../HamburgerMenu";
 
 const EstateTemplate = (props) => {
   return (
@@ -17,7 +18,7 @@ const EstateTemplate = (props) => {
             <img src={logo} alt="logo" className="h-8"/>
             <h1 className="text-2xl text-green-600 pl-1">QuietAvenue</h1>
           </Link>
-          <div className="w-6"></div>
+          <HamburgerMenu color="#000000"/>
         </div>
         <Search />
       </header>
@@ -38,20 +39,36 @@ const EstateTemplate = (props) => {
         
         {props.estate.soundScore &&
           <div div className="flex flex-col items-center mb-4">
-            <h2 className="text-2xl">Noise Score</h2>
-            <h2 className="text-4xl bg-green-400 p-2 rounded-full">{props.estate.soundScore}</h2>
+            <h2 className="text-2xl mb-1">Noise Score</h2>
+            <h2 
+            className="text-4xl leading-9 bg-green-400 rounded-full"
+            style={{padding: "0.5rem 0.5rem 0.7rem 0.5rem"}}>
+              {props.estate.soundScore}
+            </h2>
+            <h3 className=" text-xl w-96 text-center">{props.estate.audioDescription}</h3>
+            <h3 className="text-center">Data extracter from audio graph</h3>
+            <button>See Audio graph</button>
           </div>
         }
-          
-          {props.estate.audioDescription &&
-            <div div className="flex flex-col">
-              <h3>{props.estate.audioDescription}</h3>
-            </div>
-          }
         
-        <ul>
-          {props.estate.audio &&
-            <li></li>
+        <div className="border-t-2 border-green-400 mt-8 mb-4 m-auto w-96"></div>
+        
+        {props.estate.price &&
+          <div div className="flex flex-row justify-center mb-4">
+            <h3 className=" text-center">{props.estate.price}</h3>
+          </div>
+        }
+        
+        
+        <ul className="flex space-x-4 justify-center mb-4">
+          {props.estate.bathroom &&
+            <li className="border-r-2 border-l-2 border-green-400 p-1">{props.estate.bathroom} bath</li>
+          }
+          {props.estate.bedroom &&
+            <li className="border-r-2 border-l-2 border-green-400 p-1">{props.estate.bedroom} bed</li>
+          }
+          {props.estate.lotArea &&
+            <li className="border-r-2 border-l-2 border-green-400 p-1">{props.estate.lotArea} sq.ft. lot</li>
           }
         </ul>
         {props.estate.graphData &&

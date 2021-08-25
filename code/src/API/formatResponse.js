@@ -28,6 +28,10 @@ const formatResults = async (estate, data) =>{
         estate.soundScore = data.soundScore;
     }
     
+    if (data.hasOwnProperty("price")) {
+        estate.price = data.price;
+    }
+    
     if (data.hasOwnProperty("profilePicture")) {
         const profilePicture = data.profilePicture || "assets/NoPicture.jpg";
         estate.profilePicture = new URL(profilePicture, domainName);
