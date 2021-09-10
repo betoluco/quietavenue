@@ -9,6 +9,7 @@ import Graph from "../Graph";
 import HamburgerMenu from "../HamburgerMenu";
 
 const EstateTemplate = (props) => {
+  
   return (
     <React.Fragment>
       <header className="m-2">
@@ -45,9 +46,13 @@ const EstateTemplate = (props) => {
             style={{padding: "0.5rem 0.5rem 0.7rem 0.5rem"}}>
               {props.estate.soundScore}
             </h2>
+          </div>
+        }
+        
+        {props.estate.audioDescription &&
+          <div className="flex space-x-4 justify-center">
             <h3 className=" text-xl w-96 text-center">{props.estate.audioDescription}</h3>
             <h3 className="text-center">Data extracter from audio graph</h3>
-            <button>See Audio graph</button>
           </div>
         }
         
@@ -71,9 +76,11 @@ const EstateTemplate = (props) => {
             <li className="border-r-2 border-l-2 border-green-400 p-1">{props.estate.lotArea} sq.ft. lot</li>
           }
         </ul>
+        
         {props.estate.graphData &&
           <Graph dataPoints={props.estate.graphData} />
         }
+        
       </div>
     </React.Fragment>
   );
