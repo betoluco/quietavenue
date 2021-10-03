@@ -1,58 +1,45 @@
 import React, { useRef, useEffect, useState } from "react";
-import { scaleBand, scaleTime, scaleLinear} from "d3-scale";
+import { scaleBand, scaleTime, scaleQuantize } from "d3-scale";
 import { timeDay } from "d3-time";
 import { axisBottom, axisLeft} from "d3-axis";
-import { select, pointers } from "d3-selection";
+import { select } from "d3-selection";
 import { timeFormat } from "d3-time-format";
-import { Transform } from "d3-zoom/src/transform";
+import { dispatch } from "d3-dispatch";
 
 import AudioPlayer from "./stateless/AudioPlayer";
 import ColorScale from "./stateless/ColorScale";
+import customZoom from "../customZoom";
+import Transform from "../Transform";
 
 const Graph = props =>{
   const margin = { top: 10, right: 10, bottom: 35, left: 98},
   width = 843, //16:9 screen ratio
   height = 1500,
-  colorRange = ["#005bab", "#ff1100"];
+  colorRange = ["#2A00D5", "#63009E", "#A1015D", "#D80027", "#FE0002"];
+  
+  const dispatchs = dispatch("zoom", "oneFinger");
   
   const xAxisRef = useRef();
   const yAxisRef = useRef();
   const graph = useRef();
 
-  const [dragging, setDragging] = useState(false);
-  const [coordinates, setCoordinates] = useState({ x: 0, y: 0 });
-  const [origin, setOrigin] = useState({ x: 0, y: 0 });
-  const [{ x, y, k }, setTransform] = useState({ x: 0, y: 0, k: 1 });
+  const [{ k, x, y }, setTransform] = useState({ k: 1, x: 0, y: 0 });
   const [mp3Link, setmp3Link] = useState("");
   
-  
+  //events
   const onClickHandler = (link) =>{
     setmp3Link(link);
   };
   
-  // const onMouseDownHandler = (event) =>{
-  //   console.log("mouseDown")
-  //   // Record our starting point.
-  //   setOrigin({ x: event.clientX, y: event.clientY });
-  //   setDragging(true);
-  // };
+  dispatchs.on("zoom", (event) => {
+    setTransform(event);
+    const transform = new Transform(event.k, event.x, event.y);
+    select(yAxisRef.current).call(yAxis.scale(transform.rescaleY(yScale)));
+  });
   
-  // const onMouseMoveHandler = (event) =>{
-  //   if (dragging) {
-  //     // Set state for the change in coordinates.
-  //     setCoordinates({
-  //       x: event.clientX - origin.x,
-  //       y: event.clientY - origin.y,
-  //     });
-      
-  //     const transform = new Transform(1, 0, coordinates.y);
-  //     select(yAxisRef.current).call(yAxis.scale(transform.rescaleY(yScale)));
-  //   }
-  // };
-  
-  // const onMouseUpHandler = (event) =>{
-  //   setDragging(false);
-  // };
+  dispatchs.on("oneFinger", (event) =>{
+    console.log("oneFinger")
+  });
   
   useEffect(() =>{
     select(xAxisRef.current)
@@ -63,34 +50,10 @@ const Graph = props =>{
     .style("font-size","1.7rem")
     .call(yAxis);
     
-    select(graph.current)
-    .on("mousedown touchstart", (event) => {
-      event.preventDefault();
-      const t = pointers(event);
-      setOrigin({ x:t[0], y:t[1] });
-      setDragging(true);
-    })
-    .on("mouseup touchend", (event) => {
-      event.preventDefault();
-      setDragging(false);
-    })
-    .on("mousemove", (event) => {
-      console.log("MouseMove", dragging)
-      if (dragging) {
-        const t = pointers(event);
-        console.log(t)
-        setCoordinates({
-          x: t[0] - origin.x,
-          y: t[1] - origin.y,
-        });
-        
-        const transform = new Transform(1, 0, coordinates.y);
-        select(yAxisRef.current).call(yAxis.scale(transform.rescaleY(yScale)));
-      }
-    })
+    select(graph.current).call(customZoom, dispatchs);
   }, []);
   
-  const colorScale = scaleLinear()
+  const colorScale = scaleQuantize()
     .domain([0, 1])
     .range(colorRange);
       
@@ -145,11 +108,8 @@ const Graph = props =>{
   });
   
   return (
-    <div className="">
+    <div className="mb-40">
       <ColorScale />
-      {/*<div className="border-4 border-gray-800 rounded-full -mb-40">
-          <AudioPlayer audioFile={mp3Link}/>
-      </div>*/}
       <div className="flex flex-row justify-center mb-5">
         <svg 
         ref={graph}
@@ -165,12 +125,17 @@ const Graph = props =>{
           </clipPath>
           <g ref={yAxisRef} transform={`translate(${margin.left}, 0)`}/>
             <g clipPath="url(#dataClip)">
-              <g transform={`translate(0, ${coordinates.y}) scale(1, ${k})`}>
+              <g transform={`translate(0, ${y}) scale(1, ${k})`}>
                 {rects}
               </g>
             </g>
           <g ref={xAxisRef} transform={`translate(0, ${height - margin.bottom})`}/>
         </svg>
+      </div>
+      <div className="flex flex-row justify-center">
+        <div className="border-4 border-gray-800 bg-gray-800">
+          <AudioPlayer audioFile={mp3Link}/>
+        </div>
       </div>
     </div>
   );

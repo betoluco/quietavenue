@@ -33,31 +33,6 @@ const EstateTemplate = (props) => {
             {props.estate.address1+ " " + props.estate.address2}
           </h2>
         </div>
-        
-        {props.estate.videoLink &&
-          <Vimeo iframeSRC={props.estate.videoLink} />
-        }
-        
-        {props.estate.soundScore &&
-          <div div className="flex flex-col items-center mb-4">
-            <h2 className="text-2xl mb-1">Noise Score</h2>
-            <h2 
-            className="text-4xl leading-9 bg-green-400 rounded-full"
-            style={{padding: "0.5rem 0.5rem 0.7rem 0.5rem"}}>
-              {props.estate.soundScore}
-            </h2>
-          </div>
-        }
-        
-        {props.estate.audioDescription &&
-          <div className="flex space-x-4 justify-center">
-            <h3 className=" text-xl w-96 text-center">{props.estate.audioDescription}</h3>
-            <h3 className="text-center">Data extracter from audio graph</h3>
-          </div>
-        }
-        
-        <div className="border-t-2 border-green-400 mt-8 mb-4 m-auto w-96"></div>
-        
         {props.estate.price &&
           <div div className="flex flex-row justify-center mb-4">
             <h3 className=" text-center">{props.estate.price}</h3>
@@ -76,6 +51,28 @@ const EstateTemplate = (props) => {
             <li className="border-r-2 border-l-2 border-green-400 p-1">{props.estate.lotArea} sq.ft. lot</li>
           }
         </ul>
+        
+        {props.estate.videoLink &&
+          <Vimeo iframeSRC={props.estate.videoLink} />
+        }
+        
+        {props.estate.soundScore &&
+          <div div className="flex flex-col items-center mb-4">
+            <h2 className="text-2xl mb-1">Noise Score</h2>
+            <h2 
+            className="text-4xl leading-9 bg-green-400 rounded-full"
+            style={{padding: "0.5rem 0.5rem 0.7rem 0.5rem"}}>
+              {props.estate.soundScore}
+            </h2>
+          </div>
+        }
+        
+        {props.estate.audioDescription &&
+          <div className="flex flex-col items-center space-x-4 ">
+            <h3 className=" text-xl w-96 text-center mb-4">{props.estate.audioDescription}</h3>
+            <h3 className="text-center">Data extracter from audio graph</h3>
+          </div>
+        }
         
         {props.estate.graphData &&
           <Graph dataPoints={props.estate.graphData} />

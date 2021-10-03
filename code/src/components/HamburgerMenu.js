@@ -39,17 +39,17 @@ const HamburgerMenu = props =>{
               </div>
             </li>
             <li 
-            className="mb-2 text-base" 
+            className="mb-2 text-base hover:bg-green-200" 
             onMouseDown={() => onMouseDownHandler("/")}>
               Home
             </li>
             <li 
-            className="mb-2 text-base"
+            className="mb-2 text-base hover:bg-green-200"
             onMouseDown={() => onMouseDownHandler("/")}>
               For Agents
             </li>
             <li 
-            className="mb-10 text-base"
+            className="mb-10 text-base hover:bg-green-200"
             onMouseDown={() => onMouseDownHandler("/")}>
               For Prospective Buyers
             </li>

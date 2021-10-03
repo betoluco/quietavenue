@@ -15,7 +15,7 @@ const search = async (req, res) =>{
                 "propertySuggest" : {
                     "prefix" : req.query.search, 
                     "completion": { 
-                        "field" : "propertySuggest" 
+                        "field" : "estateSuggest" 
                     }
                 },
                 "citySuggest" : {
