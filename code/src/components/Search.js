@@ -1,91 +1,70 @@
-import React, {useState, useEffect } from "react";
+import React, {useState, useEffect, Fragment } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios"; 
 
-import SearchInput from "./stateless/SearchInput";
+import searchButton from "../images/searchButtonIcon.svg";
+import SuggestType from "./stateless/SuggestType";
+import Suggestion from "./stateless/Suggestion";
 
 const Search = props =>{
   const history = useHistory();
   const [searchInputText, setSearchInputText] = useState("");
-  const [suggests, setSuggest] = useState([]);
-  const [focus, setFocus] = useState(false);
+  const [suggest, setSuggest] = useState([]);
   
   useEffect(() => {
     const getData = async () => {
-      const suggestsList = [];
-      
-      if (searchInputText.length > 1 && searchInputText.length < 200 && focus){ //avoid attacks by input overload
-        const response = await axios(
-          "https://quietavenue.com/api/search?search=" + searchInputText 
-        );
+      if (searchInputText.length > 1 && searchInputText.length < 200){ //avoid attacks by input overload
+        const response = await axios("https://quietavenue.com/api/search?search=" + searchInputText );
+        
         const propertySuggest = response.data.propertySuggest;
         const citySuggest = response.data.citySuggest;
         const zipCodeSuggest = response.data.zipCodeSuggest;
+        let suggestList = [];
         
-        suggestsList.push(
-          <li className="text-sm mx-2 border-b-2 border-green-600 border-opacity-50" 
-          key="porperty">
-            Property
-          </li>
-        );
         if(propertySuggest.length){
+          suggestList.push(<SuggestType type="Property" />);
           propertySuggest.forEach(property =>{
-            suggestsList.push(
-              <li
-              onMouseDown={() => onMouseDownHandler(property.PK)}
-              className="text-lg m-1 ml-2 mb-3 hover:bg-green-200" 
-              key={property.PK}>
-                <h3>{property.address}</h3>
-              </li>
+            suggestList.push(
+              <Suggestion 
+              onMouseDownHandler={onMouseDownHandler}
+              link={property.PK}
+              name={property.address} />
             );
           });
-        }else{
-          suggestsList.push(<li className="m-5" key="noProperty"></li>);
         }
         
-        suggestsList.push(
-          <li className="text-sm mx-2 border-b-2 border-green-600 border-opacity-50" 
-          key="city">
-            City
-          </li>
-        );
         if(citySuggest.length){
+          suggestList.push(<SuggestType type="City" />);
           citySuggest.forEach(city =>{
-            suggestsList.push(
-              <li 
-              onMouseDown={() => onMouseDownHandler(city.cityId)}
-              className="text-lg m-1 ml-2 mb-2 hover:bg-green-200" 
-              key={city.cityId}>
-                <h3>{city.city}</h3>
-              </li>
+            suggestList.push(
+              <Suggestion 
+              onMouseDownHandler={onMouseDownHandler}
+              link={city.cityId}
+              name={city.city} />
             );
           });
-        }else{
-          suggestsList.push(<li className="m-5" key="noCity"></li>);
         }
         
-        suggestsList.push(
-          <li className="text-sm mx-2 border-b-2 border-green-600 border-opacity-50" 
-          key="zipCode">
-            zip code
-          </li>
-        );
         if(zipCodeSuggest.length){
-          zipCodeSuggest.forEach(zipCode =>{
-            suggestsList.push(
-              <li
-              onMouseDown={() => onMouseDownHandler(zipCode.zipCodeId)}
-              className="text-lg m-1 ml-2 mb-3 hover:bg-green-200" 
-              key={zipCode.zipCodeId}>
-                <h3>{zipCode.zipCode}</h3>
-              </li>
+          suggestList.push(<SuggestType type="Zip code" />);
+          zipCodeSuggest.forEach( zipCode  =>{
+            suggestList.push(
+              <Suggestion 
+              onMouseDownHandler={onMouseDownHandler}
+              link={zipCode.zipCodeId}
+              name={zipCode.zipCode} />
             );
           });
-        }else{
-          suggestsList.push(<li className="m-5" key="noZipCode"></li>);
         }
+        
+        if(!propertySuggest.length && !citySuggest.length && !zipCodeSuggest.length){
+          suggestList.push(<SuggestType type="No results" />);
+        }
+        
+        setSuggest(suggestList);
+      }else{
+        setSuggest([]);
       }
-      setSuggest(suggestsList);
     };
     getData();
   }, [searchInputText]);
@@ -94,12 +73,8 @@ const Search = props =>{
     setSearchInputText(event.target.value);
   };
   
-  const onFocusHandler = event =>{
-    setFocus(true);
-  };
-  
   const onBlurHandler = event =>{
-    setFocus(false);
+    setSuggest([]);
     setSearchInputText("");
   };
   
@@ -107,13 +82,27 @@ const Search = props =>{
     history.push(link);
   };
   
-  return <SearchInput
-    userInput={searchInputText}
-    onChangeHandler={onChangeHandler}
-    onFocusHandler={onFocusHandler}
-    onBlurHandler={onBlurHandler}
-    suggests={suggests}
-  />;
+  return (
+    <div className="flex flex-col items-center w-full">
+      <form className="flex content-center w-11/12 md:w-9/12 lg:w-7/12 mb-10">
+        <input 
+        className="w-full p-2 pr-6 rounded border border-gray-400 focus:ring focus:ring-green-600 focus:outline-none focus:border-transparent"
+        onChange={onChangeHandler}
+        onBlur={onBlurHandler}
+        value={searchInputText}
+        type="text"
+        placeholder="zip code, city, or address"/>
+        <img 
+        src={searchButton}
+        alt="search button"
+        className="relative -ml-6"/>
+      </form>
+      <div className="absolute mt-10 w-11/12  md:w-9/12 lg:w-7/12 shadow-md">
+        {suggest}
+      </div>
+    
+    </div>
+  );
   
 };
 

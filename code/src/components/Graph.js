@@ -10,6 +10,8 @@ import { mean } from "d3-array";
 import AudioPlayer from "./stateless/AudioPlayer";
 import ColorScale from "./stateless/ColorScale";
 import Transform from "../Transform";
+import plusSign from "../images/plusSign.svg";
+import minusSign from "../images/minusSign.svg";
 
 class Graph extends Component{
   //A class componets is necesary so that events linstener can access the state
@@ -20,7 +22,10 @@ class Graph extends Component{
     this.yAxisRef = React.createRef();
     this.graphRef = React.createRef();
     this.state = {
-      a:1, d:1, e:0, f:0, pointerPosition:null, mp3Link:"", twoFingers: false
+      a:1, d:1, e:0, f:0, 
+      pointerPosition:null, 
+      mp3Link:"",
+      pointerDistance:null
     };
   }
   
@@ -73,14 +78,17 @@ class Graph extends Component{
       const t =  pointers(event);
       if (t.length > 1) {
         event.preventDefault();
-        pointerPosition = [ mean(t, d => d[0]),  mean(t, d => d[1])]; // (A)
+        const pointerPosition = [
+          Math.abs((t[1][0] - t[0][0])/2),
+          Math.abs((t[1][1] - t[0][1])/2)
+        ];
+        console.log("pointerPosition", pointerPosition)
+        this.setState({
+          pointerPosition: pointerPosition,
+          pointerDistance: Math.hypot(t[1][1] - t[0][1], t[1][0] - t[0][0])
+        });
         
-        pointerDistance =
-        t.length > 1 && Math.hypot(t[1][1] - t[0][1], t[1][0] - t[0][0]); // (B)
-    }else{
-      
-    }
-      
+      }
     })
     .on("mouseup touchend", (event) => {
       this.setState({pointerPosition: null});
@@ -102,27 +110,53 @@ class Graph extends Component{
       }
     })
     .on("touchmove", (event) => {
-      // if (!pointerPosition) dispatch.call("oneFinger", this);
-      // if (!pointerPosition) return; // mousemove with the mouse up
-     
-      
-      // const t = pointers(event);
-      
-      // // (A)
-      // if (t.length > 1) {
-      //   matrix.e -= pointerPosition[0];
-      //   matrix.f -= pointerPosition[1];
-      //   pointerPosition = [mean(t, d => d[0]), mean(t, d => d[1])];
-      //   matrix.e += pointerPosition[0];
-      //   matrix.f += pointerPosition[1];
-    
-      //   // (B)
-      //   // scale /= pointerDistance;
-      //   // pointerDistance = Math.hypot(t[1][1] - t[0][1], t[1][0] - t[0][0]);
-      //   // scale *= pointerDistance;
+      const t = pointers(event);
+      if (t.length > 1) {
+        const pointerPosition = [
+          Math.abs((t[1][0] - t[0][0])/2) + t[0][0],
+          Math.abs((t[1][1] - t[0][1])/2) + t[0][1]
+        ];
+        const pointerDistance = Math.hypot(t[1][1] - t[0][1], t[1][0] - t[0][0]);
+        if ( pointerDistance === this.state.pointerDistance){
+          const previousPosition = [
+            this.state.e - this.state.pointerPosition[0],
+            this.state.f - this.state.pointerPosition[1]
+          ];
+          const move = [
+            previousPosition[0] + pointerPosition[0],
+            previousPosition[1] + pointerPosition[1]
+          ];
+          console.log("Moving", move)
+          
+          this.setState({
+            e: move[0], 
+            f: move[1], 
+            pointerPosition: pointerPosition,
+            pointerDistance: pointerDistance
+          });
+          
+        }else{
+          const inverseTranformationCoordinates = [
+            pointerPosition[0]/this.state.a - this.state.e/this.state.a,
+            pointerPosition[1]/this.state.d - this.state.f/this.state.d,
+          ];
         
-      //   // graphEvents.call("zoom", this, { k:scale, x:position[0], y:position[1]});
-      // }
+          const zoom = this.state.a * (pointerDistance / this.state.pointerDistance);
+          const move = [ 
+            pointerPosition[0] - inverseTranformationCoordinates[0] * zoom,
+            pointerPosition[1] - inverseTranformationCoordinates[1] * zoom
+          ];
+          this.setState({
+            a:zoom, 
+            d:zoom, 
+            e:move[0], 
+            f:move[1], 
+            pointerPosition: pointerPosition,
+            pointerDistance: pointerDistance
+          });
+          this.adjustAxis();
+        }
+      }
     })
     .on("wheel", (event) => {
       event.preventDefault();
@@ -145,7 +179,9 @@ class Graph extends Component{
   }
   
   adjustAxis = () =>{
-    const transform = new Transform(this.state.a, this.state.d, this.state.e, this.state.f);
+    const transform = new Transform(
+      this.state.a, this.state.d, this.state.e, this.state.f
+    );
     select(this.yAxisRef.current).call(this.yAxis.scale(transform.rescaleY(this.yScale)));
   }
   
@@ -192,42 +228,44 @@ class Graph extends Component{
     });
     
     return (
-      <div className="mb-40">
+      <div 
+      style={{width:"320px"}}
+      className="mb-40 flex flex-col">
         <ColorScale />
-        <div className="">
+        
+        <div className="flex flex-col">
           <button onClick={() =>{this.zoomButtons(1.12)}}>
-            Zoom In
+            <img className="transform hover:scale-125 h-8" src={plusSign} alt="Zoom in"/>
           </button>
           <button onClick={() =>{this.zoomButtons(0.88)}}>
-            Zoom Out
+            <img className="transform hover:scale-125 h-8" src={minusSign} alt="Zoom out"/>
           </button>
-          
-          <svg 
-          ref={this.graphRef}
-          height="95vh"
-          viewBox={`0 0 ${this.width} ${this.height}`}
-          preserveAspecRatio="xMidYMid meet">
-            <clipPath id="dataClip">
-              <rect 
-              x={this.margin.left}
-              y={this.margin.top}
-              width={this.width - this.margin.right} 
-              height={this.height - this.margin.bottom} />
-            </clipPath>
-            <g ref={this.yAxisRef} transform={`translate(${this.margin.left}, ${this.margin.top})`}/>
-              <g clipPath="url(#dataClip)">
-                <g transform={`matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`}>
-                  {rects}
-                </g>
+        </div>
+        
+        <svg 
+        ref={this.graphRef}
+        
+        viewBox={`0 0 ${this.width} ${this.height}`}
+        preserveAspecRatio="xMidYMid meet">
+          <clipPath id="dataClip">
+            <rect 
+            x={this.margin.left}
+            y={this.margin.top}
+            width={this.width - this.margin.right} 
+            height={this.height - this.margin.bottom} />
+          </clipPath>
+          <g ref={this.yAxisRef} transform={`translate(${this.margin.left}, ${this.margin.top})`}/>
+            <g clipPath="url(#dataClip)">
+              <g transform={
+                `matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`
+              }>
+                {rects}
               </g>
-            <g ref={this.xAxisRef} transform={`translate(0, ${this.height - this.margin.bottom})`}/>
-          </svg>
-        </div>
-        <div className="">
-          <div className="">
-            <AudioPlayer audioFile={this.state.mp3Link}/>
-          </div>
-        </div>
+            </g>
+          <g ref={this.xAxisRef} transform={`translate(0, ${this.height - this.margin.bottom})`}/>
+        </svg>
+        
+        <AudioPlayer audioFile={this.state.mp3Link}/>
       </div>
     );
   }

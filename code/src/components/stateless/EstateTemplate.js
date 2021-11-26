@@ -12,8 +12,8 @@ const EstateTemplate = (props) => {
   
   return (
     <React.Fragment>
-      <header className="m-2">
-        <div className="flex flex-row justify-between mb-7">
+      <header>
+        <div className="flex flex-row justify-between p-2.5 mb-7">
           <BackArrow />
           <Link className="flex flex-row items-center" to="/">
             <img src={logo} alt="logo" className="h-8"/>
@@ -23,8 +23,9 @@ const EstateTemplate = (props) => {
         </div>
         <Search />
       </header>
-      <div className="bg-gray-300 border-t-2 border-green-400 p-2 pt-7 mb-8" >
-        <div className="flex flex-row flex-wrap items-center justify-center mb-4">
+      
+      <div className="border-t-2 border-green-400 pt-7 mb-8 flex flex-col items-center" >
+        <div className="flex flex-col lg:flex-row flex-wrap items-center mb-6">
           <img 
           src={props.estate.profilePicture} 
           alt="Property" 
@@ -33,14 +34,13 @@ const EstateTemplate = (props) => {
             {props.estate.address1+ " " + props.estate.address2}
           </h2>
         </div>
-        {props.estate.price &&
-          <div div className="flex flex-row justify-center mb-4">
-            <h3 className=" text-center">{props.estate.price}</h3>
+        {props.price &&
+          <div div className="mb-4">
+            <h2 className="text-lg text-center">{props.price}</h2>
           </div>
         }
         
-        
-        <ul className="flex space-x-4 justify-center mb-4">
+        <ul className="flex space-x-4 mb-4">
           {props.estate.bathroom &&
             <li className="border-r-2 border-l-2 border-green-400 p-1">{props.estate.bathroom} bath</li>
           }
@@ -51,13 +51,15 @@ const EstateTemplate = (props) => {
             <li className="border-r-2 border-l-2 border-green-400 p-1">{props.estate.lotArea} sq.ft. lot</li>
           }
         </ul>
+      </div>
         
-        {props.estate.videoLink &&
+      {props.estate.videoLink &&
           <Vimeo iframeSRC={props.estate.videoLink} />
-        }
+      }
         
+      <div className="flex flex-col items-center">
         {props.estate.soundScore &&
-          <div div className="flex flex-col items-center mb-4">
+          <div div className="flex flex-col mb-4">
             <h2 className="text-2xl mb-1">Noise Score</h2>
             <h2 
             className="text-4xl leading-9 bg-green-400 rounded-full"
@@ -68,9 +70,9 @@ const EstateTemplate = (props) => {
         }
         
         {props.estate.audioDescription &&
-          <div className="flex flex-col items-center space-x-4 ">
+          <div className=" space-x-4 ">
             <h3 className=" text-xl w-96 text-center mb-4">{props.estate.audioDescription}</h3>
-            <h3 className="text-center">Data extracter from audio graph</h3>
+            <h3 className="text-center w-96">Data extracter from audio graph</h3>
           </div>
         }
         

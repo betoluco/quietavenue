@@ -12,11 +12,19 @@ const Estate = (props) =>{
     const estate = useSelector( state => state.[estateId]);
     const statusCode = useSelector( state => state.statusCode );
     
+    const moneyOptions = {style: 'currency', currency: 'USD'};
+    const money = new Intl.NumberFormat('en-US', moneyOptions);
+    
+    let price = undefined;
+    if(estate.price){
+        price = money.format(parseFloat(estate.price))
+    }
+    
     if( statusCode === 404){
         return <Redirect to="/notFound" />;
     }
     
-    return <EstateTemplate estate={estate}/>;
+    return <EstateTemplate estate={estate} price={price}/>;
 };
 
 const loadData = (store, req) => {
