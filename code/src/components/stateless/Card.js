@@ -7,7 +7,7 @@ const Card = props =>{
   const estate = useSelector( state => state[props.estate]);
   const link = "/estate/" + estate.id;
   return (
-    <div className="m-2.5 shadow-md border-b-2 border-green-600" key={estate.id}>
+    <div key={estate.id} className="m-2.5 shadow-md border-b-2 border-green-600">
       <Link to={link}>
         <img 
         className="w-full h-64 object-cover" 

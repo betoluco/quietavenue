@@ -12,7 +12,7 @@ const AudioPlayer = (props) =>{
     }, [props.audioFile]);
     
     return(
-        <audio className="w-60 h-10" ref={audio} controls>
+        <audio className="w-64 h-10 mb-20" ref={audio} controls>
             <source ref={source}  type="audio/mpeg" />
             Your browser does not support the audio element.
         </audio>

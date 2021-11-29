@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { scaleBand, scaleTime, scaleQuantize } from "d3-scale";
 import { timeDay } from "d3-time";
 import { axisBottom, axisLeft} from "d3-axis";
@@ -9,7 +9,6 @@ import { mean } from "d3-array";
 
 import AudioPlayer from "./stateless/AudioPlayer";
 import ColorScale from "./stateless/ColorScale";
-import Transform from "../Transform";
 import plusSign from "../images/plusSign.svg";
 import minusSign from "../images/minusSign.svg";
 
@@ -27,38 +26,68 @@ class Graph extends Component{
       mp3Link:"",
       pointerDistance:null
     };
-  }
-  
-  margin = { top: 7, right: 0, bottom: 35, left: 80};
-  width = 843; //16:9 screen ratio
-  height = 1500;
-  colorRange = ["#2A00D5", "#63009E", "#A1015D", "#D80027", "#FE0002"];
-  
-  colorScale = scaleQuantize()
-  .domain([0, 1])
-  .range(this.colorRange);
+    this.margin = { top: 7, right: 0, bottom: 35, left: 80};
+    this.width = 834; //16:9 screen ratio
+    this.height = 1482;
+    this.colorRange = ["#2A00D5", "#63009E", "#A1015D", "#D80027", "#FE0002"];
+    this.colorScale = scaleQuantize()
+    .domain([0, 1])
+    .range(this.colorRange);
+      
+    this.firstDay = timeDay.floor(new Date(this.props.dataPoints[0].time));
+    this.lastDay = timeDay.ceil(new Date(this.props.dataPoints[this.props.dataPoints.length - 1].time));
+    this.domainDays = timeDay.range(this.firstDay, this.lastDay);
     
-  firstDay = timeDay.floor(new Date(this.props.dataPoints[0].time));
-  lastDay = timeDay.ceil(new Date(this.props.dataPoints[this.props.dataPoints.length - 1].time));
-  domainDays = timeDay.range(this.firstDay, this.lastDay);
+    this.xScale = scaleBand()
+      .domain(this.domainDays)
+      .range([ this.margin.left, this.width - this.margin.right ])
+      .paddingInner(0.1);
+    
+    this.xAxis = axisBottom(this.xScale)
+      .tickFormat(timeFormat("%a %d"))
+      .tickSizeOuter(0);
+    
+    //using today date for the domain of Y axis for simplicity
+    this.today = new Date();
+    
+    this.yScale = scaleTime()
+      .domain([timeDay.floor(this.today), timeDay.ceil(this.today)])
+      .range([this.height - this.margin.bottom, this.margin.top]);
+    
+    this.yAxis = axisLeft(this.yScale).tickFormat(timeFormat("%H:%M"));
   
-  xScale = scaleBand()
-    .domain(this.domainDays)
-    .range([ this.margin.left, this.width - this.margin.right ])
-    .paddingInner(0.1);
-  
-  xAxis = axisBottom(this.xScale)
-    .tickFormat(timeFormat("%a %d"))
-    .tickSizeOuter(0);
-  
-  //using today date for the domain of Y axis for simplicity
-  today = new Date();
-  
-  yScale = scaleTime()
-    .domain([timeDay.floor(this.today), timeDay.ceil(this.today)])
-    .range([this.height - this.margin.bottom, this.margin.top]);
-  
-  yAxis = axisLeft(this.yScale).tickFormat(timeFormat("%H:%M"));
+    this.adjustAxis = () =>{
+      const invertY = y => {
+        return (y - this.state.f) / this.state.d;
+      };
+      
+      const rescaleY = y => {
+        return y.copy().domain(y.range().map(invertY).map(y.invert, y));
+      };
+      
+      select(this.yAxisRef.current).call(this.yAxis.scale(rescaleY(this.yScale)));
+    };
+    
+    this.reproduceSound = (link) =>{
+      this.setState({ mp3Link:link });
+    };
+    
+    this.zoomButtons = (magnification) =>{
+      const center = [this.width/2, this.height/2];
+      const inverseTranformationCoordinates = [
+        center[0]/this.state.a - this.state.e/this.state.a,
+        center[1]/this.state.d - this.state.f/this.state.d,
+      ];
+      
+      const zoom = this.state.a * magnification;
+      const move = [ 
+        center[0] - inverseTranformationCoordinates[0] * zoom,
+        center[1] - inverseTranformationCoordinates[1] * zoom
+      ];
+      this.setState({a:zoom, d:zoom, e:move[0], f:move[1]});
+      this.adjustAxis();
+    };
+  }
   
   componentDidMount(){
     select(this.xAxisRef.current)
@@ -79,10 +108,9 @@ class Graph extends Component{
       if (t.length > 1) {
         event.preventDefault();
         const pointerPosition = [
-          Math.abs((t[1][0] - t[0][0])/2),
-          Math.abs((t[1][1] - t[0][1])/2)
+          Math.abs((t[1][0] - t[0][0])/2) + t[0][0],
+          Math.abs((t[1][1] - t[0][1])/2) + t[0][1]
         ];
-        console.log("pointerPosition", pointerPosition)
         this.setState({
           pointerPosition: pointerPosition,
           pointerDistance: Math.hypot(t[1][1] - t[0][1], t[1][0] - t[0][0])
@@ -117,7 +145,7 @@ class Graph extends Component{
           Math.abs((t[1][1] - t[0][1])/2) + t[0][1]
         ];
         const pointerDistance = Math.hypot(t[1][1] - t[0][1], t[1][0] - t[0][0]);
-        if ( pointerDistance === this.state.pointerDistance){
+        if ( Math.abs(pointerDistance - this.state.pointerDistance) < 3){
           const previousPosition = [
             this.state.e - this.state.pointerPosition[0],
             this.state.f - this.state.pointerPosition[1]
@@ -126,7 +154,6 @@ class Graph extends Component{
             previousPosition[0] + pointerPosition[0],
             previousPosition[1] + pointerPosition[1]
           ];
-          console.log("Moving", move)
           
           this.setState({
             e: move[0], 
@@ -168,42 +195,15 @@ class Graph extends Component{
         pointerPosition[1]/this.state.d - this.state.f/this.state.d,
       ];
       
-      const zoom = this.state.a * 1 + event.wheelDelta / 1000;
+      const yZoom = Math.abs(this.state.d * 1 + (event.wheelDelta) / 1000);
+      const xZoom = yZoom >= 1 ? Math.log(yZoom + 5)/Math.log(6) : yZoom;
       const move = [ 
-        pointerPosition[0] - inverseTranformationCoordinates[0] * zoom,
-        pointerPosition[1] - inverseTranformationCoordinates[1] * zoom
+        pointerPosition[0] - inverseTranformationCoordinates[0] * xZoom,
+        pointerPosition[1] - inverseTranformationCoordinates[1] * yZoom
       ];
-      this.setState({a:zoom, d:zoom, e:move[0], f:move[1]});
+      this.setState({a:xZoom, d:yZoom, e:move[0], f:move[1]});
       this.adjustAxis();
     });
-  }
-  
-  adjustAxis = () =>{
-    const transform = new Transform(
-      this.state.a, this.state.d, this.state.e, this.state.f
-    );
-    select(this.yAxisRef.current).call(this.yAxis.scale(transform.rescaleY(this.yScale)));
-  }
-  
-  reproduceSound = (link) =>{
-    this.setState({ mp3Link:link });
-  };
-  
-  zoomButtons = (magnification) =>{
-    const center = [this.width/2, this.height/2];
-    const inverseTranformationCoordinates = [
-      center[0]/this.state.a - this.state.e/this.state.a,
-      center[1]/this.state.d - this.state.f/this.state.d,
-    ];
-    
-    const zoom = this.state.a * magnification;
-    const move = [ 
-      center[0] - inverseTranformationCoordinates[0] * zoom,
-      center[1] - inverseTranformationCoordinates[1] * zoom
-    ];
-    this.setState({a:zoom, d:zoom, e:move[0], f:move[1]});
-    this.adjustAxis();
-    
   }
   
   render(){
@@ -228,45 +228,55 @@ class Graph extends Component{
     });
     
     return (
-      <div 
-      style={{width:"320px"}}
-      className="mb-40 flex flex-col">
+      <Fragment>
         <ColorScale />
-        
-        <div className="flex flex-col">
-          <button onClick={() =>{this.zoomButtons(1.12)}}>
-            <img className="transform hover:scale-125 h-8" src={plusSign} alt="Zoom in"/>
-          </button>
-          <button onClick={() =>{this.zoomButtons(0.88)}}>
-            <img className="transform hover:scale-125 h-8" src={minusSign} alt="Zoom out"/>
-          </button>
+        <div className="mb-7">
+          <div className="flex flex-col absolute ml-64 mt-3">
+            <button onClick={() =>{this.zoomButtons(1.12)}}>
+              <img className="transform hover:scale-125 h-8" src={plusSign} alt="Zoom in"/>
+            </button>
+            <button onClick={() =>{this.zoomButtons(0.88)}}>
+              <img className="transform hover:scale-125 h-8" src={minusSign} alt="Zoom out"/>
+            </button>
+          </div>
+          
+          <div className="w-80">
+            <svg 
+            ref={this.graphRef}
+            viewBox={`0 0 ${this.width} ${this.height}`}
+            preserveAspecRatio="xMidYMid meet">
+              <clipPath id="graphClip">
+                <rect 
+                x={this.margin.left}
+                y={this.margin.top}
+                width={this.width - this.margin.right - this.margin.left} 
+                height={this.height - this.margin.bottom - this.margin.bottom} />
+              </clipPath>
+              <clipPath id="axisClip">
+                <rect 
+                x={this.margin.left}
+                width={this.width - this.margin.right - this.margin.left} 
+                height={this.height} />
+              </clipPath>
+              <g ref={this.yAxisRef} transform={`translate(${this.margin.left}, ${this.margin.top})`}/>
+                <g clipPath="url(#graphClip)">
+                  <g transform={
+                    `matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`
+                  }>
+                    {rects}
+                  </g>
+                </g>
+                <g clipPath="url(#axisClip)">
+                  <g ref={this.xAxisRef} transform={
+                  `matrix(${this.state.a}, 0, 0, 1, ${this.state.e}, ${this.height - this.margin.bottom - this.margin.top})`
+                  }/>
+                </g>
+            </svg>
+          </div>
         </div>
         
-        <svg 
-        ref={this.graphRef}
-        
-        viewBox={`0 0 ${this.width} ${this.height}`}
-        preserveAspecRatio="xMidYMid meet">
-          <clipPath id="dataClip">
-            <rect 
-            x={this.margin.left}
-            y={this.margin.top}
-            width={this.width - this.margin.right} 
-            height={this.height - this.margin.bottom} />
-          </clipPath>
-          <g ref={this.yAxisRef} transform={`translate(${this.margin.left}, ${this.margin.top})`}/>
-            <g clipPath="url(#dataClip)">
-              <g transform={
-                `matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`
-              }>
-                {rects}
-              </g>
-            </g>
-          <g ref={this.xAxisRef} transform={`translate(0, ${this.height - this.margin.bottom})`}/>
-        </svg>
-        
         <AudioPlayer audioFile={this.state.mp3Link}/>
-      </div>
+      </Fragment>
     );
   }
 }

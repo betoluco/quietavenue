@@ -61,18 +61,20 @@ const EstateTemplate = (props) => {
         {props.estate.soundScore &&
           <div div className="flex flex-col mb-4">
             <h2 className="text-2xl mb-1">Noise Score</h2>
-            <h2 
-            className="text-4xl leading-9 bg-green-400 rounded-full"
-            style={{padding: "0.5rem 0.5rem 0.7rem 0.5rem"}}>
-              {props.estate.soundScore}
-            </h2>
+            <div className="flex justify-center">
+              <h2 
+              className="text-4xl leading-9 bg-green-400 rounded-full"
+              style={{padding: "0.5rem 0.5rem 0.7rem 0.5rem"}}>
+                {props.estate.soundScore}
+              </h2>
+            </div>
           </div>
         }
         
         {props.estate.audioDescription &&
           <div className=" space-x-4 ">
-            <h3 className=" text-xl w-96 text-center mb-4">{props.estate.audioDescription}</h3>
-            <h3 className="text-center w-96">Data extracter from audio graph</h3>
+            <h3 className=" text-xl w-96 text-center mb-2">{props.estate.audioDescription}</h3>
+            <h5 className="text-center w-96 mb-6">Data extracter from audio graph</h5>
           </div>
         }
         
