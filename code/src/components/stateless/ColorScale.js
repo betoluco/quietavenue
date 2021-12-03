@@ -2,7 +2,7 @@ import React from "react";
 
 const ColorScale = (props) => {
     return (
-        <div className="flex flex-col w-80 mb-6">
+        <div className="flex flex-col w-72 mb-6">
             <div className="flex flex-row">
                 <div 
                 className="w-full" 

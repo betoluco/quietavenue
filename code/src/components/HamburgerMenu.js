@@ -45,7 +45,7 @@ const HamburgerMenu = props =>{
             </li>
             <li 
             className="mb-2 text-base hover:bg-green-200"
-            onMouseDown={() => onMouseDownHandler("/")}>
+            onMouseDown={() => onMouseDownHandler("/trial")}>
               For Agents
             </li>
             <li 

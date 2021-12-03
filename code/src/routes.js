@@ -1,9 +1,10 @@
 import Root from "./components/stateless/Root";
 import Estate from "./components/Estate";
-import MainHeader from "./components/stateless/MainHeader";
 import Estates from "./components/Estates";
 import FilteredEstates from "./components/FilteredEstates";
+import FreeTrial from "./components/stateless/FreeTrial";
 import NotFound from "./components/stateless/NotFound";
+
 
 const Routes = [
     {
@@ -11,26 +12,26 @@ const Routes = [
         routes:[
             {
                 ...Estate,
-                path: "/estate/:estateId"
+                path: "/estate/:estateId",
+                exact: true
             },
             {
-                component: MainHeader,
-                path:"/",
-                routes:[
-                    {
-                        ...Estates,
-                        path: "/",
-                        exact: true
-                    },
-                    {
-                        ...FilteredEstates,
-                        path: "/filter/:filter/:groupId",
-                        exact: true
-                    },
-                    {
-                        component: NotFound
-                    }
-                ]
+                ...FilteredEstates,
+                path: "/filter/:filter/:groupId",
+                exact: true
+            },
+            {
+                component: FreeTrial,
+                path: "/trial",
+                exact: true
+            },
+            {
+                ...Estates,
+                path: "/",
+                exact: true
+            },
+            {
+                component: NotFound
             }
         ]
     }

@@ -24,7 +24,8 @@ class Graph extends Component{
       a:1, d:1, e:0, f:0, 
       pointerPosition:null, 
       mp3Link:"",
-      pointerDistance:null
+      pointerDistance:null,
+      oneFinger: false
     };
     this.margin = { top: 7, right: 0, bottom: 35, left: 80};
     this.width = 834; //16:9 screen ratio
@@ -36,6 +37,7 @@ class Graph extends Component{
       
     this.firstDay = timeDay.floor(new Date(this.props.dataPoints[0].time));
     this.lastDay = timeDay.ceil(new Date(this.props.dataPoints[this.props.dataPoints.length - 1].time));
+    this.recordingTime = `Extracted form recodings take from ${this.firstDay.toLocaleDateString("en-US")} to ${this.lastDay.toLocaleDateString("en-US")}`;
     this.domainDays = timeDay.range(this.firstDay, this.lastDay);
     
     this.xScale = scaleBand()
@@ -55,18 +57,6 @@ class Graph extends Component{
       .range([this.height - this.margin.bottom, this.margin.top]);
     
     this.yAxis = axisLeft(this.yScale).tickFormat(timeFormat("%H:%M"));
-  
-    this.adjustAxis = () =>{
-      const invertY = y => {
-        return (y - this.state.f) / this.state.d;
-      };
-      
-      const rescaleY = y => {
-        return y.copy().domain(y.range().map(invertY).map(y.invert, y));
-      };
-      
-      select(this.yAxisRef.current).call(this.yAxis.scale(rescaleY(this.yScale)));
-    };
     
     this.reproduceSound = (link) =>{
       this.setState({ mp3Link:link });
@@ -86,6 +76,23 @@ class Graph extends Component{
       ];
       this.setState({a:zoom, d:zoom, e:move[0], f:move[1]});
       this.adjustAxis();
+    };
+    
+    this.resetZoom = () =>{
+      this.setState({a:1, d:1, e:0, f:0});
+      select(this.yAxisRef.current).call(this.yAxis.scale(this.yScale));
+    };
+    
+    this.adjustAxis = () =>{
+      const invertY = y => {
+        return (y - this.state.f) / this.state.d;
+      };
+      
+      const rescaleY = y => {
+        return y.copy().domain(y.range().map(invertY).map(y.invert, y));
+      };
+      
+      select(this.yAxisRef.current).call(this.yAxis.scale(rescaleY(this.yScale)));
     };
   }
   
@@ -119,7 +126,7 @@ class Graph extends Component{
       }
     })
     .on("mouseup touchend", (event) => {
-      this.setState({pointerPosition: null});
+      this.setState({pointerPosition: null, oneFinger: false});
     })
     .on("mousemove", (event) => {
       if (this.state.pointerPosition){
@@ -183,6 +190,8 @@ class Graph extends Component{
           });
           this.adjustAxis();
         }
+      }else{
+        this.setState({oneFinger: true});
       }
     })
     .on("wheel", (event) => {
@@ -195,7 +204,7 @@ class Graph extends Component{
         pointerPosition[1]/this.state.d - this.state.f/this.state.d,
       ];
       
-      const yZoom = Math.abs(this.state.d * 1 + (event.wheelDelta) / 1000);
+      const yZoom = Math.abs(this.state.d * 1 + (event.wheelDelta *5) / 1000);
       const xZoom = yZoom >= 1 ? Math.log(yZoom + 5)/Math.log(6) : yZoom;
       const move = [ 
         pointerPosition[0] - inverseTranformationCoordinates[0] * xZoom,
@@ -229,49 +238,63 @@ class Graph extends Component{
     
     return (
       <Fragment>
+        <h5 className="text-center max-w-screen-md text-sm mb-6">
+          {this.recordingTime}
+        </h5>
         <ColorScale />
         <div className="mb-7">
-          <div className="flex flex-col absolute ml-64 mt-3">
-            <button onClick={() =>{this.zoomButtons(1.12)}}>
-              <img className="transform hover:scale-125 h-8" src={plusSign} alt="Zoom in"/>
+          <div className="flex absolute items-center mt-3 ml-52" >
+            <button 
+            onClick={this.resetZoom}
+            className="bg-black text-white text-sm font-medium p-1.5 mr-2">
+              Reset
             </button>
-            <button onClick={() =>{this.zoomButtons(0.88)}}>
-              <img className="transform hover:scale-125 h-8" src={minusSign} alt="Zoom out"/>
-            </button>
+            <div className="flex flex-col">
+              <button onClick={() =>{this.zoomButtons(1.12)}}>
+                <img className="transform hover:scale-125 h-8" src={plusSign} alt="Zoom in"/>
+              </button>
+              <button onClick={() =>{this.zoomButtons(0.88)}}>
+                <img className="transform hover:scale-125 h-8" src={minusSign} alt="Zoom out"/>
+              </button>
+            </div>
           </div>
-          
-          <div className="w-80">
-            <svg 
-            ref={this.graphRef}
-            viewBox={`0 0 ${this.width} ${this.height}`}
-            preserveAspecRatio="xMidYMid meet">
-              <clipPath id="graphClip">
-                <rect 
-                x={this.margin.left}
-                y={this.margin.top}
-                width={this.width - this.margin.right - this.margin.left} 
-                height={this.height - this.margin.bottom - this.margin.bottom} />
-              </clipPath>
-              <clipPath id="axisClip">
-                <rect 
-                x={this.margin.left}
-                width={this.width - this.margin.right - this.margin.left} 
-                height={this.height} />
-              </clipPath>
-              <g ref={this.yAxisRef} transform={`translate(${this.margin.left}, ${this.margin.top})`}/>
-                <g clipPath="url(#graphClip)">
-                  <g transform={
-                    `matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`
-                  }>
-                    {rects}
+          {this.state.oneFinger && <h3 className="absolute mt-60 ml-9 w-64 z-20 text-white text-center text-xl font-semibold">
+            Use two fingers to move the map
+          </h3>}
+          <div  className={this.state.oneFinger && "z-10 bg-gray-700 bg-opacity-80"}>
+            <div style={{width:"318px"}}>
+              <svg 
+              ref={this.graphRef}
+              viewBox={`0 0 ${this.width} ${this.height}`}
+              preserveAspectRatio="xMidYMid meet">
+                <clipPath id="graphClip">
+                  <rect 
+                  x={this.margin.left}
+                  y={this.margin.top}
+                  width={this.width - this.margin.right - this.margin.left} 
+                  height={this.height - this.margin.bottom - this.margin.bottom} />
+                </clipPath>
+                <clipPath id="axisClip">
+                  <rect 
+                  x={this.margin.left}
+                  width={this.width - this.margin.right - this.margin.left} 
+                  height={this.height} />
+                </clipPath>
+                <g ref={this.yAxisRef} transform={`translate(${this.margin.left}, ${this.margin.top})`}/>
+                  <g clipPath="url(#graphClip)">
+                    <g transform={
+                      `matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`
+                    }>
+                      {rects}
+                    </g>
                   </g>
-                </g>
-                <g clipPath="url(#axisClip)">
-                  <g ref={this.xAxisRef} transform={
-                  `matrix(${this.state.a}, 0, 0, 1, ${this.state.e}, ${this.height - this.margin.bottom - this.margin.top})`
-                  }/>
-                </g>
-            </svg>
+                  <g clipPath="url(#axisClip)">
+                    <g ref={this.xAxisRef} transform={
+                    `matrix(${this.state.a}, 0, 0, 1, ${this.state.e}, ${this.height - this.margin.bottom - this.margin.top})`
+                    }/>
+                  </g>
+              </svg>
+            </div>
           </div>
         </div>
         

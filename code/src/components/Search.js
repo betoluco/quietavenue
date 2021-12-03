@@ -84,7 +84,7 @@ const Search = props =>{
   
   return (
     <div className="flex flex-col items-center w-full">
-      <form className="flex content-center w-11/12 md:w-9/12 lg:w-7/12 mb-10">
+      <form className="flex content-center w-11/12 md:max-w-screen-md mb-10">
         <input 
         className="w-full p-2 pr-6 rounded border border-gray-400 focus:ring focus:ring-green-600 focus:outline-none focus:border-transparent"
         onChange={onChangeHandler}
@@ -97,7 +97,7 @@ const Search = props =>{
         alt="search button"
         className="relative -ml-6"/>
       </form>
-      <div className="absolute mt-10 w-11/12  md:w-9/12 lg:w-7/12 shadow-md">
+      <div className="absolute mt-10 w-11/12  md:max-w-screen-md">
         {suggest}
       </div>
     

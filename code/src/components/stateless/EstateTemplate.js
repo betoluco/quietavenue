@@ -12,9 +12,9 @@ const EstateTemplate = (props) => {
   
   return (
     <React.Fragment>
-      <header>
+      <header color="#000000">
         <div className="flex flex-row justify-between p-2.5 mb-7">
-          <BackArrow />
+          <BackArrow color="#000000"/>
           <Link className="flex flex-row items-center" to="/">
             <img src={logo} alt="logo" className="h-8"/>
             <h1 className="text-2xl text-green-600 pl-1">QuietAvenue</h1>
@@ -57,7 +57,7 @@ const EstateTemplate = (props) => {
           <Vimeo iframeSRC={props.estate.videoLink} />
       }
         
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center p-2.5">
         {props.estate.soundScore &&
           <div div className="flex flex-col mb-4">
             <h2 className="text-2xl mb-1">Noise Score</h2>
@@ -73,8 +73,7 @@ const EstateTemplate = (props) => {
         
         {props.estate.audioDescription &&
           <div className=" space-x-4 ">
-            <h3 className=" text-xl w-96 text-center mb-2">{props.estate.audioDescription}</h3>
-            <h5 className="text-center w-96 mb-6">Data extracter from audio graph</h5>
+            <h3 className=" text-xl max-w-screen-md text-center mb-4">{props.estate.audioDescription}</h3>
           </div>
         }
         

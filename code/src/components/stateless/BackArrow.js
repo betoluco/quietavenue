@@ -1,22 +1,34 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 
-import leftArrow from "../../images/leftArrow.svg";
-
 const BackArrow = (props) => {
     const history = useHistory();
     
+    
     const onClickHandler = event =>{
         if(history.length > 0){
-            history.goBack()
+            history.goBack();
         }else{
-            history.push("/")
+            history.push("/");
         }
     };
     
     return (
         <button onClick={onClickHandler}>
-            <img src={leftArrow} alt="back arrow" className="h-6"/>
+            <span 
+            className="block w-6 h-1 rounded-sm mb-2.5"
+            style={{
+                backgroundColor:props.color,
+                transform: "rotate(-45deg)"  
+            }}>
+            </span>
+            <span 
+            className="block w-6 h-1 rounded-sm"
+            style={{
+            backgroundColor:props.color,
+            transform: "rotate(45deg)"
+            }}>
+            </span>
         </button>       
     );
   
