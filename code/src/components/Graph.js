@@ -11,6 +11,8 @@ import AudioPlayer from "./stateless/AudioPlayer";
 import ColorScale from "./stateless/ColorScale";
 import plusSign from "../images/plusSign.svg";
 import minusSign from "../images/minusSign.svg";
+import playNext from "../images/playNext.svg";
+import playPrevious from "../images/playPrevious.svg";
 
 class Graph extends Component{
   //A class componets is necesary so that events linstener can access the state
@@ -23,9 +25,11 @@ class Graph extends Component{
     this.state = {
       a:1, d:1, e:0, f:0, 
       pointerPosition:null, 
-      mp3Link:"",
+      recordingTime: undefined,
+      mp3Link: "",
       pointerDistance:null,
-      oneFinger: false
+      oneFinger: false,
+      index: undefined
     };
     this.margin = { top: 7, right: 0, bottom: 35, left: 80};
     this.width = 834; //16:9 screen ratio
@@ -37,7 +41,7 @@ class Graph extends Component{
       
     this.firstDay = timeDay.floor(new Date(this.props.dataPoints[0].time));
     this.lastDay = timeDay.ceil(new Date(this.props.dataPoints[this.props.dataPoints.length - 1].time));
-    this.recordingTime = `Extracted form recodings take from ${this.firstDay.toLocaleDateString("en-US")} to ${this.lastDay.toLocaleDateString("en-US")}`;
+    this.recordingDates = `Extracted form recodings taken from ${this.firstDay.toLocaleDateString("en-US")} to ${this.lastDay.toLocaleDateString("en-US")}`;
     this.domainDays = timeDay.range(this.firstDay, this.lastDay);
     
     this.xScale = scaleBand()
@@ -58,8 +62,8 @@ class Graph extends Component{
     
     this.yAxis = axisLeft(this.yScale).tickFormat(timeFormat("%H:%M"));
     
-    this.reproduceSound = (link) =>{
-      this.setState({ mp3Link:link });
+    this.playSound = (time, mp3Link, index) =>{
+      this.setState({ recordingTime: time, mp3Link: mp3Link, index:index });
     };
     
     this.zoomButtons = (magnification) =>{
@@ -93,6 +97,33 @@ class Graph extends Component{
       };
       
       select(this.yAxisRef.current).call(this.yAxis.scale(rescaleY(this.yScale)));
+    };
+    
+    this.playNext = () =>{
+      console.log("index", this.state.index)
+      let nextSoundIndex = this.state.index === undefined? 0: this.state.index + 1;
+      console.log("sound Index", nextSoundIndex);
+      if(typeof this.props.dataPoints[nextSoundIndex] === 'undefined') {
+          nextSoundIndex = 0;
+      }
+      console.log("sound Index", nextSoundIndex);
+      this.setState({ 
+        recordingTime: new Date(this.props.dataPoints[nextSoundIndex].time), 
+        mp3Link: this.props.dataPoints[nextSoundIndex].mp3Link, 
+        index:nextSoundIndex 
+      });
+    };
+    
+    this.playPrevious = () =>{
+      let previousSoundIndex = this.state.index === undefined? this.props.dataPoints.length -1: this.state.index - 1;
+      if(typeof this.props.dataPoints[previousSoundIndex] === 'undefined') {
+          previousSoundIndex = this.props.dataPoints.length -1;
+      }
+      this.setState({ 
+        recordingTime: new Date(this.props.dataPoints[previousSoundIndex].time), 
+        mp3Link: this.props.dataPoints[previousSoundIndex].mp3Link, 
+        index:previousSoundIndex 
+      });
     };
   }
   
@@ -128,6 +159,9 @@ class Graph extends Component{
     .on("mouseup touchend", (event) => {
       this.setState({pointerPosition: null, oneFinger: false});
     })
+    .on("mouseleave", (event) => {
+      this.setState({pointerPosition: null});
+    })
     .on("mousemove", (event) => {
       if (this.state.pointerPosition){
         const t = pointers(event);
@@ -147,6 +181,7 @@ class Graph extends Component{
     .on("touchmove", (event) => {
       const t = pointers(event);
       if (t.length > 1) {
+        event.preventDefault();
         const pointerPosition = [
           Math.abs((t[1][0] - t[0][0])/2) + t[0][0],
           Math.abs((t[1][1] - t[0][1])/2) + t[0][1]
@@ -233,20 +268,20 @@ class Graph extends Component{
         "green":
         this.colorScale(point.maxLoudness)
       }
-      onClick={() => this.reproduceSound(point.mp3Link)}/>;
+      onClick={() => this.playSound(time, point.mp3Link, index)}/>;
     });
     
     return (
       <Fragment>
         <h5 className="text-center max-w-screen-md text-sm mb-6">
-          {this.recordingTime}
+          {this.recordingDates}
         </h5>
         <ColorScale />
         <div className="mb-7">
-          <div className="flex absolute items-center mt-3 ml-52" >
+          <div className="flex absolute items-center mt-3 ml-52 select-none" >
             <button 
             onClick={this.resetZoom}
-            className="bg-black text-white text-sm font-medium p-1.5 mr-2">
+            className="bg-black text-white tracking-wider text-sm font-medium p-2 mr-2 rounded">
               Reset
             </button>
             <div className="flex flex-col">
@@ -258,47 +293,57 @@ class Graph extends Component{
               </button>
             </div>
           </div>
-          {this.state.oneFinger && <h3 className="absolute mt-60 ml-9 w-64 z-20 text-white text-center text-xl font-semibold">
+          {this.state.oneFinger && <h3 className="absolute mt-60 ml-9 w-64 z-20 text-center text-xl font-semibold">
             Use two fingers to move the map
           </h3>}
-          <div  className={this.state.oneFinger && "z-10 bg-gray-700 bg-opacity-80"}>
-            <div style={{width:"318px"}}>
-              <svg 
-              ref={this.graphRef}
-              viewBox={`0 0 ${this.width} ${this.height}`}
-              preserveAspectRatio="xMidYMid meet">
-                <clipPath id="graphClip">
-                  <rect 
-                  x={this.margin.left}
-                  y={this.margin.top}
-                  width={this.width - this.margin.right - this.margin.left} 
-                  height={this.height - this.margin.bottom - this.margin.bottom} />
-                </clipPath>
-                <clipPath id="axisClip">
-                  <rect 
-                  x={this.margin.left}
-                  width={this.width - this.margin.right - this.margin.left} 
-                  height={this.height} />
-                </clipPath>
-                <g ref={this.yAxisRef} transform={`translate(${this.margin.left}, ${this.margin.top})`}/>
-                  <g clipPath="url(#graphClip)">
-                    <g transform={
-                      `matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`
-                    }>
-                      {rects}
-                    </g>
+          <div style={{width:"318px"}}>
+            <svg 
+            ref={this.graphRef}
+            viewBox={`0 0 ${this.width} ${this.height}`}
+            preserveAspectRatio="xMidYMid meet">
+              <clipPath id="graphClip">
+                <rect 
+                x={this.margin.left}
+                y={this.margin.top}
+                width={this.width - this.margin.right - this.margin.left} 
+                height={this.height - this.margin.bottom - this.margin.bottom} />
+              </clipPath>
+              <clipPath id="axisClip">
+                <rect 
+                x={this.margin.left}
+                width={this.width - this.margin.right - this.margin.left} 
+                height={this.height} />
+              </clipPath>
+              <g ref={this.yAxisRef} transform={`translate(${this.margin.left}, ${this.margin.top})`} className="select-none"/>
+                <g clipPath="url(#graphClip)">
+                  <g transform={
+                    `matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`
+                  }>
+                    {rects}
                   </g>
-                  <g clipPath="url(#axisClip)">
-                    <g ref={this.xAxisRef} transform={
-                    `matrix(${this.state.a}, 0, 0, 1, ${this.state.e}, ${this.height - this.margin.bottom - this.margin.top})`
-                    }/>
-                  </g>
-              </svg>
-            </div>
+                </g>
+                <g clipPath="url(#axisClip)">
+                  <g ref={this.xAxisRef} transform={
+                  `matrix(${this.state.a}, 0, 0, 1, ${this.state.e}, ${this.height - this.margin.bottom - this.margin.top})`}
+                  className="select-none"
+                  />
+                </g>
+            </svg>
           </div>
         </div>
         
-        <AudioPlayer audioFile={this.state.mp3Link}/>
+        <div className="flex">
+          <button onClick={this.playPrevious}>
+            <img className="h-8 mr-2" src={playPrevious} alt="Play Previous"/>
+          </button>
+          <button onClick={this.playNext}>
+            <img className="h-8" src={playNext} alt="Play Next"/>
+          </button>
+        </div>
+        
+        <AudioPlayer 
+        audioFileLink={this.state.mp3Link} 
+        recordingTime={this.state.recordingTime}/>
       </Fragment>
     );
   }
