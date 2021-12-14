@@ -4,7 +4,7 @@ import path from "path";
 import { Redirect } from "react-router-dom";
 
 import { fetchEstates } from "../redux/asyncActions";
-import EstatesTemplate from "./stateless/EstatesTemplate";
+import EstatesTemplate from "./EstatesTemplate";
 import InternalServerError from "./stateless/InternalServerError";
 import Spinner from "./stateless/Spinner";
 

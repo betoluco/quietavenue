@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment } from "react";
+import React, {useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios"; 
 
@@ -22,37 +22,40 @@ const Search = props =>{
         let suggestList = [];
         
         if(propertySuggest.length){
-          suggestList.push(<SuggestType type="Property" />);
+          suggestList.push(<SuggestType type="Property" key="Property"/>);
           propertySuggest.forEach(property =>{
             suggestList.push(
               <Suggestion 
               onMouseDownHandler={onMouseDownHandler}
               link={property.PK}
-              name={property.address} />
+              name={property.address} 
+              key={property.PK}/>
             );
           });
         }
         
         if(citySuggest.length){
-          suggestList.push(<SuggestType type="City" />);
+          suggestList.push(<SuggestType type="City" key="City"/>);
           citySuggest.forEach(city =>{
             suggestList.push(
               <Suggestion 
               onMouseDownHandler={onMouseDownHandler}
               link={city.cityId}
-              name={city.city} />
+              name={city.city} 
+              key={city.cityId}/>
             );
           });
         }
         
         if(zipCodeSuggest.length){
-          suggestList.push(<SuggestType type="Zip code" />);
+          suggestList.push(<SuggestType type="Zip code" key="ZipCode"/>);
           zipCodeSuggest.forEach( zipCode  =>{
             suggestList.push(
               <Suggestion 
               onMouseDownHandler={onMouseDownHandler}
               link={zipCode.zipCodeId}
-              name={zipCode.zipCode} />
+              name={zipCode.zipCode}
+              key={zipCode.zipCodeId}/>
             );
           });
         }

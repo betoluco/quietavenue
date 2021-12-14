@@ -35,7 +35,7 @@ const EstateTemplate = (props) => {
           </h2>
         </div>
         {props.price &&
-          <div div className="mb-4">
+          <div className="mb-4">
             <h2 className="text-lg text-center">{props.price}</h2>
           </div>
         }
@@ -59,7 +59,7 @@ const EstateTemplate = (props) => {
         
       <div className="flex flex-col items-center p-2.5">
         {props.estate.soundScore &&
-          <div div className="flex flex-col mb-4">
+          <div className="flex flex-col mb-4">
             <h2 className="text-2xl mb-1">Noise Score</h2>
             <div className="flex justify-center">
               <h2 

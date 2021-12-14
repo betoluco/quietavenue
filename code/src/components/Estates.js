@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import ReactGA from "react-ga";
 
 import { fetchEstates } from "../redux/asyncActions";
-import EstatesTemplate from "./stateless/EstatesTemplate";
+import EstatesTemplate from "./EstatesTemplate";
 import InternalServerError from "./stateless/InternalServerError";
 import Spinner from "./stateless/Spinner";
 
@@ -15,7 +14,6 @@ const Estates = (props) =>{
     const statusCode = useSelector( state => state.statusCode );
     
     useEffect( () => {
-        ReactGA.pageview(window.location.pathname);
         if ( estates === undefined ) dispatch( fetchEstates(endPoint, groupId) );
     }, []);
     

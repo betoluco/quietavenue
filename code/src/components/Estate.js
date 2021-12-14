@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector} from "react-redux";
 import { Redirect } from "react-router-dom";
 import path from "path";
 
 import { fetchEstate } from "../redux/asyncActions";
 import EstateTemplate from "./stateless/EstateTemplate";
-
 
 const Estate = (props) =>{
     const estateId = props.match.params.estateId

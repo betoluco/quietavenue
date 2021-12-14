@@ -3,11 +3,11 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import Card from "./Card";
-import cancelButton from "../../images/cancelButton.svg"
-import Search from "../Search";
-import logo from "../../images/quietavenueLogoWhite.svg";
-import headerImage from  "../../images/headerImage.jpg";
-import HamburgerMenu from "../HamburgerMenu";
+import cancelButton from "../images/cancelButton.svg"
+import Search from "./Search";
+import logo from "../images/quietavenueLogoWhite.svg";
+import headerImage from  "../images/headerImage.jpg";
+import HamburgerMenu from "./HamburgerMenu";
 
 const EstatesTemaplate = (props) =>{
   const estate = useSelector( state => state.[props.estates[0]]);
@@ -17,7 +17,7 @@ const EstatesTemaplate = (props) =>{
   if (props.filter === "zipCode") filter = "Filter: " + estate.zipCode;
   
   const cardsList = props.estates.map( estate =>{
-    return <Card estate={estate}/>;
+    return <Card estate={estate} key={estate}/>;
   });
   
   return (
