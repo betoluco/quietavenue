@@ -6,24 +6,14 @@ const ColorScale = (props) => {
             <div className="flex flex-row">
                 <div 
                 className="w-full" 
-                style={{backgroundColor: "#2A00D5", height:"20px"}}>
+                style={{
+                    height:"20px",
+                    backgroundColor: "#808080",
+                    background: "linear-gradient(90deg, rgba(128,128,128,1) 0%, rgba(255,0,0,1) 100%)"
+                }}>
                 </div>
-                <div
-                className="w-full"
-                style={{backgroundColor: "#63009E", height:"20px"}}>
-                </div>
-                <div
-                className="w-full"
-                style={{backgroundColor: "#A1015D", height:"20px"}}>
-                </div>
-                <div 
-                className="w-full"
-                style={{backgroundColor: "#D80027", height:"20px"}}>
-                </div>
-                <div 
-                className="w-full"
-                style={{backgroundColor: "#FE0002", height:"20px"}}>
-                </div>
+                
+                
             </div>
             <div className="flex flex-row justify-between">
                 <h4 className="">low</h4>

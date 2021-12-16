@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { scaleBand, scaleTime, scaleQuantize } from "d3-scale";
+import { scaleBand, scaleTime, scaleLinear } from "d3-scale";
 import { timeDay } from "d3-time";
 import { axisBottom, axisLeft} from "d3-axis";
 import { select } from "d3-selection";
@@ -34,10 +34,9 @@ class Graph extends Component{
     this.margin = { top: 7, right: 0, bottom: 35, left: 80};
     this.width = 834; //16:9 screen ratio
     this.height = 1482;
-    this.colorRange = ["#2A00D5", "#63009E", "#A1015D", "#D80027", "#FE0002"];
-    this.colorScale = scaleQuantize()
+    this.colorScale = scaleLinear()
     .domain([0, 1])
-    .range(this.colorRange);
+    .range(["#808080", "#ff0000"]);
       
     this.firstDay = timeDay.floor(new Date(this.props.dataPoints[0].time));
     this.lastDay = timeDay.ceil(new Date(this.props.dataPoints[this.props.dataPoints.length - 1].time));
@@ -57,7 +56,7 @@ class Graph extends Component{
     this.today = new Date();
     
     this.yScale = scaleTime()
-      .domain([timeDay.floor(this.today), timeDay.ceil(this.today)])
+      .domain([timeDay.ceil(this.today), timeDay.floor(this.today)])
       .range([this.height - this.margin.bottom, this.margin.top]);
     
     this.yAxis = axisLeft(this.yScale).tickFormat(timeFormat("%H:%M"));
