@@ -5,13 +5,10 @@ import { renderRoutes } from "react-router-config";
 import { createStore, applyMiddleware, compose} from "redux";
 import thunkMiddleware from "redux-thunk";
 import { Provider } from "react-redux";
-import ReactGA from "react-ga";
 
 import routes from "./routes";
 import reducers from "./redux/reducers";
-import "./style.css"
-
-ReactGA.initialize("G-4CPGMCRQBY");
+import "./style.css";
 
 const preloadedState = window.__PRELOADED_STATE__;
 

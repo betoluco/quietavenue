@@ -28,7 +28,7 @@ const renderer = (req, store, context) => {
                     window.gtag = gtag
                     gtag('js', new Date());
                     
-                    gtag('config', 'G-X36JD5Z2M5');
+                    gtag('config', 'G-439GZCCJLJ');
                 </script>
                 <meta name="viewport" content="width=device-width, initial-scale=1">
                 <link rel="stylesheet" href="${css}">  

@@ -4,7 +4,7 @@ import { renderRoutes } from "react-router-config";
 const Root = ( props ) => {
     
     useEffect( () => {
-        window.gtag('config', 'G-X36JD5Z2M5', {
+        window.gtag('config', 'G-439GZCCJLJ', {
             page_title: props.location.pathname,
             page_path: props.location.pathname,
         });
