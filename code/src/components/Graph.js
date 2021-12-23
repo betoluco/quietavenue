@@ -31,9 +31,9 @@ class Graph extends Component{
       oneFinger: false,
       index: undefined
     };
-    this.margin = { top: 7, right: 0, bottom: 35, left: 80};
+    this.margin = { top: 4, right: 0, bottom: 115, left: 124};
     this.width = 834; //16:9 screen ratio
-    this.height = 1482;
+    this.height = 1560;
     this.colorScale = scaleLinear()
     .domain([0, 1])
     .range(["#808080", "#ff0000"]);
@@ -49,7 +49,7 @@ class Graph extends Component{
       .paddingInner(0.1);
     
     this.xAxis = axisBottom(this.xScale)
-      .tickFormat(timeFormat("%a %d"))
+      .tickFormat(timeFormat("%d %a"))
       .tickSizeOuter(0);
     
     //using today date for the domain of Y axis for simplicity
@@ -59,7 +59,7 @@ class Graph extends Component{
       .domain([timeDay.ceil(this.today), timeDay.floor(this.today)])
       .range([this.height - this.margin.bottom, this.margin.top]);
     
-    this.yAxis = axisLeft(this.yScale).tickFormat(timeFormat("%H:%M"));
+    this.yAxis = axisLeft(this.yScale).tickFormat(timeFormat("%I:%M %p"));
     
     this.playSound = (time, mp3Link, index) =>{
       this.setState({ recordingTime: time, mp3Link: mp3Link, index:index });
@@ -99,13 +99,10 @@ class Graph extends Component{
     };
     
     this.playNext = () =>{
-      console.log("index", this.state.index)
       let nextSoundIndex = this.state.index === undefined? 0: this.state.index + 1;
-      console.log("sound Index", nextSoundIndex);
       if(typeof this.props.dataPoints[nextSoundIndex] === 'undefined') {
           nextSoundIndex = 0;
       }
-      console.log("sound Index", nextSoundIndex);
       this.setState({ 
         recordingTime: new Date(this.props.dataPoints[nextSoundIndex].time), 
         mp3Link: this.props.dataPoints[nextSoundIndex].mp3Link, 
@@ -128,8 +125,13 @@ class Graph extends Component{
   
   componentDidMount(){
     select(this.xAxisRef.current)
-    .style("font-size","1.4rem")
-    .call(this.xAxis);
+    .style("font-size","2rem")
+    .call(this.xAxis)
+    .selectAll("text")  
+    .style("text-anchor", "end")
+    .attr("dx", "-.8em")
+    .attr("dy", ".15em")
+    .attr("transform", "rotate(-65)");
 
     select(this.yAxisRef.current)
     .style("font-size","1.7rem")
