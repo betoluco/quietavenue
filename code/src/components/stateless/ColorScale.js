@@ -9,7 +9,7 @@ const ColorScale = (props) => {
                 style={{
                     height:"20px",
                     backgroundColor: "#808080",
-                    background: "linear-gradient(90deg, rgba(128,128,128,1) 0%, rgba(255,0,0,1) 100%)"
+                    background: "linear-gradient(90deg, rgba(0,0,255,1) 0%, rgba(255,0,0,1) 100%)"
                 }}>
                 </div>
                 

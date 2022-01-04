@@ -34,9 +34,10 @@ class Graph extends Component{
     this.margin = { top: 4, right: 0, bottom: 115, left: 124};
     this.width = 834; //16:9 screen ratio
     this.height = 1560;
+    
     this.colorScale = scaleLinear()
     .domain([0, 1])
-    .range(["#808080", "#ff0000"]);
+    .range(["#0000ff", "#ff0000"]);
       
     this.firstDay = timeDay.floor(new Date(this.props.dataPoints[0].time));
     this.lastDay = timeDay.ceil(new Date(this.props.dataPoints[this.props.dataPoints.length - 1].time));
@@ -51,6 +52,10 @@ class Graph extends Component{
     this.xAxis = axisBottom(this.xScale)
       .tickFormat(timeFormat("%d %a"))
       .tickSizeOuter(0);
+      
+    this.widthScale = scaleLinear()
+    .domain([0, 1])
+    .range([0, this.xScale.bandwidth()]);
     
     //using today date for the domain of Y axis for simplicity
     this.today = new Date();
@@ -254,21 +259,27 @@ class Graph extends Component{
   render(){
     const rects = this.props.dataPoints.map( (point, index) =>{
       const time = new Date(point.time);
-      const xPosition = this.xScale(timeDay.floor(time));
+      const xPosition = this.xScale(timeDay.floor(time)) + (this.xScale.bandwidth()/2 - this.widthScale(point.maxLoudness)/2);
       this.today.setHours(time.getHours(), time.getMinutes(), time.getSeconds(), 0);
       const yPosition = this.yScale(this.today);
-        
+      
+      if (this.state.mp3Link === point.mp3Link) {
+        return <rect 
+        key={point.mp3Link}
+        width={ this.xScale.bandwidth() }
+        height="1"
+        x={this.xScale(timeDay.floor(time))}
+        y={yPosition}
+        fill={ "green" }
+        onClick={() => this.playSound(time, point.mp3Link, index)}/>;
+      }
       return <rect 
       key={point.mp3Link}
-      width={this.xScale.bandwidth()}
+      width={ this.widthScale(point.maxLoudness) }
       height="1"
       x={xPosition}
       y={yPosition}
-      fill={
-        this.state.mp3Link === point.mp3Link? 
-        "green":
-        this.colorScale(point.maxLoudness)
-      }
+      fill={this.colorScale(point.maxLoudness)}
       onClick={() => this.playSound(time, point.mp3Link, index)}/>;
     });
     
