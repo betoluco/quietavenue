@@ -129,7 +129,7 @@ class Graph extends Component{
     .call(this.xAxis)
     .selectAll("text")  
     .style("text-anchor", "end")
-    .attr("dx", "-.8em")
+    .attr("dx", "-.6em")
     .attr("dy", ".15em")
     .attr("transform", "rotate(-65)");
 
@@ -211,13 +211,13 @@ class Graph extends Component{
             pointerPosition[1]/this.state.d - this.state.f/this.state.d,
           ];
         
-          const zoom = this.state.a * (pointerDistance / this.state.pointerDistance);
+          const zoom = this.state.a * (pointerDistance / this.state.pointerDistance) * 3;
           const move = [ 
             pointerPosition[0] - inverseTranformationCoordinates[0] * zoom,
             pointerPosition[1] - inverseTranformationCoordinates[1] * zoom
           ];
           this.setState({
-            a:zoom, 
+            a:1, 
             d:zoom, 
             e:move[0], 
             f:move[1], 
@@ -240,8 +240,8 @@ class Graph extends Component{
         pointerPosition[1]/this.state.d - this.state.f/this.state.d,
       ];
       
-      const yZoom = Math.abs(this.state.d * 1 + (event.wheelDelta *5) / 1000);
-      const xZoom = yZoom >= 1 ? Math.log(yZoom + 5)/Math.log(6) : yZoom;
+      const yZoom = Math.abs(this.state.d * 1 + (event.wheelDelta * 4) / 1000);
+      const xZoom = 1;
       const move = [ 
         pointerPosition[0] - inverseTranformationCoordinates[0] * xZoom,
         pointerPosition[1] - inverseTranformationCoordinates[1] * yZoom
@@ -307,13 +307,7 @@ class Graph extends Component{
                 x={this.margin.left}
                 y={this.margin.top}
                 width={this.width - this.margin.right - this.margin.left} 
-                height={this.height - this.margin.bottom - this.margin.bottom} />
-              </clipPath>
-              <clipPath id="axisClip">
-                <rect 
-                x={this.margin.left}
-                width={this.width - this.margin.right - this.margin.left} 
-                height={this.height} />
+                height={this.height - this.margin.top - this.margin.bottom -2} />
               </clipPath>
               <g ref={this.yAxisRef} transform={`translate(${this.margin.left}, ${this.margin.top})`} className="select-none"/>
                 <g clipPath="url(#graphClip)">
@@ -323,12 +317,10 @@ class Graph extends Component{
                     {rects}
                   </g>
                 </g>
-                <g clipPath="url(#axisClip)">
-                  <g ref={this.xAxisRef} transform={
-                  `matrix(${this.state.a}, 0, 0, 1, ${this.state.e}, ${this.height - this.margin.bottom - this.margin.top})`}
-                  className="select-none"
-                  />
-                </g>
+                <g ref={this.xAxisRef} transform={
+                `matrix(${this.state.a}, 0, 0, 1, ${this.state.e}, ${this.height - this.margin.bottom - this.margin.top})`}
+                className="select-none"
+                />
             </svg>
           </div>
         </div>
