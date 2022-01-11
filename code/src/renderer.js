@@ -5,7 +5,7 @@ import { renderRoutes } from "react-router-config";
 import serializer from "serialize-javascript";
 import { Provider } from "react-redux";
 
-import routes from "./routes";
+import Routes from "./Routes";
 import rehydrationBundle from "../clientBuild/clientBundle.js";
 import css from "../clientBuild/main.css";
 
@@ -13,7 +13,7 @@ const renderer = (req, store, context) => {
     const content = ReactDOMServer.renderToString(
         <Provider store={store}>
             <StaticRouter location={req.path} context={ context }>
-                <Fragment>{renderRoutes(routes)}</Fragment>
+                <Fragment>{renderRoutes(Routes)}</Fragment>
             </StaticRouter>
         </Provider>
     );

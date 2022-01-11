@@ -6,7 +6,7 @@ import { createStore, applyMiddleware, compose} from "redux";
 import thunkMiddleware from "redux-thunk";
 import { Provider } from "react-redux";
 
-import routes from "./routes";
+import Routes from "./Routes";
 import reducers from "./redux/reducers";
 import "./style.css";
 
@@ -22,7 +22,7 @@ const store = createStore(reducers, preloadedState, composeEnhancers(
 ReactDOM.hydrate(
     <Provider store={store} >
         <BrowserRouter>
-            <Fragment>{renderRoutes(routes)}</Fragment>
+            <Fragment>{renderRoutes(Routes)}</Fragment>
         </BrowserRouter>
     </Provider>,
     document.querySelector('#root')
