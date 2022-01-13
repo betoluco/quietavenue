@@ -4,7 +4,7 @@ import { matchRoutes } from "react-router-config";
 import cors from "cors";
 
 import renderer from "./renderer";
-import Routes from "./routes";
+import Routes from "./Routes";
 import createStore from "./redux/createStore";
 import estates from "./API/estates";
 import estate from "./API/estate";
