@@ -16,15 +16,16 @@ const HamburgerMenu = props =>{
   return (
     <Fragment>
       <button onClick={() => {setShowMenu(true);}}>
+        <span className="hidden">Menu</span>
         <span 
         className="block w-8 h-1 rounded-sm mb-1"
         style={{backgroundColor:props.color}}>
         </span>
         <span 
-        className="block w-8 h-1 rounded-sm mb-1 "
+        className="block w-8 h-1 rounded-sm mb-1"
         style={{backgroundColor:props.color}}>
         </span>
-        <span className="block w-8 h-1 rounded-sm mb-1"
+        <span className="block w-8 h-1 rounded-sm"
         style={{backgroundColor:props.color}}>
         </span>
       </button>
