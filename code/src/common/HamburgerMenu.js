@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { useHistory } from "react-router-dom";
 
-import logo from "../images/quietavenueLogoGreen.svg";
+import logo from "./images/quietavenueLogoGreen.svg";
 
 const HamburgerMenu = props =>{
   const history = useHistory();

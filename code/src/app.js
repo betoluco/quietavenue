@@ -2,13 +2,13 @@ import awsServerlessExpressMiddleware from "aws-serverless-express/middleware";
 import express from "express";
 import { matchRoutes } from "react-router-config";
 import cors from "cors";
+import { configureStore } from '@reduxjs/toolkit';
 
 import renderer from "./renderer";
 import Routes from "./Routes";
-import createStore from "./redux/createStore";
 import estates from "./API/estates";
-import estate from "./API/estate";
 import search from "./API/search";
+import estatesReducer from './estatesReducer';
 
 const app = express();
 
@@ -18,17 +18,12 @@ app.use(awsServerlessExpressMiddleware.eventContext());
 
 const corsDev = "https://8ef2832e749e4b0e8eb0dafdb5d7df96.vfs.cloud9.us-west-1.amazonaws.com"; //Allow request from Cloud 9 development machine
 
-app.get("/api/estate/:estateId", cors({origin: corsDev}), async (req, res) =>{
-    const response = await estate(req, res);
-    res.send(JSON.stringify(response));
-});
-
 app.get("/api/search", cors({origin: corsDev}), async (req, res) =>{
     const response = await search(req, res);
     res.send(JSON.stringify(response));
 });
 
-app.get("/api/query/:property/:groupId", cors({origin: corsDev}), async (req, res) =>{
+app.get("/api/estates", cors({origin: corsDev}), async (req, res) =>{
     const response = await estates(req, res);
     res.send(JSON.stringify(response));
 });
@@ -36,7 +31,11 @@ app.get("/api/query/:property/:groupId", cors({origin: corsDev}), async (req, re
 //Server side rendering
 
 app.get("*", async (req, res) =>{
-    const store = createStore();
+    const store = configureStore({
+        reducer:{
+            estates: estatesReducer
+        }
+    });
     
     const path = req.apiGateway.event.path;
     

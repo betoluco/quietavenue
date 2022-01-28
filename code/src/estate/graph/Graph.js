@@ -7,12 +7,12 @@ import { timeFormat } from "d3-time-format";
 import { pointers } from "d3-selection";
 import { mean } from "d3-array";
 
-import AudioPlayer from "./stateless/AudioPlayer";
-import ColorScale from "./stateless/ColorScale";
-import plusSign from "../images/plusSign.svg";
-import minusSign from "../images/minusSign.svg";
-import playNext from "../images/playNext.svg";
-import playPrevious from "../images/playPrevious.svg";
+import AudioPlayer from "./AudioPlayer";
+import ColorScale from "./ColorScale";
+import plusSign from "./plusSign.svg";
+import minusSign from "./minusSign.svg";
+import playNext from "./playNext.svg";
+import playPrevious from "./playPrevious.svg";
 
 class Graph extends Component{
   //A class componets is necesary so that events linstener can access the state

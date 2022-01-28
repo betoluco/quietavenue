@@ -1,11 +1,8 @@
 import React, {Fragment} from "react";
 import { Link } from "react-router-dom";
 
-import headerImage from  "../../images/headerImage.jpg";
-import logo from "../../images/quietavenueLogoGreen.svg";
-import HamburgerMenu from "../HamburgerMenu";
-import Search from "../Search";
-import BackArrow from "./BackArrow";
+import logo from "../common/images/quietavenueLogoGreen.svg";
+import HamburgerMenu from "../common/HamburgerMenu";
 
 const NotFound = ({ staticContext = {} }) => {
     staticContext.notFound = true;
@@ -21,7 +18,7 @@ const NotFound = ({ staticContext = {} }) => {
             <h1 className="text-center text-3xl mb-3">Ooops!, not found</h1>
             <h4 className="text-center text-xl">
                 To go home click 
-                <Link to="/" className="text-blue-600"> here</Link>
+                <Link to="/" className="text-blue-600">here</Link>
             </h4>
         </Fragment>
     );

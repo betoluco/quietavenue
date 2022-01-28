@@ -54,7 +54,7 @@ const search = async (req, res) =>{
             const citySuggest = results.data.suggest.citySuggest[0].options;
             response.citySuggest = citySuggest.map((city) => {
                 return {
-                    cityId: "/filter/cityId/" + city._source.cityId,
+                    cityId: "?filter=cityId&filterId=" + city._source.cityId,
                     city: city._source.city
                 };
             });
@@ -62,7 +62,7 @@ const search = async (req, res) =>{
             const zipCodeSuggest = results.data.suggest.zipCodeSuggest[0].options;
             response.zipCodeSuggest = zipCodeSuggest.map((zipCode) => {
                 return{
-                    zipCodeId: "/filter/zipCode/" + zipCode._source.zipCode,
+                    zipCodeId: "?filter=zipCodeId&filterId=" + zipCode._source.zipCode,
                     zipCode: zipCode._source.zipCode
                 };
             });

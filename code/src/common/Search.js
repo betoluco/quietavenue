@@ -2,9 +2,9 @@ import React, {useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios"; 
 
-import searchButton from "../images/searchButtonIcon.svg";
-import SuggestType from "./stateless/SuggestType";
-import Suggestion from "./stateless/Suggestion";
+import searchButton from "./images/searchButtonIcon.svg";
+import SuggestType from "./SuggestType";
+import Suggestion from "./Suggestion";
 
 const Search = props =>{
   const history = useHistory();

@@ -1,9 +1,8 @@
-import Root from "./components/stateless/Root";
-import Estate from "./components/Estate";
-import Estates from "./components/Estates";
-import FilteredEstates from "./components/FilteredEstates";
-import FreeTrial from "./components/stateless/FreeTrial";
-import NotFound from "./components/stateless/NotFound";
+import Root from "./Root";
+import Estate from "./estate/Estate";
+import Estates from "./estates/Estates";
+import FreeTrial from "./freeTrial/FreeTrial";
+import NotFound from "./notFound/NotFound";
 
 
 const Routes = [
@@ -13,11 +12,6 @@ const Routes = [
             {
                 ...Estate,
                 path: "/estate/:estateId",
-                exact: true
-            },
-            {
-                ...FilteredEstates,
-                path: "/filter/:filter/:groupId",
                 exact: true
             },
             {

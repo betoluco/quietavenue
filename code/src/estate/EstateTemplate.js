@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import logo from "../../images/quietavenueLogoGreen.svg";
-import BackArrow from "./BackArrow";
-import Search from "../Search";
+import logo from "../common/images/quietavenueLogoGreen.svg";
+import BackArrow from "../common/BackArrow";
+import Search from "../common/Search";
 import Vimeo from "./Vimeo";
-import Graph from "../Graph";
-import HamburgerMenu from "../HamburgerMenu";
+import Graph from "./graph/Graph";
+import HamburgerMenu from "../common/HamburgerMenu";
 
 const EstateTemplate = (props) => {
   

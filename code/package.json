@@ -7,6 +7,7 @@
   "author": "betoluco",
   "license": "MIT",
   "dependencies": {
+    "@reduxjs/toolkit": "^1.7.1",
     "aws-serverless-express": "^3.4.0",
     "axios": "^0.18.0",
     "cors": "^2.8.5",
@@ -22,8 +23,6 @@
     "react-redux": "^7.2.2",
     "react-router-config": "^5.1.1",
     "react-router-dom": "^5.2.0",
-    "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0",
     "serialize-javascript": "^5.0.1",
     "webpack-node-externals": "^3.0.0"
   },
@@ -56,6 +55,7 @@
     "cypress": "^6.2.0",
     "jest": "^27.4.7",
     "mini-css-extract-plugin": "^1.6.0",
+    "msw": "^0.36.7",
     "postcss": "^8.3.0",
     "postcss-loader": "^5.3.0",
     "postcss-preset-env": "^6.7.0",

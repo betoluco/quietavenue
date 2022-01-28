@@ -4,21 +4,20 @@ import { useSelector } from "react-redux";
 
 
 const Card = props =>{
-  const estate = useSelector( state => state[props.estate]);
-  const link = "/estate/" + estate.id;
+  const link = "/estate/" + props.estate.id;
   return (
     <div className="m-2.5 shadow-md border-b-2 border-green-600">
       <Link to={link}>
         <img 
         className="w-full h-64 object-cover" 
-        src={estate.profilePicture} 
+        src={props.estate.profilePicture} 
         alt="Estate" />
-        <div key={estate.id} className="m-2">
+        <div key={props.estate.id} className="m-2">
           <h2 className="text-lg">
-            {estate.address1}
+            {props.estate.address1}
           </h2>
           <h3 className="text-sm">
-            {estate.address2}
+            {props.estate.address2}
           </h3>
         </div>
       </Link>

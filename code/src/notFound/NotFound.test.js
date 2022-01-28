@@ -18,7 +18,7 @@ test('NotFound component renders all elements', () => {
     component.getByRole("heading", {name: "QuietAvenue"});
     component.getByRole("button", {name:"Menu"});
     component.getByRole("heading", {name: "Ooops!, not found"});
-    component.getByRole("heading", {name: "To go home click here"})
+    component.getByRole("heading", {name: "To go home click here"});
     component.getByRole("link", {name: "here"});
 });
 
