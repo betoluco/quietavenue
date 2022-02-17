@@ -1,7 +1,5 @@
 # quietavenue.com
 
-quietavenue.com is a website that consist in a catalogue of real estate properties and details about them, like audio and video
-
 The website is deployed on Amazon Web Services (AWS) and uses the following services.
 
 - S3: quietavenue S3 bucket is used to store resources like: images, audios, json files, and webpack bundles
