@@ -7,7 +7,6 @@
   "author": "betoluco",
   "license": "MIT",
   "dependencies": {
-    "@reduxjs/toolkit": "^1.7.1",
     "aws-serverless-express": "^3.4.0",
     "axios": "^0.18.0",
     "cors": "^2.8.5",
@@ -37,8 +36,7 @@
     "clientBuild": "npm run clear-old-clientBuild && npm run upload-clientBuild",
     "clear-old-clientBuild": "aws s3 rm s3://quietavenuerawfiles/quietavenue/servercopy/ --recursive",
     "upload-clientBuild": "aws s3 cp clientBuild s3://quietavenuerawfiles/quietavenue/servercopy/ --recursive",
-    "remove-old-files": "rm -r clientBuild dist serverBundle.js.LICENSE.txt",
-    "test": "jest"
+    "remove-old-files": "rm -r clientBuild dist serverBundle.js.LICENSE.txt"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
@@ -58,11 +56,5 @@
     "tailwindcss": "^2.1.2",
     "webpack": "^5.37.1",
     "webpack-cli": "^4.7.0"
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
-      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
-    }
   }
 }
