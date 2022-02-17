@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import Card from "./Card";
-import cancelButton from "./cancelButton.svg";
+import deleteFilter from "./deleteFilter.svg";
 
 const EstatesTemaplate = (props) =>{
   // const estate = useSelector( state => state.[props.estates[0]]);
@@ -23,7 +23,7 @@ const EstatesTemaplate = (props) =>{
           <div className="flex flex-row justify-center p-1 rounded-full border-2 border-green-800 bg-green-600">
             <h2 className="text-white pr-1">{filter}</h2>
             <Link to="/">
-              <img className="transform hover:scale-125 h-6" src={cancelButton} alt="Cancel filter"/>
+              <img className="transform hover:scale-125 h-6" src={deleteFilter} alt="delete filter"/>
             </Link>
           </div>
         </div>

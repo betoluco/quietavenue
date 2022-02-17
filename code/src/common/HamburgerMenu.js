@@ -1,22 +1,20 @@
 import React, { Fragment, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import logo from "./images/quietavenueLogoGreen.svg";
+import closeMenu from "./images/closeMenu.svg";
 
 const HamburgerMenu = props =>{
-  const history = useHistory();
-  
   const [showMenu, setShowMenu] = useState(false);
   
-  const onMouseDownHandler = link =>{
-    setShowMenu(false);
-    history.push(link);
+  const onClickHandler = () =>{
+    setShowMenu(!showMenu);
   };
   
   return (
     <Fragment>
-      <button onClick={() => {setShowMenu(true);}}>
-        <span className="hidden">Menu</span>
+      <button onClick={onClickHandler}>
+        <span className="hidden">menu button</span>
         <span 
         className="block w-8 h-1 rounded-sm mb-1"
         style={{backgroundColor:props.color}}>
@@ -35,24 +33,36 @@ const HamburgerMenu = props =>{
             <li>
               <div 
               className="flex flex-row items-center justify-between pb-3 border-b border-green-200 mb-2">
-                <img src={logo} alt="logo" className="h-8"/>
-                <button  onClick={() => {setShowMenu(false)}} className="text-4xl">&times;</button>
+                <img src={logo} alt="company logo" />
+                <button onClick={onClickHandler}>
+                  <img src={closeMenu} alt="close menu" />
+                </button>
               </div>
             </li>
-            <li 
-            className="mb-2 text-base hover:bg-green-200" 
-            onMouseDown={() => onMouseDownHandler("/")}>
-              Home
+            <li className="mb-2 hover:bg-green-200">
+              <Link 
+              className="text-base block"
+              to="/"
+              onClick={onClickHandler}>
+                Home
+              </Link>
+            </li>
+            <li className="mb-2 hover:bg-green-200">
+              <Link 
+              className="text-base block"
+              to="/trial"
+              onClick={onClickHandler}>
+                For Agents
+              </Link>
             </li>
             <li 
-            className="mb-2 text-base hover:bg-green-200"
-            onMouseDown={() => onMouseDownHandler("/trial")}>
-              For Agents
-            </li>
-            <li 
-            className="mb-10 text-base hover:bg-green-200"
-            onMouseDown={() => onMouseDownHandler("/")}>
-              For Prospective Buyers
+            className="mb-10 hover:bg-green-200">
+              <Link 
+              className="text-base block"
+              to="/"
+              onClick={onClickHandler}>
+                For Prospective Buyers
+              </Link>
             </li>
           </ul>
         </div>

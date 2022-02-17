@@ -7,15 +7,17 @@ const BackArrow = (props) => {
     
     const onClickHandler = event =>{
         if(history.length > 0){
+            console.log("history.length > 0")
             history.goBack();
         }else{
+            console.log("push")
             history.push("/");
         }
     };
     
     return (
         <button onClick={onClickHandler}>
-            <span className="invisible">back</span>
+            <span className="hidden">back</span>
             <span 
             className="block w-6 h-1 rounded-sm mb-2.5"
             style={{

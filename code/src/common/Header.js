@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import HamburgerMenu from "./HamburgerMenu";
@@ -19,7 +19,7 @@ const Header = (props) =>{
     }}>
       <div className="flex flex-row justify-between w-full p-2.5 mb-16">
         <Link className="flex flex-row items-center" to="/">
-          <img src={logo} alt="logo" className="h-10"/>
+          <img src={logo} alt="Company logo" />
           <h1 className="text-3xl text-white pl-2">QuietAvenue</h1>
         </Link>
         <HamburgerMenu color="#ffffff"/>

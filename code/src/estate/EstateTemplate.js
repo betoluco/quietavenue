@@ -16,7 +16,7 @@ const EstateTemplate = (props) => {
         <div className="flex flex-row justify-between p-2.5 mb-7">
           <BackArrow color="#000000"/>
           <Link className="flex flex-row items-center" to="/">
-            <img src={logo} alt="logo" className="h-8"/>
+            <img src={logo} alt="company logo"/>
             <h1 className="text-2xl text-green-600 pl-1">QuietAvenue</h1>
           </Link>
           <HamburgerMenu color="#000000"/>

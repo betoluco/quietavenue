@@ -1,9 +1,11 @@
 import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
+
+import Header from "../common/Header";
 
 const FreeTrial = (props) =>{
   return(
     <Fragment>
+      <Header />
       <div className="flex flex-col items-center p-2.5">
         <h4 className="mb-4 max-w-screen-md ">
           When you enroll your property for a free trial,* you provide prospective customers with the information they need to make an informed purchase.

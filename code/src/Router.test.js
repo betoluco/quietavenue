@@ -2,9 +2,10 @@
  * @jest-environment jsdom
  */
 import React, { Fragment } from 'react';
+import 'regenerator-runtime/runtime' //required for redux when testing on SSR
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import {render, waitFor} from '@testing-library/react';
+import {render, screen, waitFor} from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { renderRoutes } from "react-router-config";
 import { Provider } from "react-redux";
@@ -40,7 +41,7 @@ test('home render estates', async () => {
     }
   });
   
-  const component = render(
+  render(
     <Provider store={store} >
       <MemoryRouter initialEntries={["/"]}>
         <Fragment>{renderRoutes(Routes)}</Fragment>
@@ -48,9 +49,8 @@ test('home render estates', async () => {
     </Provider>
   );
   
-  await waitFor(() => expect(component.getByRole("link", {name: "Estate address1 address2"}))
-  .toHaveProperty("href", "http://localhost/estate/estate_id"));
   
+  expect(await screen.findByRole("link", {name: "Estate address1 address2"})).toBeInDocument
   
 });
 
@@ -58,11 +58,11 @@ test('invalid path should redirect to 404', () => {
   //Mock function used by google analytics
   window.gtag = function gtag(){};
   
-  const component = render(
+  render(
       <MemoryRouter initialEntries={["/random"]}>
         <Fragment>{renderRoutes(Routes)}</Fragment>
       </MemoryRouter>
   );
-  component.getByRole("heading", {name: "Ooops!, not found"});
+  expect(screen.findByRole("heading", {name: "Ooops!, not found"})).toBeInDocument;
   
 });

@@ -1,8 +1,11 @@
 module.exports = {
   purge: [
-    './src/components/stateless/*.js',
-    './src/components/*.js',
-    './src/components/**/*.js'
+    './src/common/*.js',
+    './src/estate/*.js',
+    './src/estate/graph/*.js',
+    './src/estates/*.js',
+    './src/freeTrial/*.js',
+    './src/notFound/*.js'
   ],
   darkMode: false, // or 'media' or 'class'
   theme: {
