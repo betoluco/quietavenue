@@ -1,112 +1,116 @@
 import React, {useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import axios from "axios"; 
+import { useHistory } from "react-router-dom";
 
 import searchButton from "./images/searchButtonIcon.svg";
-import SuggestType from "./SuggestType";
-import Suggestion from "./Suggestion";
 
 const Search = props =>{
-  const history = useHistory();
+  let history = useHistory();
   const [searchInputText, setSearchInputText] = useState("");
   const [suggest, setSuggest] = useState([]);
+  const [showSuggest, setShowSuggest] = useState(false);
   
   useEffect(() => {
-    const getData = async () => {
+    (async function () {
       if (searchInputText.length > 1 && searchInputText.length < 200){ //avoid attacks by input overload
-        const response = await axios("https://quietavenue.com/api/search?search=" + searchInputText );
+        try{ 
+          const response = await axios("https://quietavenue.com/api/search?search=" + searchInputText );
         
-        const propertySuggest = response.data.propertySuggest;
-        const citySuggest = response.data.citySuggest;
-        const zipCodeSuggest = response.data.zipCodeSuggest;
-        let suggestList = [];
-        
-        if(propertySuggest.length){
-          suggestList.push(<SuggestType type="Property" key="Property"/>);
-          propertySuggest.forEach(property =>{
-            suggestList.push(
-              <Suggestion 
-              onMouseDownHandler={onMouseDownHandler}
-              link={property.PK}
-              name={property.address} 
-              key={property.PK}/>
-            );
+          let suggestList = [];
+          
+          response.data.forEach( filter =>{
+            if(filter.elements.length){
+              suggestList.push(
+                <li 
+                className="p-1 bg-white text-sm w-full"
+                key={filter.filter}>
+                  {filter.filter}
+                </li>
+              );
+              filter.elements.forEach( element =>{
+                suggestList.push(
+                  <li 
+                  key={element.link}
+                  onMouseDown={ () => onMouseDown(element.link)}
+                  className="flex p-1 pl-2.5 bg-white text-lg hover:bg-green-200">
+                    {element.name}
+                  </li>
+                );
+              });
+            }
           });
-        }
-        
-        if(citySuggest.length){
-          suggestList.push(<SuggestType type="City" key="City"/>);
-          citySuggest.forEach(city =>{
+          
+          if(!suggestList.length){
             suggestList.push(
-              <Suggestion 
-              onMouseDownHandler={onMouseDownHandler}
-              link={city.cityId}
-              name={city.city} 
-              key={city.cityId}/>
+              <li 
+              className="flex p-1 bg-white text-sm border-b-2 border-green-600 border-opacity-50"
+              key="No results">
+                No results
+              </li>
             );
-          });
-        }
+          }
         
-        if(zipCodeSuggest.length){
-          suggestList.push(<SuggestType type="Zip code" key="ZipCode"/>);
-          zipCodeSuggest.forEach( zipCode  =>{
-            suggestList.push(
-              <Suggestion 
-              onMouseDownHandler={onMouseDownHandler}
-              link={zipCode.zipCodeId}
-              name={zipCode.zipCode}
-              key={zipCode.zipCodeId}/>
-            );
-          });
+          setSuggest(suggestList);
+          setShowSuggest(true);
+        }catch{
+          setShowSuggest(false);
         }
-        
-        if(!propertySuggest.length && !citySuggest.length && !zipCodeSuggest.length){
-          suggestList.push(<SuggestType type="No results" />);
-        }
-        
-        setSuggest(suggestList);
       }else{
         setSuggest([]);
+        setShowSuggest(false);
       }
-    };
-    getData();
+    })();
   }, [searchInputText]);
+  
   
   const onChangeHandler = event =>{
     setSearchInputText(event.target.value);
   };
   
-  const onBlurHandler = event =>{
-    setSuggest([]);
+  const onMouseDown = link =>{
+    history.push(link);
     setSearchInputText("");
   };
   
-  const onMouseDownHandler = link =>{
-    history.push(link);
+  const onBlurHandler = event =>{
+    setShowSuggest(false);
+  };
+  
+  const onFocusHandler = event => {
+    if(searchInputText.length > 1){
+      setShowSuggest(true);
+    }
   };
   
   return (
-    <div className="flex flex-col items-center w-full">
-      <form className="flex content-center w-11/12 md:max-w-screen-md mb-10">
-        <input 
-        className="w-full p-2 pr-6 rounded border border-gray-400 focus:ring focus:ring-green-600 focus:outline-none focus:border-transparent"
-        onChange={onChangeHandler}
-        onBlur={onBlurHandler}
-        value={searchInputText}
-        type="text"
-        placeholder="zip code, city, or address"/>
-        <img 
-        src={searchButton}
-        alt="search button"
-        className="relative -ml-6"/>
+    <div 
+    className="flex justify-center mb-8 w-full">
+      <form className="w-11/12 md:max-w-screen-md"
+      onFocus={onFocusHandler}
+      onBlur={onBlurHandler}>
+        <div className="flex">
+          <label htmlFor="search" className="hidden">Search by zip code, city or address</label>
+          <input 
+          id="search"
+          autoComplete="off"
+          className="w-full p-2 pr-6 rounded border border-gray-400 focus:ring focus:ring-green-600 focus:outline-none focus:border-transparent"
+          onChange={onChangeHandler}
+          value={searchInputText}
+          type="text"
+          placeholder="zip code, city or address"/>
+          <img 
+          src={searchButton}
+          alt="search button"
+          className="relative -ml-6"/>
+        </div>
+        {showSuggest &&
+          <ul className="absolute rounded border border-2 border-green-200 w-11/12 md:max-w-screen-md mt-0.5 empty:hidden">
+            {suggest}
+          </ul>
+        }
       </form>
-      <div className="absolute mt-10 w-11/12  md:max-w-screen-md">
-        {suggest}
-      </div>
-    
     </div>
   );
-  
 };
 
 export default Search;

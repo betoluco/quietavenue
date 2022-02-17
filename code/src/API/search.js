@@ -4,11 +4,21 @@ import { elasticSearch } from "./urls";
 
 const search = async (req, res) =>{
     if(req.query.search.length < 200) {
-        let response = {
-            propertySuggest:[], 
-            citySuggest:[],
-            zipCodeSuggest:[]
-        };
+        let response = [
+            {
+                filter: "Properties",
+                elements: []
+            },
+            {
+                filter: "City",
+                elements: []
+            },
+            {
+                filter: "Zip Code",
+                elements: []
+            }
+           
+        ];
         
         const suggesters ={
             "suggest": {
@@ -44,26 +54,26 @@ const search = async (req, res) =>{
             });
             
             const propertySuggest = results.data.suggest.propertySuggest[0].options;
-            response.propertySuggest = propertySuggest.map((property) => {
+            response[0].elements = propertySuggest.map((property) => {
                 return {
-                    PK: "/estate/" + property._id,
-                    address: property._source.address1 + " " + property._source.address2 
+                    link: "/estate/" + property._id,
+                    name: property._source.address1 + " " + property._source.address2 
                 };
             });
             
             const citySuggest = results.data.suggest.citySuggest[0].options;
-            response.citySuggest = citySuggest.map((city) => {
+            response[1].elements = citySuggest.map((city) => {
                 return {
-                    cityId: "?filter=cityId&filterId=" + city._source.cityId,
-                    city: city._source.city
+                    link: "?filter=cityId&filterId=" + city._source.cityId,
+                    name: city._source.city
                 };
             });
             
             const zipCodeSuggest = results.data.suggest.zipCodeSuggest[0].options;
-            response.zipCodeSuggest = zipCodeSuggest.map((zipCode) => {
+            response[2].elements = zipCodeSuggest.map((zipCode) => {
                 return{
-                    zipCodeId: "?filter=zipCodeId&filterId=" + zipCode._source.zipCode,
-                    zipCode: zipCode._source.zipCode
+                    link: "?filter=zipCodeId&filterId=" + zipCode._source.zipCode,
+                    name: zipCode._source.zipCode
                 };
             });
                 
