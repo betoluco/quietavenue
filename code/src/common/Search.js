@@ -1,6 +1,7 @@
 import React, {useState, useEffect } from "react";
 import axios from "axios"; 
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import searchButton from "./images/searchButtonIcon.svg";
 
@@ -9,6 +10,13 @@ const Search = props =>{
   const [searchInputText, setSearchInputText] = useState("");
   const [suggest, setSuggest] = useState([]);
   const [showSuggest, setShowSuggest] = useState(false);
+  
+  useEffect(() =>{
+    useSelector( state =>{ 
+      state.estates 
+      
+    })
+  }, []);
   
   useEffect(() => {
     (async function () {
