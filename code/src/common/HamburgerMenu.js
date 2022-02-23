@@ -13,7 +13,7 @@ const HamburgerMenu = props =>{
   
   return (
     <Fragment>
-      <button onClick={onClickHandler}>
+      <button onClick={onClickHandler} data-cy="openHamburgerMenu">
         <span className="hidden">menu button</span>
         <span 
         className="block w-8 h-1 rounded-sm mb-1"
@@ -29,17 +29,17 @@ const HamburgerMenu = props =>{
       </button>
       { showMenu &&
         <div className="fixed inset-0 z-10 w-full h-full bg-gray-400 bg-opacity-80">
-          <ul className="absolute right-0 w-5/6 sm:w-1/2 md:w-72 bg-white p-3">
+          <ul className="absolute right-0 w-5/6 sm:w-1/2 md:w-72 bg-white p-3" data-cy="hamburgerMenu">
             <li>
               <div 
               className="flex flex-row items-center justify-between pb-3 border-b border-green-200 mb-2">
                 <img src={logo} alt="company logo" />
-                <button onClick={onClickHandler}>
+                <button onClick={onClickHandler} data-cy="closeHamburgerMenu">
                   <img src={closeMenu} alt="close menu" />
                 </button>
               </div>
             </li>
-            <li className="mb-2 hover:bg-green-200">
+            <li className="mb-2 hover:bg-green-200" data-cy="hamburgerMenuHome">
               <Link 
               className="text-base block"
               to="/"
@@ -47,7 +47,7 @@ const HamburgerMenu = props =>{
                 Home
               </Link>
             </li>
-            <li className="mb-2 hover:bg-green-200">
+            <li className="mb-2 hover:bg-green-200" data-cy="hamburgerMenuForAgents">
               <Link 
               className="text-base block"
               to="/trial"
@@ -55,8 +55,7 @@ const HamburgerMenu = props =>{
                 For Agents
               </Link>
             </li>
-            <li 
-            className="mb-10 hover:bg-green-200">
+            <li className="mb-10 hover:bg-green-200" data-cy="hamburgerMenuForBuyers">
               <Link 
               className="text-base block"
               to="/"
