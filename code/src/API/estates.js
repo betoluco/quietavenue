@@ -1,34 +1,22 @@
-import axios from "axios";
+import AWS from "aws-sdk";
 
-import { elasticSearch} from "./urls";
 import formatResponse from "./formatResponse";
 
 const estates = async (req, res) =>{
-    const query = {query: {match_all: {}}};
+    AWS.config.update({region: 'us-west-1'});
+    const docClient = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
+    const params = { TableName: "quietavenue.com" };
     
     try {
-        const results = await axios.get( elasticSearch, { 
-            params:{
-                source: JSON.stringify(query),
-                source_content_type: "application/json"
-            }
-        });
+        const tableItems = await docClient.scan(params).promise();
+        const response = await Promise.all( tableItems.Items.map( async estate => {
+            return formatResponse( {id: estate.PK}, estate.estate ); 
+        }));
+        res.status(200);
+        return response;
         
-        const estates = results.data.hits.hits;
-        if (estates.length > 0){
-            res.status(200);
-            const response = await Promise.all( estates.map( async (estate)  => {
-                const estateData = estate._source;
-                return formatResponse( {id: estate._id}, estateData );
-            }));
-            return response;
-        }
-    
-        res.status(404);
-        return;
-    
     }catch (error) {
-        console.log(error);
+        console.log("Error", error.message);
         res.status(500);
         return;
     }

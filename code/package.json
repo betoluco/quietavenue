@@ -7,6 +7,8 @@
   "author": "betoluco",
   "license": "MIT",
   "dependencies": {
+    "@reduxjs/toolkit": "^1.7.2",
+    "aws-sdk": "^2.1080.0",
     "aws-serverless-express": "^3.4.0",
     "axios": "^0.18.0",
     "cors": "^2.8.5",
@@ -36,7 +38,7 @@
     "clientBuild": "npm run clear-old-clientBuild && npm run upload-clientBuild",
     "clear-old-clientBuild": "aws s3 rm s3://quietavenuerawfiles/quietavenue/servercopy/ --recursive",
     "upload-clientBuild": "aws s3 cp clientBuild s3://quietavenuerawfiles/quietavenue/servercopy/ --recursive",
-    "remove-old-files": "rm -r clientBuild dist serverBundle.js.LICENSE.txt"
+    "remove-old-files": "rm -r clientBuild dist"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
