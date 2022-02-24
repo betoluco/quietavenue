@@ -1,4 +1,3 @@
-import { domainName } from "./urls";
 import getGraphData from "./getGraphData";
 
 const formatResults = async (estate, data) =>{
@@ -34,7 +33,7 @@ const formatResults = async (estate, data) =>{
     
     if (data.hasOwnProperty("profilePicture")) {
         const profilePicture = data.profilePicture || "assets/NoPicture.jpg";
-        estate.profilePicture = new URL(profilePicture, domainName);
+        estate.profilePicture = new URL(profilePicture, "https://quietavenue.com");
     }
     
     if (data.hasOwnProperty("videoLink")) {
