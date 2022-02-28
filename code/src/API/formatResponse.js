@@ -6,6 +6,12 @@ const formatResults = async (estate, data) =>{
     estate.city = data.city || "NO CITY";
     estate.cityId = data.cityId || "NO-CITY";
     estate.zipCode = data.zipCode || "NO-ZIPCODE";
+    estate.citySuggest = data.citySuggest || [];
+    estate.zipCodeSuggest = data.zipCodeSuggest || [];
+    estate.estateSuggest = data.estateSuggest || [];
+    
+    const profilePicture = data.profilePicture || "assets/NoPicture.jpg";
+    estate.profilePicture = new URL(profilePicture, "https://quietavenue.com");
     
     if (data.hasOwnProperty("audioDescription")) {
         estate.audioDescription = data.audioDescription;
@@ -29,11 +35,6 @@ const formatResults = async (estate, data) =>{
     
     if (data.hasOwnProperty("price")) {
         estate.price = data.price;
-    }
-    
-    if (data.hasOwnProperty("profilePicture")) {
-        const profilePicture = data.profilePicture || "assets/NoPicture.jpg";
-        estate.profilePicture = new URL(profilePicture, "https://quietavenue.com");
     }
     
     if (data.hasOwnProperty("videoLink")) {
