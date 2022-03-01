@@ -7,7 +7,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import renderer from "./renderer";
 import Routes from "./Routes";
 import estates from "./API/estates";
-import search from "./API/search";
 import estatesReducer from './estatesReducer';
 
 const app = express();
