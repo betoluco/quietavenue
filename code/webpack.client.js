@@ -1,12 +1,12 @@
 const path = require("path");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 // Client side bundle for hydration
 module.exports = function(env, argv) {
-
     
-    return {
-        mode: process.env.NODE_ENV ? 'production' : 'development',
+    const config = {
+        mode: process.env.NODE_ENV,
         
         entry: "./src/client",
         
@@ -37,7 +37,7 @@ module.exports = function(env, argv) {
                 },
                 {
                     test: /\.css$/i,
-                    use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+                    use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
                 },
                 {
                     test: /\.(png|svg|jpg|jpeg)$/i,
@@ -53,9 +53,16 @@ module.exports = function(env, argv) {
             } 
         },
         
-        devtool: process.env.NODE_ENV ? 'source-map' : 'eval',
-        
-        plugins: [new MiniCssExtractPlugin()],
+        plugins: [
+            new MiniCssExtractPlugin(),
+            new CssMinimizerPlugin()
+        ],
     };
+    
+    if (process.env.NODE_ENV === 'production') {
+        config.devtool =  'source-map';
+    }
+    
+    return config
 };
 

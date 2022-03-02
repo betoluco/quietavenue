@@ -28,17 +28,18 @@
     "webpack-node-externals": "^3.0.0"
   },
   "scripts": {
-    "dev": "NODE_ENV=development npm run build && npm run upload-assets && npm run remove-old-files",
-    "prod": "NODE_ENV=production npm run build && npm run clear-assets && npm run upload-assets && npm run clientBuild && npm run remove-old-files",
+    "dev": "NODE_ENV=development npm run build && npm run upload-assets",
+    "prod": "NODE_ENV=production npm run build && npm run clear-assets && npm run upload-assets && npm run upload-maps",
     "build": "npm run client-build && npm run server-build",
-    "client-build": "webpack --config webpack.client.js",
+    "client-build": " webpack --config webpack.client.js",
     "server-build": "webpack --config webpack.server.js",
     "clear-assets": "aws s3 rm s3://quietavenue.com/assets/dist --recursive",
     "upload-assets": "aws s3 cp dist s3://quietavenue.com/assets/dist --recursive",
-    "clientBuild": "npm run clear-old-clientBuild && npm run upload-clientBuild",
-    "clear-old-clientBuild": "aws s3 rm s3://quietavenuerawfiles/quietavenue/servercopy/ --recursive",
-    "upload-clientBuild": "aws s3 cp clientBuild s3://quietavenuerawfiles/quietavenue/servercopy/ --recursive",
-    "remove-old-files": "rm -r clientBuild dist"
+    "upload-maps": "npm run clear-old-maps && npm run upload-clientBundle-js-map && npm run upload-main-css-map",
+    "clear-old-maps": "aws s3 rm s3://quietavenuerawfiles/quietavenue/mapfiles/ --recursive",
+    "upload-clientBundle-js-map": "aws s3 cp clientBuild/clientBundle.js.map  s3://quietavenuerawfiles/quietavenue/mapfiles/",
+    "upload-main-css-map": "aws s3 cp clientBuild/main.css.map s3://quietavenuerawfiles/quietavenue/mapfiles/"
+    
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
@@ -49,11 +50,12 @@
     "copyfiles": "^2.4.1",
     "core-js": "^3.8.1",
     "css-loader": "^5.0.1",
+    "css-minimizer-webpack-plugin": "^3.4.1",
     "cypress": "^6.2.0",
-    "mini-css-extract-plugin": "^1.6.0",
-    "postcss": "^8.3.0",
+    "mini-css-extract-plugin": "^2.5.3",
+    "postcss": "^8.4.7",
     "postcss-loader": "^5.3.0",
-    "postcss-preset-env": "^6.7.0",
+    "postcss-preset-env": "^7.4.1",
     "style-loader": "^2.0.0",
     "tailwindcss": "^2.1.2",
     "webpack": "^5.37.1",

@@ -5,7 +5,7 @@ const nodeExternals = require("webpack-node-externals");
 module.exports = function(env, argv) {
     
     return {
-        mode: process.env.NODE_ENV ? 'production' : 'development',
+        mode: process.env.NODE_ENV,
         
         entry: "./src/lambda.js",
         

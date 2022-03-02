@@ -1,5 +1,8 @@
 module.exports = {
   purge: [
+    './src/*.js',
+    './src/**/*js',
+    './src/**/**/*.js',
     './src/common/*.js',
     './src/estate/*.js',
     './src/estate/graph/*.js',
