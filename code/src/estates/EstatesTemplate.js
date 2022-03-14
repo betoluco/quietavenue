@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import Card from "./Card";
-import deleteFilter from "./deleteFilter.svg";
+//import deleteFilter from "./deleteFilter.svg";
 
 const EstatesTemaplate = (props) =>{
   // const estate = useSelector( state => state.[props.estates[0]]);
@@ -13,7 +13,7 @@ const EstatesTemaplate = (props) =>{
   // if (props.filter === "zipCode") filter = "Filter: " + estate.zipCode;
   
   const cardsList = props.estates.map( estate =>{
-    return <Card estate={estate} key={estate}/>;
+    return <Card estate={estate} key={estate.id}/>;
   });
   
   return (
@@ -38,7 +38,7 @@ const EstatesTemaplate = (props) =>{
         </div>
       }*/}
       <div 
-      className="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      className="mb-8 m-2.5 grid grid-cols-1 md:m-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {cardsList}
       </div>
     </Fragment>

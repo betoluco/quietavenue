@@ -3,71 +3,60 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import searchButton from "./images/searchButtonIcon.svg";
+import searchButton from "./images/magnifyingGlassOp.svg";
+import { estateSuggest } from "../trie";
 
 const Search = props =>{
   let history = useHistory();
+  
   const [searchInputText, setSearchInputText] = useState("");
   const [suggest, setSuggest] = useState([]);
   const [showSuggest, setShowSuggest] = useState(false);
   
-  useEffect(() =>{
-    useSelector( state =>{ 
-      state.estates 
-      
-    })
-  }, []);
-  
   useEffect(() => {
-    (async function () {
-      if (searchInputText.length > 1 && searchInputText.length < 200){ //avoid attacks by input overload
-        try{ 
-          const response = await axios("https://quietavenue.com/api/search?search=" + searchInputText );
-        
-          let suggestList = [];
-          
-          response.data.forEach( filter =>{
-            if(filter.elements.length){
-              suggestList.push(
-                <li 
-                className="p-1 bg-white text-sm w-full"
-                key={filter.filter}>
-                  {filter.filter}
-                </li>
-              );
-              filter.elements.forEach( element =>{
-                suggestList.push(
-                  <li 
-                  key={element.link}
-                  onMouseDown={ () => onMouseDown(element.link)}
-                  className="flex p-1 pl-2.5 bg-white text-lg hover:bg-green-200">
-                    {element.name}
-                  </li>
-                );
-              });
-            }
-          });
-          
-          if(!suggestList.length){
-            suggestList.push(
-              <li 
-              className="flex p-1 bg-white text-sm border-b-2 border-green-600 border-opacity-50"
-              key="No results">
-                No results
-              </li>
-            );
-          }
-        
-          setSuggest(suggestList);
-          setShowSuggest(true);
-        }catch{
-          setShowSuggest(false);
-        }
-      }else{
-        setSuggest([]);
-        setShowSuggest(false);
+    console.log("estate", estateSuggest.find(searchInputText))
+    
+    if (searchInputText.length > 0) {
+      let suggestList = [];
+      const estateSuggestions = estateSuggest.find(searchInputText);
+      
+      if(estateSuggestions.length){
+        suggestList.push(
+          <li 
+          className="p-1 bg-white text-sm w-full"
+          key={'estates'}>
+            Estates
+          </li>
+        );
+        estateSuggestions.forEach( element =>{
+          suggestList.push(
+            <li 
+            key={element.link}
+            onMouseDown={ () => onMouseDown(element.link)}
+            className="flex p-1 pl-2.5 bg-white text-lg hover:bg-green-200">
+              {element.name}
+            </li>
+          );
+        });
       }
-    })();
+        
+      if(!suggestList.length){
+        suggestList.push(
+          <li 
+          className="flex p-1 bg-white text-sm border-b-2 border-green-600 border-opacity-50"
+          key="No results">
+            No results
+          </li>
+        );
+      }
+      
+      setSuggest(suggestList);
+      setShowSuggest(true);
+    
+    }else{
+      setSuggest([]);
+      setShowSuggest(false);
+    }
   }, [searchInputText]);
   
   
@@ -92,8 +81,8 @@ const Search = props =>{
   
   return (
     <div 
-    className="flex justify-center mb-8 w-full">
-      <form className="w-11/12 md:max-w-screen-md"
+    className="flex justify-center w-full">
+      <form className="w-full mx-3 md:w-8/12 lg:w-6/12 xl:w-4/12"
       onFocus={onFocusHandler}
       onBlur={onBlurHandler}>
         <div className="flex">
@@ -101,7 +90,8 @@ const Search = props =>{
           <input 
           id="search"
           autoComplete="off"
-          className="w-full p-2 pr-6 rounded border border-gray-400 focus:ring focus:ring-green-600 focus:outline-none focus:border-transparent"
+          className="w-full p-3 pr-7 rounded-md placeholder-stone-400 focus:ring 
+          focus:ring-green-600 ring-inset focus:outline-none border border-stone-400"
           onChange={onChangeHandler}
           value={searchInputText}
           type="text"
@@ -109,7 +99,7 @@ const Search = props =>{
           <img 
           src={searchButton}
           alt="search button"
-          className="relative -ml-6"/>
+          className="relative -ml-7"/>
         </div>
         {showSuggest &&
           <ul className="absolute rounded border border-2 border-green-200 w-11/12 md:max-w-screen-md mt-0.5 empty:hidden">

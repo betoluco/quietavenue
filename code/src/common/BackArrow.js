@@ -4,37 +4,22 @@ import { useHistory } from "react-router-dom";
 const BackArrow = (props) => {
     const history = useHistory();
     
-    
     const onClickHandler = event =>{
-        if(history.length > 0){
-            console.log("history.length > 0")
-            history.goBack();
-        }else{
-            console.log("push")
-            history.push("/");
-        }
+        history.length > 0? history.goBack(): history.push("/");
     };
     
     return (
         <button onClick={onClickHandler}>
             <span className="hidden">back</span>
             <span 
-            className="block w-6 h-1 rounded-sm mb-2.5"
-            style={{
-                backgroundColor:props.color,
-                transform: "rotate(-45deg)"  
-            }}>
+            className="block bg-stone-800 w-4 md:w-6 h-0.5 md:h-1 rounded-sm 
+            mb-[8px] md:mb-[11px] -rotate-45">
             </span>
             <span 
-            className="block w-6 h-1 rounded-sm"
-            style={{
-            backgroundColor:props.color,
-            transform: "rotate(45deg)"
-            }}>
+            className="block bg-stone-800 w-4 md:w-6 h-0.5 md:h-1 rounded-sm rotate-45">
             </span>
-        </button>       
+        </button>
     );
-  
 };
 
 export default BackArrow;

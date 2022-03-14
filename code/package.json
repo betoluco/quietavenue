@@ -39,7 +39,6 @@
     "clear-old-maps": "aws s3 rm s3://quietavenuerawfiles/quietavenue/mapfiles/ --recursive",
     "upload-clientBundle-js-map": "aws s3 cp clientBuild/clientBundle.js.map  s3://quietavenuerawfiles/quietavenue/mapfiles/",
     "upload-main-css-map": "aws s3 cp clientBuild/main.css.map s3://quietavenuerawfiles/quietavenue/mapfiles/"
-    
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
@@ -57,7 +56,7 @@
     "postcss-loader": "^5.3.0",
     "postcss-preset-env": "^7.4.1",
     "style-loader": "^2.0.0",
-    "tailwindcss": "^2.1.2",
+    "tailwindcss": "^3.0.23",
     "webpack": "^5.37.1",
     "webpack-cli": "^4.7.0"
   }

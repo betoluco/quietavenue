@@ -5,7 +5,9 @@ import { fetchEstates } from "../estatesReducer";
 import EstatesTemplate from "./EstatesTemplate";
 import InternalServerError from "../common/InternalServerError";
 import Spinner from "../common/Spinner";
-import Header from '../common/Header';
+import Logo from "../common/Logo";
+import HamburgerMenu from "../common/HamburgerMenu";
+import Slogan from "../common/Slogan";
 
 const Estates = (props) =>{
     const dispatch = useDispatch();
@@ -18,14 +20,14 @@ const Estates = (props) =>{
     const searchParams = new URLSearchParams(props.location.search)
     
     const estates = useSelector( state => {
-        if (searchParams.has('filter') && searchParams.has('filterId')){
+        // if (searchParams.has('filter') && searchParams.has('filterId')){
             
-            return state.estates.estates.filter(estate =>{
-                return searchParams.get('filterId') === estate.[searchParams.get('filter')]
-            });
-        }else {
+        //     return state.estates.estates.filter(estate =>{
+        //         return searchParams.get('filterId') === estate.[searchParams.get('filter')]
+        //     });
+        // }else {
             return state.estates.estates;
-        }
+        // }
     });
         
         
@@ -43,7 +45,13 @@ const Estates = (props) =>{
     
     return (
         <Fragment>
-            <Header />
+            <header className="mb-12" >
+                <div className="flex flex-row justify-between mx-3 mt-2.5 mb-4">
+                    <Logo />
+                    <HamburgerMenu />
+                </div>
+                <Slogan />
+            </header>
             {content}
         </Fragment>
     );
