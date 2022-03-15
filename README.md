@@ -28,7 +28,7 @@ After you are done, don't forget to delete clientBuild folder, dist folder and s
 ## Deploy the application
 ```bash
 cd code
-npm run prd
+npm run prod
 cd ..
 sam build
 sam deploy

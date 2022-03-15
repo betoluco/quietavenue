@@ -17,28 +17,24 @@ const Estates = (props) =>{
         if ( estateStatus === "idle" ) dispatch( fetchEstates() );
     }, [estateStatus, dispatch]);
     
-    const searchParams = new URLSearchParams(props.location.search)
+    const searchParams = new URLSearchParams(props.location.search);
     
     const estates = useSelector( state => {
-        // if (searchParams.has('filter') && searchParams.has('filterId')){
-            
-        //     return state.estates.estates.filter(estate =>{
-        //         return searchParams.get('filterId') === estate.[searchParams.get('filter')]
-        //     });
-        // }else {
+        if (searchParams.has('filter') && searchParams.has('filterId')){
+            return state.estates.estates.filter(estate =>{
+                return searchParams.get('filterId') === estate[searchParams.get('filter')];
+            });
+        }else {
             return state.estates.estates;
-        // }
+        }
     });
-        
-        
     
-   
     let content;
 
     if (estateStatus === 'loading') {
         content = <Spinner/>;
     } else if (estateStatus === 'succeeded') {
-        content = <EstatesTemplate estates={estates} />;
+        content = <EstatesTemplate estates={estates} filter={searchParams.get('filter')}/>;
     } else if (estateStatus === 'failed') {
         content = <InternalServerError />;
     }

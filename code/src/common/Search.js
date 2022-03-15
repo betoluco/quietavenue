@@ -14,7 +14,6 @@ const Search = props =>{
   const [showSuggest, setShowSuggest] = useState(false);
   
   useEffect(() => {
-    console.log("estate", estateSuggest.find(searchInputText))
     
     if (searchInputText.length > 0) {
       let suggestList = [];
