@@ -14,7 +14,7 @@ const Slogan = (props) =>{
         backgroundRepeat:"no-repeat",
         }}>
             <h2 
-            className="text-center md:text-3xl text-white font-medium tracking-wide
+            className="text-center text-lg md:text-3xl text-white font-medium tracking-wide
             mb-10 mt-12 px-3 mx-auto max-w-xl drop-shadow-lg">
                 See and hear what goes on in front of your future home
             </h2>

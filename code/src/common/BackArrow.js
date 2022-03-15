@@ -12,11 +12,11 @@ const BackArrow = (props) => {
         <button onClick={onClickHandler}>
             <span className="hidden">back</span>
             <span 
-            className="block bg-stone-800 w-4 md:w-6 h-0.5 md:h-1 rounded-sm 
+            className="block bg-stone-800 w-5 md:w-6 h-1 rounded-sm 
             mb-[8px] md:mb-[11px] -rotate-45">
             </span>
             <span 
-            className="block bg-stone-800 w-4 md:w-6 h-0.5 md:h-1 rounded-sm rotate-45">
+            className="block bg-stone-800 w-5 md:w-6 h-1 rounded-sm rotate-45">
             </span>
         </button>
     );
