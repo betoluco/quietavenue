@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 import logo from "./images/quietavenueLogoOp.svg";
 import pointer from "./images/pointerOp.svg";
-import closeMenu from "./images/closeMenuOp.svg";
 
 const HamburgerMenu = props =>{
   const [showMenu, setShowMenu] = useState(false);
@@ -28,8 +27,8 @@ const HamburgerMenu = props =>{
       </button>
       { showMenu &&
         <div className="fixed inset-0 z-10 w-full h-full bg-gray-400 bg-opacity-80">
-          <ul className="absolute right-0 w-5/6 sm:w-1/2 md:w-72 bg-white p-2 border-l-2 
-          border-b-2 border-green-600 rounded-l-md rounded-br-md" 
+          <ul className="absolute right-0 w-5/6 sm:w-1/2 md:w-72 bg-white p-3 border-l 
+          border-b border-green-600 rounded-l-md rounded-br-md" 
           data-cy="hamburgerMenu">
             <li>
               <div 
@@ -48,7 +47,7 @@ const HamburgerMenu = props =>{
             <li className="py-4 pl-2 hover:bg-green-200 rounded-md text-stone-800 font-semibold" 
             data-cy="hamburgerMenuHome">
               <div className="flex flex-row items-center">
-                <img src={pointer} alt="pointer" className="h-2 pr-2"/>
+                <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
                 <Link 
                 className="text-lg text-stone-800"
                 to="/"
@@ -60,7 +59,7 @@ const HamburgerMenu = props =>{
             <li className="py-4 pl-2 hover:bg-green-200 rounded-md text-stone-800 font-semibold" 
             data-cy="hamburgerMenuForAgents">
               <div className="flex flex-row items-center">
-                <img src={pointer} alt="pointer" className="h-2 pr-2"/>
+                <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
                 <Link 
               className="text-lg text-stone-800"
               to="/trial"
@@ -72,7 +71,7 @@ const HamburgerMenu = props =>{
             <li className="py-4 pl-2 mb-80 hover:bg-green-200 rounded-md text-stone-800 font-semibold" 
              data-cy="hamburgerMenuForBuyers">
               <div className="flex flex-row items-center">
-                <img src={pointer} alt="pointer" className="h-2 pr-2"/>
+                <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
                 <Link 
                 className="text-lg text-stone-800"
                 to="/"

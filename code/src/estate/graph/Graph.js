@@ -9,10 +9,10 @@ import { mean } from "d3-array";
 
 import AudioPlayer from "./AudioPlayer";
 import ColorScale from "./ColorScale";
-// import plusSign from "./plusSign.svg";
-// import minusSign from "./minusSign.svg";
-// import playNext from "./playNext.svg";
-// import playPrevious from "./playPrevious.svg";
+import plusSign from "./plusSignOp.svg";
+import minusSign from "./minusSignOp.svg";
+import playNext from "./playNextOp.svg";
+import playPrevious from "./playPreviousOp.svg";
 
 class Graph extends Component{
   //A class componets is necesary so that events linstener can access the state
@@ -37,7 +37,7 @@ class Graph extends Component{
     
     this.colorScale = scaleLinear()
     .domain([0, 1])
-    .range(["#0000ff", "#ff0000"]);
+    .range(["#ffc9c9", "#ff0000"]);
       
     this.firstDay = timeDay.floor(new Date(this.props.dataPoints[0].time));
     this.lastDay = timeDay.ceil(new Date(this.props.dataPoints[this.props.dataPoints.length - 1].time));
@@ -285,7 +285,7 @@ class Graph extends Component{
     
     return (
       <Fragment>
-        <h5 className="text-center max-w-screen-md text-sm mb-6">
+        <h5 className="text-stone-800 text-center max-w-screen-md text-sm mb-6">
           {this.recordingDates}
         </h5>
         <ColorScale />
@@ -293,15 +293,15 @@ class Graph extends Component{
           <div className="flex absolute items-center mt-3 ml-48 select-none" >
             <button 
             onClick={this.resetZoom}
-            className="bg-black text-white tracking-wider text-sm font-medium p-2 mr-3 rounded">
+            className="bg-stone-900 text-white tracking-wider text-sm font-medium p-2 mr-3 rounded">
               Reset
             </button>
             <div className="flex flex-col">
               <button onClick={() =>{this.zoomButtons(1.12)}}>
-                {/*<img className="transform hover:scale-125 mb-1" src={plusSign} alt="Zoom in"/>*/}
+                <img className="transform hover:scale-125 mb-1" src={plusSign} alt="Zoom in"/>
               </button>
               <button onClick={() =>{this.zoomButtons(0.88)}}>
-                {/*<img className="transform hover:scale-125 mt-1" src={minusSign} alt="Zoom out"/>*/}
+                <img className="transform hover:scale-125 mt-1" src={minusSign} alt="Zoom out"/>
               </button>
             </div>
           </div>
@@ -336,18 +336,18 @@ class Graph extends Component{
           </div>
         </div>
         
-        <div className="flex">
-          <button onClick={this.playPrevious}>
-            {/*<img className="mr-2" src={playPrevious} alt="Play Previous"/>*/}
-          </button>
-          <button onClick={this.playNext}>
-            {/*<img src={playNext} alt="Play Next"/>*/}
-          </button>
-        </div>
-        
         <AudioPlayer 
         audioFileLink={this.state.mp3Link} 
         recordingTime={this.state.recordingTime}/>
+        
+        <div className="flex mb-14">
+          <button onClick={this.playPrevious}>
+            <img className="mr-6" src={playPrevious} alt="Play Previous"/>
+          </button>
+          <button onClick={this.playNext}>
+            <img src={playNext} alt="Play Next"/>
+          </button>
+        </div>
       </Fragment>
     );
   }

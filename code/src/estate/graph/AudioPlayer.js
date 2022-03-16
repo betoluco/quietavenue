@@ -19,7 +19,7 @@ const AudioPlayer = (props) =>{
                     {props.recordingTime.toLocaleTimeString("en-US")}
                 </h3>
             }
-            <audio className="w-64 h-10 mb-20" ref={audio} controls>
+            <audio className="w-64 h-10 mb-4 border rounden border-green-600" ref={audio} controls>
                 <source ref={source}  type="audio/mpeg" />
                 Your browser does not support the audio element.
             </audio>
