@@ -5,7 +5,7 @@ const initialState = {
   estates: [],
   status: 'idle',
   error: null
-}
+};
 
 export const fetchEstates = createAsyncThunk('estates/fetchEstates', async () =>{
     const response = await axios.get('https://quietavenue.com/api/estates');

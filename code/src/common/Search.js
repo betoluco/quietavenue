@@ -1,10 +1,11 @@
 import React, {useState, useEffect } from "react";
-import axios from "axios"; 
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import searchButton from "./images/magnifyingGlassOp.svg";
 import { estateSuggest } from "../trie";
+import { citySuggest } from "../trie";
+import {zipCodeSuggest } from "../trie";
 
 const Search = props =>{
   let history = useHistory();
@@ -14,15 +15,16 @@ const Search = props =>{
   const [showSuggest, setShowSuggest] = useState(false);
   
   useEffect(() => {
-    
     if (searchInputText.length > 0) {
       let suggestList = [];
       const estateSuggestions = estateSuggest.find(searchInputText);
+      const citySuggestions = citySuggest.find(searchInputText);
+      const zipCodeSuggestions = zipCodeSuggest.find(searchInputText);
       
       if(estateSuggestions.length){
         suggestList.push(
           <li 
-          className="p-1 bg-white text-sm w-full"
+          className="p-1 bg-white text-base text-stone-500 w-full"
           key={'estates'}>
             Estates
           </li>
@@ -32,7 +34,47 @@ const Search = props =>{
             <li 
             key={element.link}
             onMouseDown={ () => onMouseDown(element.link)}
-            className="flex p-1 pl-2.5 bg-white text-lg hover:bg-green-200">
+            className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
+              {element.name}
+            </li>
+          );
+        });
+      }
+      
+      if(citySuggestions.length){
+        suggestList.push(
+          <li 
+          className="p-1 bg-white text-base text-stone-500 w-full"
+          key={'city'}>
+            city
+          </li>
+        );
+        citySuggestions.forEach( element =>{
+          suggestList.push(
+            <li 
+            key={element.link}
+            onMouseDown={ () => onMouseDown(element.link)}
+            className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
+              {element.name}
+            </li>
+          );
+        });
+      }
+      
+      if(zipCodeSuggestions.length){
+        suggestList.push(
+          <li 
+          className="p-1 bg-white text-base text-stone-500 w-full"
+          key={'zipCode'}>
+            Zip code
+          </li>
+        );
+        zipCodeSuggestions.forEach( element =>{
+          suggestList.push(
+            <li 
+            key={element.link}
+            onMouseDown={ () => onMouseDown(element.link)}
+            className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
               {element.name}
             </li>
           );
@@ -81,7 +123,7 @@ const Search = props =>{
   return (
     <div 
     className="flex justify-center w-full">
-      <form className="w-full mx-3 md:w-8/12 lg:w-6/12 xl:w-4/12"
+      <form className="w-11/12 md:w-8/12 lg:w-6/12 xl:w-4/12"
       onFocus={onFocusHandler}
       onBlur={onBlurHandler}>
         <div className="flex">
@@ -101,7 +143,8 @@ const Search = props =>{
           className="relative -ml-7"/>
         </div>
         {showSuggest &&
-          <ul className="absolute rounded border border-2 border-green-200 w-11/12 md:max-w-screen-md mt-0.5 empty:hidden">
+          <ul className="absolute w-11/12 md:w-8/12 lg:w-6/12 xl:w-4/12 rounded-md 
+          border border border-green-600 overflow-hidden ">
             {suggest}
           </ul>
         }

@@ -7,7 +7,7 @@ const Vimeo = props => {
         <iframe 
           src={props.iframeSRC} 
           frameBorder="0"
-          className="boder border-stone-400"
+          className="border border-stone-400 mb-8"
           allow="autoplay; fullscreen; picture-in-picture" 
           style={{position:"absolute", top:"0", left:"0", width: "100%", height:"100%"}}
           title="House video">

@@ -55,14 +55,10 @@ const EstateTemplate = (props) => {
             <li className="text-stone-800">{props.estate.lotArea} sq.ft. lot</li>
           }
         </ul>
-        <span className="bg-stone-400 w-full max-w-xl h-px "></span>
       </div>
         
       {props.estate.videoLink &&
-          <Fragment>
-            <Vimeo iframeSRC={props.estate.videoLink} />
-            <div className="flex justify-center mb-10"><span className="bg-stone-400 w-full max-w-xl h-px "></span></div>
-          </Fragment>
+        <Vimeo iframeSRC={props.estate.videoLink} />
       }
         
       <div className="flex flex-col items-center p-2.5">

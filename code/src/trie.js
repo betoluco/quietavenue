@@ -11,8 +11,9 @@ const TrieNode = function (key) {
 const Trie = function () {
     this.root = new TrieNode(null);
     
-    this.insert = (word, data) => {
+    this.insert = (word, name, link) => {
         let node = this.root;
+        word = word.toLowerCase();
         
         for (let i = 0; i < word.length; i++) {
             if(!node.children[word[i]]){
@@ -23,8 +24,8 @@ const Trie = function () {
             
             if (i === word.length - 1) {
                 node.end = true;
-                node.name = data.address1 + data.address2;
-                node.link = 'estate/' + data.id
+                node.name = name;
+                node.link = link;
             }
         }
     };
@@ -33,8 +34,8 @@ const Trie = function () {
         let node = this.root;
         let output = [];
         for (let i = 0; i < prefix.length; i++) {
-            if (node.children[prefix[i]]) {
-                node = node.children[prefix[i]];
+            if (node.children[prefix[i].toLowerCase()]) {
+                node = node.children[prefix[i].toLowerCase()];
             } else {
                 return output;
             }
@@ -60,5 +61,5 @@ const Trie = function () {
 };
 
 export const estateSuggest = new Trie();
-export const zipCodeSuggest = new Trie();
 export const citySuggest = new Trie();
+export const zipCodeSuggest = new Trie();
