@@ -37,6 +37,12 @@ const Trie = function () {
             if (node.children[prefix[i].toLowerCase()]) {
                 node = node.children[prefix[i].toLowerCase()];
             } else {
+                if (node.end) {
+                    output.push({
+                        "name": node.name,
+                        "link": node.link
+                    });
+                }
                 return output;
             }
         }

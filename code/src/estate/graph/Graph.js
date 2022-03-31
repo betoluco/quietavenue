@@ -11,8 +11,6 @@ import AudioPlayer from "./AudioPlayer";
 import ColorScale from "./ColorScale";
 import plusSign from "./plusSignOp.svg";
 import minusSign from "./minusSignOp.svg";
-import playNext from "./playNextOp.svg";
-import playPrevious from "./playPreviousOp.svg";
 
 class Graph extends Component{
   //A class componets is necesary so that events linstener can access the state
@@ -24,9 +22,7 @@ class Graph extends Component{
     this.graphRef = React.createRef();
     this.state = {
       a:1, d:1, e:0, f:0, 
-      pointerPosition:null, 
-      recordingTime: undefined,
-      mp3Link: "",
+      pointerPosition:null,
       pointerDistance:null,
       oneFinger: false,
       index: undefined
@@ -66,10 +62,6 @@ class Graph extends Component{
     
     this.yAxis = axisLeft(this.yScale).tickFormat(timeFormat("%I:%M %p"));
     
-    this.playSound = (time, mp3Link, index) =>{
-      this.setState({ recordingTime: time, mp3Link: mp3Link, index:index });
-    };
-    
     this.zoomButtons = (magnification) =>{
       const center = [this.width/2, this.height/2];
       const inverseTranformationCoordinates = [
@@ -103,29 +95,10 @@ class Graph extends Component{
       select(this.yAxisRef.current).call(this.yAxis.scale(rescaleY(this.yScale)));
     };
     
-    this.playNext = () =>{
-      let nextSoundIndex = this.state.index === undefined? 0: this.state.index + 1;
-      if(typeof this.props.dataPoints[nextSoundIndex] === 'undefined') {
-          nextSoundIndex = 0;
-      }
-      this.setState({ 
-        recordingTime: new Date(this.props.dataPoints[nextSoundIndex].time), 
-        mp3Link: this.props.dataPoints[nextSoundIndex].mp3Link, 
-        index:nextSoundIndex 
-      });
+    this.setIndex = (index) =>{
+      this.setState({index:index });
     };
     
-    this.playPrevious = () =>{
-      let previousSoundIndex = this.state.index === undefined? this.props.dataPoints.length -1: this.state.index - 1;
-      if(typeof this.props.dataPoints[previousSoundIndex] === 'undefined') {
-          previousSoundIndex = this.props.dataPoints.length -1;
-      }
-      this.setState({ 
-        recordingTime: new Date(this.props.dataPoints[previousSoundIndex].time), 
-        mp3Link: this.props.dataPoints[previousSoundIndex].mp3Link, 
-        index:previousSoundIndex 
-      });
-    };
   }
   
   componentDidMount(){
@@ -262,8 +235,7 @@ class Graph extends Component{
       const xPosition = this.xScale(timeDay.floor(time)) + (this.xScale.bandwidth()/2 - this.widthScale(point.maxLoudness)/2);
       this.today.setHours(time.getHours(), time.getMinutes(), time.getSeconds(), 0);
       const yPosition = this.yScale(this.today);
-      
-      if (this.state.mp3Link === point.mp3Link) {
+      if (this.state.index === index) {
         return <rect 
         key={point.mp3Link}
         width={ this.xScale.bandwidth() }
@@ -271,7 +243,7 @@ class Graph extends Component{
         x={this.xScale(timeDay.floor(time))}
         y={yPosition}
         fill={ "green" }
-        onClick={() => this.playSound(time, point.mp3Link, index)}/>;
+        onClick={() => this.setIndex(index)}/>;
       }
       return <rect 
       key={point.mp3Link}
@@ -280,7 +252,7 @@ class Graph extends Component{
       x={xPosition}
       y={yPosition}
       fill={this.colorScale(point.maxLoudness)}
-      onClick={() => this.playSound(time, point.mp3Link, index)}/>;
+      onClick={() => this.setIndex(index)}/>;
     });
     
     return (
@@ -337,17 +309,9 @@ class Graph extends Component{
         </div>
         
         <AudioPlayer 
-        audioFileLink={this.state.mp3Link} 
-        recordingTime={this.state.recordingTime}/>
-        
-        <div className="flex mb-14">
-          <button onClick={this.playPrevious}>
-            <img className="mr-6" src={playPrevious} alt="Play Previous"/>
-          </button>
-          <button onClick={this.playNext}>
-            <img src={playNext} alt="Play Next"/>
-          </button>
-        </div>
+        dataPoints={this.props.dataPoints}
+        index={this.state.index}
+        setIndex={this.setIndex}/>
       </Fragment>
     );
   }

@@ -26,7 +26,7 @@ const EstateTemplate = (props) => {
           <img 
           src={props.estate.profilePicture} 
           alt="Property" 
-          className="h-28 w-28 mb-3 rounded-full object-cover border border-green-600" />
+          className="h-28 w-28 mb-3 rounded-full object-cover border border-stone-400" />
           <h2 className="ml-4 text-center text-2xl text-stone-800">
             {props.estate.address1+ " " + props.estate.address2}
           </h2>
@@ -67,7 +67,7 @@ const EstateTemplate = (props) => {
             <h2 className="text-2xl mb-1 text-stone-800 font-semibold">Noise Score</h2>
             <div className="flex justify-center">
               <h2 className="text-4xl text-stone-800 leading-9 bg-green-600 
-              rounded-full border border-green-400"
+              rounded-full border border-stone-400"
               style={{padding: "0.5rem 0.5rem 0.7rem 0.5rem"}}>
                 {props.estate.soundScore}
               </h2>
