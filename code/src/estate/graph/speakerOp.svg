@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-<svg width="28" height="28" version="1.1" viewBox="0 0 7.41 7.41" xmlns="http://www.w3.org/2000/svg">
- <g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round">
-  <ellipse cx="3.7" cy="3.7" rx="3.56" ry="3.56" stroke-width=".295"/>
-  <g stroke-width=".265px">
-   <path d="m1.32 4.5v-1.59h1.59l1.59-1.06v3.7l-1.59-1.06h-1.59"/>
-   <path d="m6.09 1.85-1.06 0.529z"/>
-   <path d="m5.03 3.7h1.59-1.59"/>
-   <path d="m5.03 5.03 1.06 0.529z"/>
-  </g>
+<svg version="1.1" viewBox="0 0 7.4 7.4" xmlns="http://www.w3.org/2000/svg">
+ <g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".37">
+  <circle cx="3.7" cy="3.7" r="3.6"/>
+  <path d="m1.3 4.5v-1.6h1.6l1.6-1.1v3.7l-1.6-1.1h-1.6"/>
+  <path d="m6.1 1.8-1.1 0.53z"/>
+  <path d="m5 3.7h1.6-1.6"/>
+  <path d="m5 5 1.1 0.53z"/>
  </g>
 </svg>
