@@ -1,8 +1,10 @@
 module.exports = {
-  content: [
-    './src/*.{js, jsx}',
-    './src/**/*{js, jsx}',
+  purge: [
+    './src/*.js',
+    './src/*/*.js',
+    './src/*/*/*.js'
   ],
+  darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
       padding: {
@@ -16,4 +18,4 @@ module.exports = {
     extend: {},
   },
   plugins: [],
-}
+};
