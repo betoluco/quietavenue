@@ -5,7 +5,7 @@ import Search from "../common/Search";
 
 const Slogan = (props) =>{
     return(
-        <div className="border-y rounded-sm border-green-600 pb-72"
+        <div className="border-y rounded-sm border-stone-400 pb-72"
         style={{
         backgroundImage: `linear-gradient(to bottom, hsla(0, 0%, 0%, 0.4), hsla(0, 0%, 0%, 0.1)),
         url(${headerImage})`,

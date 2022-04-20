@@ -16,18 +16,18 @@ const EstatesTemaplate = (props) =>{
   return (
     <Fragment>
       { filter &&
-        <div className="inline-block m-2 mb-4">
-          <div className="flex flex-row justify-center items-center p-2 rounded-full border border-green-800 bg-green-600">
+        <div className="inline-block m-2 ml-6 mb-4">
+          <div className="flex flex-row justify-center items-center p-2 rounded-full border border-stone-400 bg-green-600">
             <h2 className="text-lg  text-white pr-2.5">{filter}</h2>
             <Link to="/">
-              <img className="" src={deleteFilter} alt="delete filter"/>
+              <img className="w-6" src={deleteFilter} alt="delete filter"/>
             </Link>
           </div>
         </div>
       }
       { !filter && 
         <div className="flex justify-center m-2 mb-8">
-        <Link to="/trial" className="flex flex-col items-center p-4 bg-green-600 border border-green-800 rounded-md shadow-xl">
+        <Link to="/trial" className="flex flex-col items-center p-4 bg-green-600 border border-stone-400 rounded-md shadow-xl">
           <h2 className="text-2xl text-white font-semibold pb-2 ">Are you an agent?</h2>
           <h3 className="text-lg text-white text-center">Click here to learn more about our <span className="font-semibold underline">free trial.</span></h3>
         </Link>

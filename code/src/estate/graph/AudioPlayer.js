@@ -3,13 +3,13 @@ import playNextIcon from "./playNextOp.svg";
 import playPreviousIcon from "./playPreviousOp.svg";
 import playIcon from "./playOp.svg";
 import pauseIcon from "./pauseOp.svg";
-import speakerIcon from "./speakerOp.svg"
-
+import speakerIcon from "./speakerOp.svg";
 
 const AudioPlayer = props =>{
     const [isPlaying, setIsPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
     const [timeUpdate, setTimeUpdate] = useState(0);
+    const [volume, setVolume] = useState(1);
     const [title, setTitle] = useState(undefined);
     const audio = useRef();
     
@@ -31,6 +31,12 @@ const AudioPlayer = props =>{
         setTimeUpdate(Math.floor(audio.current.currentTime));
     };
     
+    const updateTrack = (trackProgress, max) =>{
+        const currentPercentage = `${(trackProgress / max) * 100}%`;
+        return `-webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #a8a29e), 
+        color-stop(${currentPercentage}, #fff))`;
+    };
+    
     const getDuration = () =>{
         setDuration(Math.floor(audio.current.duration));
     };
@@ -43,6 +49,7 @@ const AudioPlayer = props =>{
     
     const volumeChange = event=>{
         audio.current.volume = event.target.value;
+        setVolume(event.target.value);
     };
     
     const play = () => {
@@ -67,38 +74,60 @@ const AudioPlayer = props =>{
     }, [props.index]);
     
     return(
-        <Fragment>
-            { title && 
-                <h3>
-                    {title.toLocaleDateString("en-US")} <span> </span>
-                    {title.toLocaleTimeString("en-US")}
-                </h3>
-            }
-            <p>{convertTime(timeUpdate)}</p>
-            <p>{convertTime(duration)}</p>
-            <input type="range" min="0" max={duration} step="1" value={timeUpdate}
-            onChange={ event => changePlayTime(event)}/>
-            <div className="flex">
-                <button onClick={() => playNextPrevious(-1)}>
-                    <img className="mr-6" src={playPreviousIcon} alt="Play Previous"/>
+        <div className="flex flex-col items-center mb-40 ">
+            <div className="mb-4 text-lg text-stone-800">
+                { title 
+                    ?<h3>
+                        {title.toLocaleDateString("en-US")} <span> </span>
+                        {title.toLocaleTimeString("en-US")}
+                    </h3>
+                    :<h3>Select a minute from the graph</h3>
+                }
+            </div>
+            <input className="w-72" 
+            style={{ 
+                background: updateTrack(timeUpdate, duration),  
+                border: '0.2px solid #292524',
+                borderRadius: '4px',
+                height: '10px'
+            }}
+            type="range" min="0" max={duration} step="1" 
+            value={timeUpdate} onChange={ event => changePlayTime(event)}/>
+            <p className="mb-6 text-stone-800">
+                {convertTime(timeUpdate)}<span> / </span>
+                {convertTime(duration)}
+            </p>
+            <div className="flex justify-between w-52 mb-6">
+                <button className="w-10" onClick={() => playNextPrevious(-1)}>
+                    <img src={playPreviousIcon} alt="Play Previous"/>
                 </button>
-                <button onClick={play}>
+                <button className="w-10" onClick={play}>
                     {isPlaying
-                        ?<img className="mr-6" src={playIcon} alt="Play"/>
-                        :<img className="mr-6" src={pauseIcon} alt="Play"/>
+                        ?<img src={playIcon} alt="Play"/>
+                        :<img src={pauseIcon} alt="Play"/>
                     }
                 </button>
-                <button onClick={() => playNextPrevious(1)}>
+                <button className="w-10" onClick={() => playNextPrevious(1)}>
                     <img src={playNextIcon} alt="Play Next"/>
                 </button>
             </div>
-            <img src={speakerIcon} alt="speaker"/>
-            <input type="range" min="0" max="1" step="0.1" onChange={ event => volumeChange(event)}/>
-            <audio ref={audio} onPlay={onPlay} onPause={onPause} onLoadedMetadata={getDuration} onTimeUpdate={onTimeUpdate}>
+            <div className="flex items-center -ml-6">
+                <img className="w-6 mr-2.5" src={speakerIcon} alt="speaker"/>
+                <input className="w-28" 
+                style={{ 
+                    background: updateTrack(volume, 1),
+                    border: '0.2px solid #292524',
+                    borderRadius: '4px',
+                    height: '10px'  
+                }} 
+                type="range" min="0" max="1" step="0.1" onChange={ event => volumeChange(event)}/>
+            </div>
+            <audio ref={audio} onPlay={onPlay} onPause={onPause} 
+            onLoadedMetadata={getDuration} onTimeUpdate={onTimeUpdate}>
                 <source  type="audio/mp3" />
                 Your browser does not support the audio element.
             </audio>
-        </Fragment>
+        </div>
     );
 };
 

@@ -140,7 +140,7 @@ const Search = props =>{
           <img 
           src={searchButton}
           alt="search button"
-          className="relative -ml-7"/>
+          className="relative w-5 -ml-7"/>
         </div>
         {showSuggest &&
           <ul className="absolute w-11/12 md:w-8/12 lg:w-6/12 xl:w-4/12 rounded-md 

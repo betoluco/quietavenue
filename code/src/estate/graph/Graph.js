@@ -270,10 +270,10 @@ class Graph extends Component{
             </button>
             <div className="flex flex-col">
               <button onClick={() =>{this.zoomButtons(1.12)}}>
-                <img className="transform hover:scale-125 mb-1" src={plusSign} alt="Zoom in"/>
+                <img className="w-8 transform hover:scale-125 mb-1" src={plusSign} alt="Zoom in"/>
               </button>
               <button onClick={() =>{this.zoomButtons(0.88)}}>
-                <img className="transform hover:scale-125 mt-1" src={minusSign} alt="Zoom out"/>
+                <img className="w-8 transform hover:scale-125 mt-1" src={minusSign} alt="Zoom out"/>
               </button>
             </div>
           </div>

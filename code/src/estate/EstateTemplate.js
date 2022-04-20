@@ -32,7 +32,7 @@ const EstateTemplate = (props) => {
           </h2>
         </div>
         <Link to={{ pathname: "https://zillow.com"}} target="_blank" >
-          <h3 className="text-lg text-stone-800 font-semibold underline mb-4">Click here to se more pictures</h3>
+          <h3 className="text-lg text-center text-stone-800 font-semibold underline mb-4">Click here to se more pictures</h3>
         </Link>
         {props.price &&
           <h2 className="text-lg text-center text-stone-800 mb-4">{props.price}</h2>
