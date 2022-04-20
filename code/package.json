@@ -29,7 +29,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development npm run build && npm run upload-assets",
-    "prod": "NODE_ENV=production npm run build,
+    "prod": "NODE_ENV=production npm run build",
     "build": "npm run client-build && npm run server-build",
     "client-build": "webpack --config webpack.client.js",
     "server-build": "webpack --config webpack.server.js",
