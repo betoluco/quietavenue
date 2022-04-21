@@ -7,6 +7,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import estatesReducer from './estatesReducer';
 import Routes from "./Routes";
+import ScrollToTop from "./ScrollToTop";
 import "./style.css";
 
 const preloadedState = window.__PRELOADED_STATE__;
@@ -24,6 +25,7 @@ const store = configureStore({
 ReactDOM.hydrate(
     <Provider store={store} >
         <BrowserRouter>
+            <ScrollToTop />
             <Fragment>{renderRoutes(Routes)}</Fragment>
         </BrowserRouter>
     </Provider>,
