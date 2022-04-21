@@ -29,9 +29,11 @@ After you are done, don't forget to delete clientBuild folder, dist folder and s
 ```bash
 cd code
 npm run prod
-npm run prod-upload-assets
 cd ..
 sam build
+cd code
+npm run prod-upload-assets
+cd ..
 sam deploy
 ```
 
