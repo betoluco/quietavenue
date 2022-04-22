@@ -218,7 +218,8 @@ class Graph extends Component{
         pointerPosition[1]/this.state.d - this.state.f/this.state.d,
       ];
       
-      const yZoom = Math.abs(this.state.d * 1 + (event.wheelDelta * 4) / 1000);
+      const zoom = this.state.d * 1 + (event.wheelDelta * 4) / 1000;
+      const yZoom = zoom > 1? zoom : 1 
       const xZoom = 1;
       const move = [ 
         pointerPosition[0] - inverseTranformationCoordinates[0] * xZoom,
