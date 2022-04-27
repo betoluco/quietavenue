@@ -1,6 +1,7 @@
 import AWS from "aws-sdk";
 
 import formatResponse from "./formatResponse";
+import validateEstates from "./validateEstates";
 
 const estates = async (req, res) =>{
     AWS.config.update({region: 'us-west-1'});
@@ -9,9 +10,11 @@ const estates = async (req, res) =>{
     
     try {
         const tableItems = await docClient.scan(params).promise();
-        const response = await Promise.all( tableItems.Items.map( async estate => {
-            return formatResponse( {id: estate.PK}, estate.estate ); 
-        }));
+        const response = await Promise.all( 
+            tableItems.Items.filter(validateEstates).map( 
+                async estate => {return formatResponse(estate);}
+            ).reverse()
+        );
         res.status(200);
         return response;
         

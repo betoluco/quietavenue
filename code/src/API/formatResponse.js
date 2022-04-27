@@ -1,51 +1,58 @@
 import getGraphData from "./getGraphData";
 
-const formatResults = async (estate, data) =>{
-    estate.address1 = data.address1 || "NO STREET";
-    estate.address2 = data.address2 || "NO CITY";
-    estate.city = data.city || "NO CITY";
-    estate.cityId = data.cityId || "NO-CITY";
-    estate.zipCode = data.zipCode || "NO-ZIPCODE";
-    estate.citySuggest = data.citySuggest || [];
-    estate.zipCodeSuggest = data.zipCodeSuggest || [];
-    estate.estateSuggest = data.estateSuggest || [];
+const formatResults = async (estate) =>{
+    const item = {id: estate.PK};
+    const data = estate.estate;
+   
+    item.address1 = data.address1;
+    item.address2 = data.address2;
+    item.city = data.city;
+    item.cityId = data.cityId;
+    item.zipCode = data.zipCode;
+    item.citySuggest = data.citySuggest;
+    item.zipCodeSuggest = data.zipCodeSuggest;
+    item.estateSuggest = data.estateSuggest;
     
-    const profilePicture = data.profilePicture || "assets/NoPicture.jpg";
-    estate.profilePicture = new URL(profilePicture, "https://quietavenue.com");
+    const profilePicture = data.profilePicture;
+    item.profilePicture = new URL(profilePicture, "https://quietavenue.com");
     
     if (data.hasOwnProperty("audioDescription")) {
-        estate.audioDescription = data.audioDescription;
+        item.audioDescription = data.audioDescription;
     }
     
     if (data.hasOwnProperty("bathroom")) {
-        estate.bathroom = data.bathroom;
+        item.bathroom = data.bathroom;
     }
     
     if (data.hasOwnProperty("bedroom")) {
-        estate.bedroom = data.bedroom;
+        item.bedroom = data.bedroom;
     }
     
     if (data.hasOwnProperty("lotArea")) {
-        estate.lotArea = data.lotArea;
+        item.lotArea = data.lotArea;
     }
     
     if (data.hasOwnProperty("soundScore")) {
-        estate.soundScore = data.soundScore;
+        item.soundScore = data.soundScore;
     }
     
     if (data.hasOwnProperty("price")) {
-        estate.price = data.price;
+        item.price = data.price;
     }
     
     if (data.hasOwnProperty("videoLink")) {
-        estate.videoLink = data.videoLink;
+        item.videoLink = data.videoLink;
     }
     
     if (data.hasOwnProperty("graphDataLink")) {
-        estate.graphData = await getGraphData(data.graphDataLink);
+        item.graphData = await getGraphData(data.graphDataLink);
     }
     
-    return estate;
+    if (data.hasOwnProperty("zillowLink")) {
+        item.zillowLink = data.zillowLink;
+    }
+    
+    return item;
 };
 
 export default formatResults;
