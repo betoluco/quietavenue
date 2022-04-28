@@ -166,7 +166,7 @@ class Graph extends Component{
           Math.abs((t[1][1] - t[0][1])/2) + t[0][1]
         ];
         const pointerDistance = Math.hypot(t[1][1] - t[0][1], t[1][0] - t[0][0]);
-        if ( Math.abs(pointerDistance - this.state.pointerDistance) < 3){
+        if ( Math.abs(pointerDistance - this.state.pointerDistance) < 7){
           const previousPosition = [
             this.state.e - this.state.pointerPosition[0],
             this.state.f - this.state.pointerPosition[1]
@@ -188,15 +188,15 @@ class Graph extends Component{
             pointerPosition[0]/this.state.a - this.state.e/this.state.a,
             pointerPosition[1]/this.state.d - this.state.f/this.state.d,
           ];
-        
-          const zoom = this.state.a * (pointerDistance / this.state.pointerDistance) * 3;
+          const yZoom = this.state.d * (pointerDistance / this.state.pointerDistance);
+          const xZoom = 1;
           const move = [ 
-            pointerPosition[0] - inverseTranformationCoordinates[0] * zoom,
-            pointerPosition[1] - inverseTranformationCoordinates[1] * zoom
+            pointerPosition[0] - inverseTranformationCoordinates[0] * xZoom,
+            pointerPosition[1] - inverseTranformationCoordinates[1] * yZoom
           ];
           this.setState({
-            a:1, 
-            d:zoom, 
+            a:xZoom, 
+            d:yZoom, 
             e:move[0], 
             f:move[1], 
             pointerPosition: pointerPosition,
@@ -219,7 +219,7 @@ class Graph extends Component{
       ];
       
       const zoom = this.state.d * 1 + (event.wheelDelta * 4) / 1000;
-      const yZoom = zoom > 1? zoom : 1 
+      const yZoom = zoom > 1? zoom : 1;
       const xZoom = 1;
       const move = [ 
         pointerPosition[0] - inverseTranformationCoordinates[0] * xZoom,
