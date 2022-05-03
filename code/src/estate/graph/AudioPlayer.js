@@ -103,8 +103,8 @@ const AudioPlayer = props =>{
                 </button>
                 <button className="w-10" onClick={play}>
                     {isPlaying
-                        ?<img src={playIcon} alt="Play"/>
-                        :<img src={pauseIcon} alt="Play"/>
+                        ?<img src={pauseIcon} alt="Play"/>
+                        :<img src={playIcon} alt="Play"/>
                     }
                 </button>
                 <button className="w-10" onClick={() => playNextPrevious(1)}>
