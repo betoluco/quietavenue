@@ -14,11 +14,10 @@ const AudioPlayer = props =>{
     const audio = useRef();
     
     const playNextPrevious = delta =>{
-        if (props.index){
-            const newIndex = props.index + delta;
-            if (newIndex >= 0  || newIndex < props.dataPoints.length){
-                props.setIndex(newIndex);
-            }
+        const newIndex = props.index + delta || 0;
+        if (newIndex >= 0  && newIndex < props.dataPoints.length){
+            console.log(newIndex)
+            props.setIndex(newIndex);
         }
     };
     
@@ -54,6 +53,7 @@ const AudioPlayer = props =>{
     
     const play = () => {
         isPlaying? audio.current.pause(): audio.current.play();
+        if(props.index === undefined) props.setIndex(0);
     };
     
     const onPlay = () => {
@@ -65,7 +65,7 @@ const AudioPlayer = props =>{
     };
     
     useEffect(() =>{
-        if (props.index){
+        if (props.index >= 0 && props.index < props.dataPoints.length){
             const audioLink = new URL(props.dataPoints[props.index].mp3Link, "https://quietavenue.com");
             audio.current.setAttribute('src', audioLink);
             audio.current.autoplay = true;
@@ -103,7 +103,7 @@ const AudioPlayer = props =>{
                 </button>
                 <button className="w-10" onClick={play}>
                     {isPlaying
-                        ?<img src={pauseIcon} alt="Play"/>
+                        ?<img src={pauseIcon} alt="Pause"/>
                         :<img src={playIcon} alt="Play"/>
                     }
                 </button>
