@@ -1,6 +1,7 @@
 const path = require("path");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const Dotenv = require('dotenv-webpack');
 
 // Client side bundle for hydration
 module.exports = function(env, argv) {
@@ -55,7 +56,8 @@ module.exports = function(env, argv) {
         
         plugins: [
             new MiniCssExtractPlugin(),
-            new CssMinimizerPlugin()
+            new CssMinimizerPlugin(),
+            new Dotenv()
         ],
     };
     

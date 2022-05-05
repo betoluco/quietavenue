@@ -1,5 +1,6 @@
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
+const Dotenv = require('dotenv-webpack');
 
 // Client side bundle for hydration
 module.exports = function(env, argv) {
@@ -52,6 +53,10 @@ module.exports = function(env, argv) {
         target: "node",
         
         externals: [nodeExternals()],
+        
+        plugins: [
+            new Dotenv()
+        ],
     };
 };
 
