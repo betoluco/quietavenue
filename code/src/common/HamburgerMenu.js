@@ -44,42 +44,39 @@ const HamburgerMenu = props =>{
                 </button>
               </div>
             </li>
-            <li className="py-4 pl-2 hover:bg-green-200 rounded-md text-stone-800 font-semibold" 
+            <Link 
+            to="/"
+            onClick={onClickHandler}
             data-cy="hamburgerMenuHome">
-              <div className="flex flex-row items-center">
-                <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
-                <Link 
-                className="text-lg text-stone-800"
-                to="/"
-                onClick={onClickHandler}>
-                  Home
-                </Link>
-              </div>
-            </li>
-            <li className="py-4 pl-2 hover:bg-green-200 rounded-md text-stone-800 font-semibold" 
+              <li className="py-4 pl-2 hover:bg-green-200 rounded-md" >
+                <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
+                  <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
+                    Home
+                </div>
+              </li>
+            </Link>
+            <Link
+            to="/trial"
+            onClick={onClickHandler}
             data-cy="hamburgerMenuForAgents">
-              <div className="flex flex-row items-center">
-                <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
-                <Link 
-              className="text-lg text-stone-800"
-              to="/trial"
-              onClick={onClickHandler}>
-                For Agents
-              </Link>
-              </div>
-            </li>
-            <li className="py-4 pl-2 mb-80 hover:bg-green-200 rounded-md text-stone-800 font-semibold" 
-             data-cy="hamburgerMenuForBuyers">
-              <div className="flex flex-row items-center">
-                <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
-                <Link 
-                className="text-lg text-stone-800"
-                to="/"
-                onClick={onClickHandler}>
-                  For Prospective Buyers
-                </Link>
-              </div>
-            </li>
+              <li className="py-4 pl-2 hover:bg-green-200 rounded-md" >
+                <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
+                  <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
+                  For Agents
+                </div>
+              </li>
+            </Link>
+            <Link 
+            to="/contact"
+            onClick={onClickHandler}
+            data-cy="hamburgerMenuContatUs">
+              <li className="py-4 pl-2 mb-80 hover:bg-green-200 rounded-md">
+                <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
+                  <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
+                    Contact us
+                </div>
+              </li>
+            </Link>
           </ul>
         </div>
       }
