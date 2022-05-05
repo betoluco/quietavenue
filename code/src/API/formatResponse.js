@@ -44,8 +44,12 @@ const formatResults = async (estate) =>{
         item.videoLink = data.videoLink;
     }
     
-    if (data.hasOwnProperty("graphDataLink")) {
-        item.graphData = await getGraphData(data.graphDataLink);
+    try{
+        if (data.hasOwnProperty("graphDataLink")) {
+            item.graphData = await getGraphData(data.graphDataLink);
+        }
+    }catch (error){
+        console.log(error);
     }
     
     if (data.hasOwnProperty("zillowLink")) {
