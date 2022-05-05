@@ -11,9 +11,9 @@ const estates = async (req, res) =>{
     try {
         const tableItems = await docClient.scan(params).promise();
         const response = await Promise.all( 
-            tableItems.Items.filter(validateEstates).map( 
-                async estate => {return formatResponse(estate);}
-            ).reverse()
+            tableItems.Items.filter(validateEstates).map( async estate => {
+                return formatResponse(estate);
+            }).reverse()
         );
         res.status(200);
         return response;
