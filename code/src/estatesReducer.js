@@ -8,7 +8,7 @@ const initialState = {
 };
 
 export const fetchEstates = createAsyncThunk('estates/fetchEstates', async () =>{
-    const response = await axios.get(`${process.env.API_ESTATES}`);
+    const response = await axios.get(`${process.env.REACT_APP_API_ESTATES}`);
     return response.data;
 });
 
