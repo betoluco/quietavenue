@@ -1,7 +1,8 @@
 describe('logo', () =>{
-    it('Logo has link', () =>{
+    it('Logo has link to home', () =>{
         cy.visit('');
-        cy.get('[data-cy=linkToHome]').should('have.attr', 'href','/');
+        cy.get('[data-cy=linkToHome]').should('be.visible').click()
+        cy.location('pathname').should('eq', '/')
         
         
     });

@@ -41,7 +41,7 @@ describe('Menu', () =>{
         cy.get('[data-cy=hamburgerMenu]').should('not.exist');
     })
     
-    it('Clicking "For Agents" in menu takes you to "/tria"', () =>{
+    it('Clicking "Contact us" in menu takes you to "/contact"', () =>{
         cy.get('[data-cy=hamburgerMenu]').should('be.visible');
         cy.get('[data-cy=hamburgerMenuContatUs]').should('be.visible').click();
         cy.location('pathname').should('eq', '/contact');
