@@ -1,10 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  quietavenue
-
-  SAM Template for quietavenue.com, server side rendering with hydration React app and API
-  
+  Lambda function template for quietavenue.com a serverless side rendering react app
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
@@ -28,17 +25,3 @@ Resources:
           Properties:
             Path: /{proxy+}
             Method: any
-
-Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  Quietavenue:
-    Description: "API Gateway endpoint URL for Prod stage for Quietavenue function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  QuietavenueFunction:
-    Description: "Quietavenue Lambda Function ARN"
-    Value: !GetAtt QuietavenueFunction.Arn
-  QuietavenueFunctionIamRole:
-    Description: "Implicit IAM Role created for Quietavenue function"
-    Value: !GetAtt QuietavenueFunctionRole.Arn
