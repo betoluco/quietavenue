@@ -1,14 +1,10 @@
 AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  Lambda function with api gateway (quietavenue.com)
+  quietavenue
 
-Parameters:
-  Environment:
-    Description: An environment name that is prefixed to resource names
-    Type: String
-    Default: Test
-
+  SAM Template for quietavenue.com, server side rendering with hydration React app and API
+  
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
@@ -45,6 +41,44 @@ Resources:
             Method: any
             Auth:
               ApiKeyRequired: true
+  
+  APIGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      EndpointConfiguration:
+        Type: REGIONAL
+      Auth:
+        ApiKeyRequired: true
+        UsagePlan:
+          CreateUsagePlan: PER_API
+          Description: !Sub ${Environment} API gateway usage plan, key and usage plan key for quietavenue
+          
+            
+  CFDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Origins:
+          - 
+            DomainName: !Sub ${APIGateway}.execute-api.us-west-1.amazonaws.com
+            OriginPath: !Sub /Prod #name of the deployed stage
+            Id: !Sub ${APIGateway}-origin
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only #again API-Gateway only supports https
+            OriginCustomHeaders:
+              - 
+                HeaderName: x-api-key
+                HeaderValue: !GetAtt GetApiKeyValue.Value
+        DefaultCacheBehavior: #this section defines attached behaviors, first the S3 origin
+          TargetOriginId: !Sub ${APIGateway}-origin #name of the origin
+          ViewerProtocolPolicy: redirect-to-https
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+        Enabled: true
+      Tags:
+        - Key: description
+          Value: !Sub ${Environment} CloudFront for quietavenue
+            
   
   APIGateway:
     Type: AWS::Serverless::Api
