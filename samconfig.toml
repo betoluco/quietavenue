@@ -2,6 +2,16 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
+stack_name = "quietavenueDev"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1x27nddmanbga"
+s3_prefix = "quietavenuedevelopment" #Same name that "BucketName" in resources.yaml
+region = "us-west-1"
+confirm_changeset = false
+capabilities = "CAPABILITY_IAM"
+
+[production]
+[production.deploy]
+[production.deploy.parameters]
 stack_name = "quietavenue"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1x27nddmanbga"
 s3_prefix = "quietavenue"

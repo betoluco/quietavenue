@@ -1,27 +1,199 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  Lambda function template for quietavenue.com a serverless side rendering react app
+  Lambda function with api gateway (quietavenue.com)
+
+Parameters:
+  Environment:
+    Description: An environment name that is prefixed to resource names
+    Type: String
+    Default: Test
+
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 10
 
 Resources:
-  QuietavenueFunction:
+  ServerlessSideRenderingFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: code/
       Handler: serverBundle.handler
       Runtime: nodejs12.x
+      Description: !Sub ${Environment} lambda function and Proxy Greedy API for quietavenue
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::GetAtt: [VPC, DefaultSecurityGroup]
+        SubnetIds:
+          - !Ref PrivateSubnet1
+          - !Ref PrivateSubnet2
       Events:
-        QuietavenueProxyRoot:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+        APIGatewayRootEndpoint: #Whitout this it will throw missing authentication token
+          Type: Api
           Properties:
+            RestApiId: !Ref APIGateway
             Path: /
             Method: any
-        QuietavenueProxyGreedy:
+            Auth:
+              ApiKeyRequired: true
+        APIgatewayProxyGreedy:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
+            RestApiId: !Ref APIGateway
             Path: /{proxy+}
             Method: any
+            Auth:
+              ApiKeyRequired: true
+  
+  APIGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      EndpointConfiguration:
+        Type: REGIONAL
+      Auth:
+        ApiKeyRequired: true
+        UsagePlan:
+          CreateUsagePlan: PER_API
+          Description: !Sub ${Environment} API gateway usage plan, key and usage plan key for quietavenue
+          
+            
+  CFDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Origins:
+          - 
+            DomainName: !Sub ${APIGateway}.execute-api.us-west-1.amazonaws.com
+            OriginPath: !Sub /Prod #name of the deployed stage
+            Id: !Sub ${APIGateway}-origin
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only #again API-Gateway only supports https
+            OriginCustomHeaders:
+              - 
+                HeaderName: x-api-key
+                HeaderValue: !GetAtt GetApiKeyValue.Value
+        DefaultCacheBehavior: #this section defines attached behaviors, first the S3 origin
+          TargetOriginId: !Sub ${APIGateway}-origin #name of the origin
+          ViewerProtocolPolicy: redirect-to-https
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+        Enabled: true
+      Tags:
+        - Key: description
+          Value: !Sub ${Environment} CloudFront for quietavenue
+  
+# Custom Resource to retrieve API Key value instead of ID
+
+  GetApiKeyValue:
+    DependsOn: APIGateway
+    Type: Custom::ApiKeyValue
+    Properties:
+      ServiceToken: !GetAtt GetApiKeyValueFunction.Arn
+
+  GetApiKeyValueFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          -
+            Sid: AllowLambdaServiceToAssumeRole
+            Effect: Allow
+            Action: 
+              - sts:AssumeRole
+            Principal:
+              Service: 
+                - lambda.amazonaws.com
+      Policies:
+        - 
+          PolicyName: RotateKeysPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - 
+                Effect: Allow
+                Action: apigateway:GET
+                Resource: "*"
+
+  GetApiKeyValueFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: CFScripts/
+      Handler: getApiKey.lambda_handler
+      Role: !GetAtt GetApiKeyValueFunctionRole.Arn
+      Runtime: python3.7
+      Timeout: 120
+      Description: !Sub ${Environment} lambda obtains api key and pass it to cloudfront
+      Environment:
+        Variables:
+          API_KEY: !Ref APIGateway.ApiKey
+      
+  SourceDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions:
+        -
+          AttributeName: PK
+          AttributeType: S
+      KeySchema: 
+        - 
+          AttributeName: PK
+          KeyType: HASH
+      ProvisionedThroughput: 
+        ReadCapacityUnits: 50
+        WriteCapacityUnits: 5
+      Tags:
+        - Key: description
+          Value: !Sub ${Environment} DynamoDB table source data for quietavenue
+        
+  # S3BucketAssets:
+  #   Type: AWS::S3::Bucket
+  #   Properties:
+  #     BucketName: quietavenue
+  #     AccessControl: Private
+  #     PublicAccessBlockConfiguration:
+  #       BlockPublicAcls: true
+  #       BlockPublicPolicy: true
+  #       IgnorePublicAcls: true
+  #       RestrictPublicBuckets: true
+  #     Tags:
+  #       - Key: description
+  #         Value: !Sub ${Environment} S3 Bucket for assets for quietavenue
+  
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.192.0.0/16
+      Tags:
+        - Key: description
+          Value: !Sub ${Environment} VPC for quietavenue
+    
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.192.10.0/24
+      Tags:
+        - Key: Name
+          Value: !Sub ${Environment} Public Subnet 1 for quietavenue
+  
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.192.20.0/24
+      Tags:
+        - Key: Name
+          Value: !Sub ${Environment} Private Subnet 1 for quietavenue
+
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.192.21.0/24
+      Tags:
+        - Key: Name
+          Value: !Sub ${Environment} Private Subnet 2 for quietavenue
