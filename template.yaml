@@ -18,12 +18,6 @@ Resources:
       Handler: serverBundle.handler
       Runtime: nodejs12.x
       Description: lambda function and Proxy Greedy API for quietavenue
-      VpcConfig:
-        SecurityGroupIds:
-          - Fn::GetAtt: [VPC, DefaultSecurityGroup]
-        SubnetIds:
-          - !Ref PrivateSubnet1
-          - !Ref PrivateSubnet2
       Events:
         APIGatewayRootEndpoint: #Whitout this it will throw missing authentication token
           Type: Api
@@ -196,38 +190,3 @@ Resources:
   #     Tags:
   #       - Key: description
   #         Value: S3 Bucket for assets for quietavenue
-  
-  VPC:
-    Type: AWS::EC2::VPC
-    Properties:
-      CidrBlock: 10.192.0.0/16
-      Tags:
-        - Key: description
-          Value: VPC for quietavenue
-    
-  PublicSubnet1:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      CidrBlock: 10.192.10.0/24
-      Tags:
-        - Key: Name
-          Value: Public Subnet 1 for quietavenue
-  
-  PrivateSubnet1:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      CidrBlock: 10.192.20.0/24
-      Tags:
-        - Key: Name
-          Value: Private Subnet 1 for quietavenue
-
-  PrivateSubnet2:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      CidrBlock: 10.192.21.0/24
-      Tags:
-        - Key: Name
-          Value: Private Subnet 2 for quietavenue
