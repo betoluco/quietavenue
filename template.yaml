@@ -18,6 +18,10 @@ Resources:
       Handler: serverBundle.handler
       Runtime: nodejs12.x
       Description: lambda function and Proxy Greedy API for quietavenue
+      Environment:
+        Variables:
+          DINAMODB_TABLE: !Ref SourceDynamoDBTable
+          S3_BUCKET: !Ref S3BucketAssets
       Events:
         APIGatewayRootEndpoint: #Whitout this it will throw missing authentication token
           Type: Api
@@ -48,7 +52,6 @@ Resources:
           CreateUsagePlan: PER_API
           Description: API gateway usage plan, key and usage plan key for quietavenue
           
-            
   CFDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
@@ -73,7 +76,6 @@ Resources:
         - Key: description
           Value: CloudFront for quietavenue
             
-  
   APIGateway:
     Type: AWS::Serverless::Api
     Properties:
@@ -177,16 +179,15 @@ Resources:
         - Key: description
           Value:  DynamoDB table source data for quietavenue
         
-  # S3BucketAssets:
-  #   Type: AWS::S3::Bucket
-  #   Properties:
-  #     BucketName: quietavenue
-  #     AccessControl: Private
-  #     PublicAccessBlockConfiguration:
-  #       BlockPublicAcls: true
-  #       BlockPublicPolicy: true
-  #       IgnorePublicAcls: true
-  #       RestrictPublicBuckets: true
-  #     Tags:
-  #       - Key: description
-  #         Value: S3 Bucket for assets for quietavenue
+  S3BucketAssets:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: description
+          Value: S3 Bucket for assets

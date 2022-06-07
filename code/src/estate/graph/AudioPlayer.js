@@ -66,7 +66,7 @@ const AudioPlayer = props =>{
     
     useEffect(() =>{
         if (props.index >= 0 && props.index < props.dataPoints.length){
-            const audioLink = new URL(props.dataPoints[props.index].mp3Link, "https://quietavenue.com");
+            const audioLink = new URL(props.dataPoints[props.index].mp3Link, `${process.env.REACT_APP_DOMAIN_NAME}`);
             audio.current.setAttribute('src', audioLink);
             audio.current.autoplay = true;
             setTitle(new Date(props.dataPoints[props.index].time));

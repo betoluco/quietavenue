@@ -55,7 +55,7 @@ module.exports = function(env, argv) {
         externals: [nodeExternals()],
         
         plugins: [
-            new Dotenv()
+            new Dotenv({path: `./.env.${process.env.DOTENV}`})
         ],
     };
 };

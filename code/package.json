@@ -28,14 +28,15 @@
     "webpack-node-externals": "^3.0.0"
   },
   "scripts": {
-    "dev": "NODE_ENV=development npm run build && npm run upload-assets",
-    "prod": "NODE_ENV=production npm run build",
+    "dev": "NODE_ENV=development DOTENV=test npm run build",
+    "test": "NODE_ENV=production DOTENV=test npm run build",
+    "prod": "NODE_ENV=production DOTENV=prod npm run build",
     "build": "npm run client-build && npm run server-build",
     "client-build": "webpack --config webpack.client.js",
     "server-build": "webpack --config webpack.server.js",
-    "prod-upload-assets": "npm run clear-assets && npm run upload-assets && npm run clear-old-maps && npm run upload-clientBundle-js-map && npm run upload-main-css-map",
-    "clear-assets": "aws s3 rm s3://quietavenue.com/assets/dist --recursive",
-    "upload-assets": "aws s3 cp dist s3://quietavenue.com/assets/dist --recursive",
+    "clear-assets": "aws s3 rm s3://quietavenueDev.com/assets/dist --recursive",
+    "upload-assets": "aws s3 cp dist s3://quietavenueDev.com/assets/dist --recursive",
+    "prod-renew-maps": "npm run clear-old-maps && npm run upload-clientBundle-js-map && npm run upload-main-css-map",
     "clear-old-maps": "aws s3 rm s3://quietavenuerawfiles/quietavenue/mapfiles/ --recursive",
     "upload-clientBundle-js-map": "aws s3 cp clientBuild/clientBundle.js.map  s3://quietavenuerawfiles/quietavenue/mapfiles/",
     "upload-main-css-map": "aws s3 cp clientBuild/main.css.map s3://quietavenuerawfiles/quietavenue/mapfiles/"

@@ -57,7 +57,7 @@ module.exports = function(env, argv) {
         plugins: [
             new MiniCssExtractPlugin(),
             new CssMinimizerPlugin(),
-            new Dotenv()
+            new Dotenv({path: `./.env.${process.env.DOTENV}`})
         ],
     };
     

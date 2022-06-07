@@ -6,7 +6,7 @@ import validateEstates from "./validateEstates";
 const estates = async (req, res) =>{
     AWS.config.update({region: 'us-west-1'});
     const docClient = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
-    const params = { TableName: "quietavenue.com" };
+    const params = { TableName: `${process.env.DINAMODB_TABLE}` };
     
     try {
         const tableItems = await docClient.scan(params).promise();

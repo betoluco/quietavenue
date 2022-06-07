@@ -136,4 +136,5 @@ code/dist/
 code/serverBundle.js
 
 #environment variables
-.env
+.env.prod
+.env.test
