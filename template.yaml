@@ -58,23 +58,43 @@ Resources:
       DistributionConfig:
         Origins:
           - 
-            DomainName: !Sub ${APIGateway}.execute-api.us-west-1.amazonaws.com
-            OriginPath: !Sub /Prod #name of the deployed stage
             Id: !Sub ${APIGateway}-origin
+            DomainName: !Sub ${APIGateway}.execute-api.us-west-1.amazonaws.com
+            OriginPath: /Prod #name of the deployed stage
             CustomOriginConfig:
               OriginProtocolPolicy: https-only #again API-Gateway only supports https
             OriginCustomHeaders:
               - 
                 HeaderName: x-api-key
                 HeaderValue: !GetAtt GetApiKeyValue.Value
-        DefaultCacheBehavior: #this section defines attached behaviors, first the S3 origin
+          -
+            Id: !Ref S3BucketAssets
+            DomainName: !Sub ${S3BucketAssets}.s3.amazonaws.com
+            S3OriginConfig: !Sub origin-access-identity/cloudfront/${CFOriginAccessIdentity}
+            
+        DefaultCacheBehavior: #this section defines attached behaviors,
           TargetOriginId: !Sub ${APIGateway}-origin #name of the origin
           ViewerProtocolPolicy: redirect-to-https
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+        CacheBehaviors:
+          -
+            TargetOriginId: !Ref S3BucketAssets
+            ViewerProtocolPolicy: redirect-to-https
+            PathPattern: assets/*
+          -
+            TargetOriginId: !Ref S3BucketAssets
+            ViewerProtocolPolicy: redirect-to-https
+            PathPattern: favicon.ico
         Enabled: true
       Tags:
         - Key: description
           Value: CloudFront for quietavenue
+  
+  CFOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties: 
+      CloudFrontOriginAccessIdentityConfig: 
+        Comment: "Origin access identity for S3 bucket assets"
             
   APIGateway:
     Type: AWS::Serverless::Api
@@ -163,6 +183,7 @@ Resources:
       
   SourceDynamoDBTable:
     Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
     Properties: 
       AttributeDefinitions:
         -
@@ -181,6 +202,7 @@ Resources:
         
   S3BucketAssets:
     Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
     Properties:
       AccessControl: Private
       PublicAccessBlockConfiguration:
