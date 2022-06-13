@@ -1,7 +1,7 @@
 const path = require("path");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const Dotenv = require('dotenv-webpack');
+const webpack = require("webpack");
 
 // Client side bundle for hydration
 module.exports = function(env, argv) {
@@ -14,7 +14,7 @@ module.exports = function(env, argv) {
         output: {
             filename: "clientBundle.js",
             path: path.resolve(__dirname, "clientBuild"),
-            publicPath: "https://quietavenue.com/assets/dist/"
+            publicPath: `${process.env.REACT_APP_DOMAIN}/assets/dist/`
         },
         
         module: {
@@ -57,7 +57,9 @@ module.exports = function(env, argv) {
         plugins: [
             new MiniCssExtractPlugin(),
             new CssMinimizerPlugin(),
-            new Dotenv({path: `./.env.${process.env.DOTENV}`})
+            new webpack.DefinePlugin({
+                'process.env.REACT_APP_DOMAIN': JSON.stringify(process.env.REACT_APP_DOMAIN)
+            }),
         ],
     };
     

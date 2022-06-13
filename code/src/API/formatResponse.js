@@ -14,7 +14,7 @@ const formatResults = async (estate) =>{
     item.estateSuggest = data.estateSuggest;
     
     const profilePicture = data.profilePicture;
-    item.profilePicture = new URL(profilePicture, `${process.env.REACT_APP_DOMAIN_NAME}`);
+    item.profilePicture = new URL(profilePicture, `${process.env.REACT_APP_DOMAIN}`);
     
     if (data.hasOwnProperty("audioDescription")) {
         item.audioDescription = data.audioDescription;

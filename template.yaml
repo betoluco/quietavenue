@@ -70,7 +70,9 @@ Resources:
           -
             Id: !Ref S3BucketAssets
             DomainName: !Sub ${S3BucketAssets}.s3.amazonaws.com
-            S3OriginConfig: !Sub origin-access-identity/cloudfront/${CFOriginAccessIdentity}
+            S3OriginConfig: 
+              OriginAccessIdentity: 
+              # OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CFOriginAccessIdentity}
             
         DefaultCacheBehavior: #this section defines attached behaviors,
           TargetOriginId: !Sub ${APIGateway}-origin #name of the origin
@@ -81,10 +83,12 @@ Resources:
             TargetOriginId: !Ref S3BucketAssets
             ViewerProtocolPolicy: redirect-to-https
             PathPattern: assets/*
+            CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
           -
             TargetOriginId: !Ref S3BucketAssets
             ViewerProtocolPolicy: redirect-to-https
             PathPattern: favicon.ico
+            CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
         Enabled: true
       Tags:
         - Key: description
@@ -95,7 +99,7 @@ Resources:
     Properties: 
       CloudFrontOriginAccessIdentityConfig: 
         Comment: "Origin access identity for S3 bucket assets"
-            
+  
   APIGateway:
     Type: AWS::Serverless::Api
     Properties:
@@ -107,31 +111,6 @@ Resources:
         UsagePlan:
           CreateUsagePlan: PER_API
           Description: API gateway usage plan, key and usage plan key for quietavenue
-          
-            
-  CFDistribution:
-    Type: AWS::CloudFront::Distribution
-    Properties:
-      DistributionConfig:
-        Origins:
-          - 
-            DomainName: !Sub ${APIGateway}.execute-api.us-west-1.amazonaws.com
-            OriginPath: !Sub /Prod #name of the deployed stage
-            Id: !Sub ${APIGateway}-origin
-            CustomOriginConfig:
-              OriginProtocolPolicy: https-only #again API-Gateway only supports https
-            OriginCustomHeaders:
-              - 
-                HeaderName: x-api-key
-                HeaderValue: !GetAtt GetApiKeyValue.Value
-        DefaultCacheBehavior: #this section defines attached behaviors, first the S3 origin
-          TargetOriginId: !Sub ${APIGateway}-origin #name of the origin
-          ViewerProtocolPolicy: redirect-to-https
-          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
-        Enabled: true
-      Tags:
-        - Key: description
-          Value: CloudFront for quietavenue
   
 # Custom Resource to retrieve API Key value instead of ID
 

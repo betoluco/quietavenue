@@ -1,6 +1,6 @@
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
-const Dotenv = require('dotenv-webpack');
+const webpack = require("webpack");
 
 // Client side bundle for hydration
 module.exports = function(env, argv) {
@@ -15,7 +15,7 @@ module.exports = function(env, argv) {
             path: path.resolve(__dirname, "./"),
             libraryTarget: "commonjs2",
             assetModuleFilename: 'dist/[hash][ext][query]',
-            publicPath: "https://quietavenue.com/assets/"
+            publicPath: `${process.env.REACT_APP_DOMAIN}/assets/`
         },
         
         module: {
@@ -50,13 +50,15 @@ module.exports = function(env, argv) {
             extensions: [".js", ".jsx", ".json"],
         },
         
+        plugins: [
+            new webpack.DefinePlugin({
+                'process.env.REACT_APP_DOMAIN': JSON.stringify(process.env.REACT_APP_DOMAIN)
+            }),
+        ],
+        
         target: "node",
         
         externals: [nodeExternals()],
-        
-        plugins: [
-            new Dotenv({path: `./.env.${process.env.DOTENV}`})
-        ],
     };
 };
 
