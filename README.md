@@ -59,7 +59,7 @@ cd code
 npm run dev
 cd ..
 sam build
-sam local start-api -p 8080
+sam local start-api -p 8080 --env-vars ./localDeployEnvVar.json
 ```
 
 On menu bar go to Preview > Preview Running Application

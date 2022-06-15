@@ -1,0 +1,6 @@
+{
+    "ServerlessSideRenderingFunction":{
+      "DINAMODB_TABLE": "quietavenueDev-SourceDynamoDBTable-ITW84JAWK62H" ,
+      "S3_BUCKET": "quietavenuedev-s3bucketassets-15lz4s5m91ue7"
+    }
+}

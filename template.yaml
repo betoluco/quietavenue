@@ -11,11 +11,42 @@ Globals:
     Timeout: 10
 
 Resources:
+  ServerlessSideRenderingFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          -
+            Sid: AllowLambdaServiceToAssumeRole
+            Effect: Allow
+            Action: 
+              - sts:AssumeRole
+            Principal:
+              Service: 
+                - lambda.amazonaws.com
+      Policies:
+        -
+          PolicyName: ServerlessSideRenderingFunctionPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              Effect: Allow
+              Action: 
+                - s3:GetObject
+                - dynamodb:Scan
+              Resource: 
+                - !Sub ${S3BucketAssets.Arn}/*
+                - !GetAtt SourceDynamoDBTable.Arn
+  
   ServerlessSideRenderingFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: code/
       Handler: serverBundle.handler
+      Role: !GetAtt ServerlessSideRenderingFunctionRole.Arn
       Runtime: nodejs12.x
       Description: lambda function and Proxy Greedy API for quietavenue
       Environment:
@@ -71,8 +102,7 @@ Resources:
             Id: !Ref S3BucketAssets
             DomainName: !Sub ${S3BucketAssets}.s3.amazonaws.com
             S3OriginConfig: 
-              OriginAccessIdentity: 
-              # OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CFOriginAccessIdentity}
+              OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CFOriginAccessIdentity}
             
         DefaultCacheBehavior: #this section defines attached behaviors,
           TargetOriginId: !Sub ${APIGateway}-origin #name of the origin
