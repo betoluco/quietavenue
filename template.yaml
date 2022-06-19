@@ -1,9 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  quietavenue
-
-  SAM Template for quietavenue.com, server side rendering with hydration React app and API
+  see "understanding the deployment process of the project" in the docs
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -222,3 +220,18 @@ Resources:
       Tags:
         - Key: description
           Value: S3 Bucket for assets
+  
+  S3BucketAssetsPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties: 
+      Bucket: !Ref S3BucketAssets
+      PolicyDocument:
+        Version: '2008-10-17'
+        Id: PolicyForCloudFrontPrivateContent
+        Statement:
+          - Sid: 1
+            Action: 's3:GetObject'
+            Effect: Allow
+            Resource: !Sub '${S3BucketAssets.Arn}/*'
+            Principal: 
+              AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CFOriginAccessIdentity}'
