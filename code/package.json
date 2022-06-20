@@ -28,7 +28,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "scripts": {
-    "dev": "NODE_ENV=development REACT_APP_DOMAIN=https://d14gjrmy4gfvfp.cloudfront.net npm run build  && npm upload-assets",
+    "dev": "NODE_ENV=development REACT_APP_DOMAIN=https://d14gjrmy4gfvfp.cloudfront.net npm run build  && npm run upload-assets",
     "test": "NODE_ENV=production REACT_APP_DOMAIN=https://d14gjrmy4gfvfp.cloudfront.net npm run build && npm run clear-assets && npm run upload-assets",
     "prod": "NODE_ENV=production REACT_APP_DOMAIN=https://quietavenue.com npm run build",
     "build": "npm run client-build && npm run server-build",
