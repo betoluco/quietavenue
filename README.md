@@ -1,57 +1,9 @@
 # quietavenue.com
 
-The project consists of a serverless side rendering React app with hydration and a HTTP API. The server side rendering and the API are run in a lambda function. 
-The function is triggered by an API Gateway event. The server side rendering is handled by Express.js
-
-## To set up the project in a aws cloud9 environment
-1. Create a Cloud9 environment
-    i. Use the cheapest instance type
-    ii. In Network Settings select quietavenue|vpc-063a7278724443b38 as Network(VPC) and 10.0.1.0_US_WEST_1_quietavenue_PUB as the subnet
-
-2. In AWS EC2 console add the security groups to cloud9
-    i. Select the Cloud9 instance
-    ii. Go to Actions => Security => Change security groups
-    iii. Select the default security group for quietavenue sg-052d6d59f5c84778c
-    iv. click on "Add security group" and check that appears on the list "Security groups associated with the network interface" and save
-    v.Check in security tab that the correct security group is applied
-
-3. In AWS AIM console create a new role 
-   i. Select your use case: EC2
-   ii. Attach permissions policies: AdministratorAccess
-
-4. In AWS EC2 console attach the role to the Cloud9 instance
-   i. Selece the Cloud9 instance
-   ii. Go to Actions -> Security -> Modify IAM Role
-   iii. In the drop down list select the role previously created
-More info on [aws docs](https://docs.aws.amazon.com/cloud9/latest/user-guide/credentials.html#credentials-temporary-attach-console) and [youtube viedo](https://www.youtube.com/watch?v=C4AyfV3Z3xs)
-
-5. Click on AWS Cloud9 in menu bar -> Preferences -> AWS Settings -> turn off "AWS manage temporary credentials"
-
-6. In the cloud9 bash
-```bash
-aws configure list
-```
-something like the following text must appear
-```bash
-
-      Name                    Value             Type    Location
-      ----                    -----             ----    --------
-   profile                <not set>             None    None
-access_key     ****************2I37         iam-role    
-secret_key     ****************ME6A         iam-role    
-    region                <not set>             None    None
-```
-More info on [aws docs](https://aws.amazon.com/premiumsupport/knowledge-center/access-key-does-not-exist)
-
-7. Clone the proyect to aws cloud9 and initialize it
-```bash
-git clone https://github.com/betoluco/quietavenue.git
-npm init
-```
-Note: feel free to update the dependencies with exeption of d3-array@2.12.1
+Check specific documetation
 
 
-# After you are done runing the app locally or deploying it, don't forget to delete clientBuild folder, dist folder and serverBundle File
+
 
 ## Run the app locally
 ```bash
@@ -70,10 +22,10 @@ cd code
 npx cypress run --headless
 ```
 
-## Deploy the application
+## Deploy the application for testing
 ```bash
 cd code
-npm run prod
+npm run test
 cd ..
 sam build
 cd code
@@ -84,7 +36,7 @@ sam deploy
 
 You need to delete the cache on cloudfront
 
-## After every deployment is recommended that quietavenue.com is tested with cypress tests. To do this you need to have node installed in your local machine.
+## Check the application online
 
 1. Create a new folder
 2. In terminal go to the folder and create a node package, use default configuration 
@@ -98,7 +50,7 @@ npx cypress open
 ```
 4. Open folder and delete the test (folders and files) inside cypress/integration folder
 5. Download the test (folders and files) of the project located in code/cypress/integration and paste it in cypress/integration folder on your local machine
-6. Edit the test in to point to quietavenue.com
+6. Edit the test in to point to home url example quietavenue.com
 
 
 # Given that sam build is really slow, you use Create React App to create a app and develop in there
