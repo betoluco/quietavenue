@@ -1,9 +1,5 @@
 # quietavenue.com
-
 Check specific documetation
-
-
-
 
 ## Run the app locally
 ```bash
@@ -13,8 +9,6 @@ cd ..
 sam build
 sam local start-api -p 8080 --env-vars ./localDeployEnvVar.json
 ```
-
-On menu bar go to Preview > Preview Running Application
 
 ## To test locally with cypress
 ```bash
@@ -36,21 +30,6 @@ sam deploy
 
 You need to delete the cache on cloudfront
 
-## Check the application online
-
-1. Create a new folder
-2. In terminal go to the folder and create a node package, use default configuration 
-```bash
-npm init
-```
-3 Install cypress and open it
- ```bash
-npm install cypress
-npx cypress open
-```
-4. Open folder and delete the test (folders and files) inside cypress/integration folder
-5. Download the test (folders and files) of the project located in code/cypress/integration and paste it in cypress/integration folder on your local machine
-6. Edit the test in to point to home url example quietavenue.com
 
 
 # Given that sam build is really slow, you use Create React App to create a app and develop in there
