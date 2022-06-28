@@ -19,6 +19,7 @@ const corsDev = "https://8ef2832e749e4b0e8eb0dafdb5d7df96.vfs.cloud9.us-west-1.a
 
 app.get("/api/estates", cors({origin: corsDev}), async (req, res) =>{
     const response = await estates(req, res);
+    res.contentType('application/json');
     res.send(JSON.stringify(response));
 });
 
@@ -48,6 +49,7 @@ app.get("*", async (req, res) =>{
         if (context.notFound) {
             res.status(404);
         }
+        res.contentType('text/html');
         res.send(content);
     };
     
