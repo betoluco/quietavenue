@@ -15,7 +15,7 @@ app.use(awsServerlessExpressMiddleware.eventContext());
 
 // API
 
-const corsDev = "https://8ef2832e749e4b0e8eb0dafdb5d7df96.vfs.cloud9.us-west-1.amazonaws.com"; //Allow request from Cloud 9 development machine
+const corsDev = "https://48d1c8ccf17442fb9e070ede1dc6c4ca.vfs.cloud9.us-west-1.amazonaws.com"; //Allow request from Cloud 9 development machine
 
 app.get("/api/estates", cors({origin: corsDev}), async (req, res) =>{
     const response = await estates(req, res);
