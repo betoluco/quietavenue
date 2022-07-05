@@ -52,7 +52,8 @@ module.exports = function(env, argv) {
         
         plugins: [
             new webpack.DefinePlugin({
-                'process.env.REACT_APP_DOMAIN': JSON.stringify(process.env.REACT_APP_DOMAIN)
+                'process.env.REACT_APP_DOMAIN': JSON.stringify(process.env.REACT_APP_DOMAIN),
+                'process.env.CORS': JSON.stringify(process.env.CORS),
             }),
         ],
         
