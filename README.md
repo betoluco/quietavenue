@@ -1,6 +1,8 @@
 # quietavenue.com
 Check specific documetation
 
+Make sure you have node v14.0.0
+
 ## Run the app locally
 ```bash
 cd code
@@ -10,10 +12,10 @@ sam build
 sam local start-api -p 8080 --env-vars ./localDeployEnvVar.json
 ```
 
-## To test locally with cypress
+## To test locally with cypress 9.7.0
 ```bash
 cd code
-npx cypress run --headless
+npx cypress run 
 ```
 
 ## Deploy the application for testing
@@ -22,13 +24,11 @@ cd code
 npm run test
 cd ..
 sam build
-cd code
-npm run prod-upload-assets
-cd ..
 sam deploy
 ```
 
-You need to delete the cache on cloudfront
+
+Afther a deployment you need to invalidate the cache on cloudfront to see the change applied
 
 
 
@@ -82,6 +82,5 @@ You need to delete the cache on cloudfront
     code/src/style.css                                   ==> src/style.css   
     code/src/trie.js                                     ==> src/trie.js   
     code/tailwind.config.js                              ==> tailwind.config.js
-    code/.env                                            ==> .env
 
 3. run the app (npm start), ans see the preview -> preview running application
