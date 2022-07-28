@@ -1,11 +1,10 @@
 import React, {useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 import searchButton from "./images/magnifyingGlassOp.svg";
 import { estateSuggest } from "../trie";
 import { citySuggest } from "../trie";
-import {zipCodeSuggest } from "../trie";
+import { zipCodeSuggest } from "../trie";
 
 const Search = props =>{
   let history = useHistory();
@@ -25,7 +24,7 @@ const Search = props =>{
         suggestList.push(
           <li 
           className="p-1 bg-white text-base text-stone-500 w-full"
-          key={'estates'}>
+          key={'estates'} data-cy="estateTitle">
             Estates
           </li>
         );
@@ -45,8 +44,8 @@ const Search = props =>{
         suggestList.push(
           <li 
           className="p-1 bg-white text-base text-stone-500 w-full"
-          key={'city'}>
-            city
+          key={'city'} data-cy="cityTitle">
+            City
           </li>
         );
         citySuggestions.forEach( element =>{
@@ -65,7 +64,7 @@ const Search = props =>{
         suggestList.push(
           <li 
           className="p-1 bg-white text-base text-stone-500 w-full"
-          key={'zipCode'}>
+          key={'zipCode'} data-cy="zipCodeTitle">
             Zip code
           </li>
         );
@@ -81,11 +80,11 @@ const Search = props =>{
         });
       }
         
-      if(!suggestList.length){
+      if(suggestList.length === 0){
         suggestList.push(
           <li 
           className="flex p-1 bg-white text-sm border-b-2 border-green-600 border-opacity-50"
-          key="No results">
+          key="No results" data-cy="noResults">
             No results
           </li>
         );
@@ -115,7 +114,7 @@ const Search = props =>{
   };
   
   const onFocusHandler = event => {
-    if(searchInputText.length > 1){
+    if(searchInputText.length > 0){
       setShowSuggest(true);
     }
   };
@@ -136,7 +135,8 @@ const Search = props =>{
           onChange={onChangeHandler}
           value={searchInputText}
           type="text"
-          placeholder="zip code, city or address"/>
+          placeholder="zip code, city or address"
+          data-cy="inputField"/>
           <img 
           src={searchButton}
           alt="search button"
@@ -144,7 +144,7 @@ const Search = props =>{
         </div>
         {showSuggest &&
           <ul className="absolute w-11/12 md:w-8/12 lg:w-6/12 xl:w-4/12 rounded-md 
-          border border border-green-600 overflow-hidden ">
+          border border border-green-600 overflow-hidden" data-cy="resultsList">
             {suggest}
           </ul>
         }
