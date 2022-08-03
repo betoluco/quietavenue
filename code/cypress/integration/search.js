@@ -23,11 +23,14 @@ describe('Search', () =>{
         cy.get('[data-cy=noResults]').should('have.text', 'No results')
     });
      it("Estate, City, ZipCode titles are displayed", () =>{
+        cy.intercept('/api/estates*').as('apiCall')
         cy.visit('/');
+        cy.wait(['@apiCall'])
         cy.get('[data-cy=inputField]').type("10");
         cy.get('[data-cy=resultsList]').should('be.visible')
         cy.get('[data-cy=estateTitle]').should('have.text', 'Estates')
         cy.get('[data-cy=cityTitle]').should('have.text', 'City')
         cy.get('[data-cy=zipCodeTitle]').should('have.text', 'Zip code')
     });
+    //it("Estate Page  when cliclking estate", () =>{
 });
