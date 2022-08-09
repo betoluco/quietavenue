@@ -3,8 +3,6 @@ const TrieNode = function (key) {
     this.parent = null;
     this.children = {};
     this.end = false;
-    this.name = "";
-    this.link="";
     
 };
 

@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 const Card = props =>{
   const link = "/estate/" + props.estate.id;
   return (
-    <div className="shadow-md border-b-2 border-green-600 rounded-md">
+    <div className="shadow-md border-b-2 border-green-600 rounded-md" data-cy={props.estate.id}>
       <Link to={link}>
         <img 
         className="w-full h-64 object-cover rounded-md" 

@@ -16,10 +16,10 @@ const EstatesTemaplate = (props) =>{
   return (
     <Fragment>
       { filter &&
-        <div className="inline-block m-2 ml-6 mb-4">
+        <div className="inline-block m-2 ml-6 mb-4" data-cy="filter">
           <div className="flex flex-row justify-center items-center p-2 rounded-full border border-stone-400 bg-green-600">
-            <h2 className="text-lg  text-white pr-2.5">{filter}</h2>
-            <Link to="/">
+            <h2 className="text-lg text-white pr-2.5" data-cy="filterName">{filter}</h2>
+            <Link to="/" data-cy="deleteFilter">
               <img className="w-6" src={deleteFilter} alt="delete filter"/>
             </Link>
           </div>

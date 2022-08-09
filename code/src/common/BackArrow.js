@@ -9,7 +9,7 @@ const BackArrow = (props) => {
     };
     
     return (
-        <button onClick={onClickHandler}>
+        <button onClick={onClickHandler} data-cy="backArrow">
             <span className="hidden">back</span>
             <span 
             className="block bg-stone-800 w-5 md:w-6 h-1 rounded-sm 

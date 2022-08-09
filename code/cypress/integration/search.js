@@ -32,5 +32,12 @@ describe('Search', () =>{
         cy.get('[data-cy=cityTitle]').should('have.text', 'City')
         cy.get('[data-cy=zipCodeTitle]').should('have.text', 'Zip code')
     });
-    //it("Estate Page  when cliclking estate", () =>{
+    it("Browser goes to estate page when cliclking a estate in search results", () =>{
+        cy.intercept('/api/estates*').as('apiCall')
+        cy.visit('/');
+        cy.wait(['@apiCall'])
+        cy.get('[data-cy=inputField]').type("10");
+        cy.get(`[data-cy=${CSS.escape('estate/1020-Helm-Ln-Foster-City-Ca-94404')}]`).click()
+        cy.location('pathname').should('eq', '/estate/1020-Helm-Ln-Foster-City-Ca-94404')
+    });
 });
