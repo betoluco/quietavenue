@@ -2,7 +2,7 @@ import React from "react";
 
 const Vimeo = props => {
   return(
-    <div className="mb-4 flex justify-center">
+    <div className="mb-4 flex justify-center"  data-cy="estateVideo">
       <div className= "relative w-full p-56.2 lg:w-9/12 lg:p-42.1 xl:w-6/12  xl:p-28.1">
         <iframe 
           src={props.iframeSRC} 

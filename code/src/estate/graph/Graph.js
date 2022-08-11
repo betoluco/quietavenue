@@ -262,7 +262,7 @@ class Graph extends Component{
           {this.recordingDates}
         </h5>
         <ColorScale />
-        <div className="mb-7">
+        <div className="mb-7" data-cy="estateAudioGraph">
           <div className="flex absolute items-center mt-3 ml-48 select-none" >
             <button 
             onClick={this.resetZoom}
