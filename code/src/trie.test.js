@@ -85,14 +85,54 @@ describe("Node with many children", () =>{
     });
 });
 
-// describe("Search", () =>{
-//     beforeAll(() => {
-//         estateSuggest.insert("Lantern", "Lantern St", "link/to/Lanter St");
-//         estateSuggest.insert("Lamda", "Lambda rd", "link/to/Lambda rd");
-//         estateSuggest.insert("Linder", "Linder Av", "link/to/Lindel Av");
-//     });
+describe("Search", () =>{
+    beforeAll(() => {
+        estateSuggest.insert("Lantern", "Lantern St", "link/to/Lanter St");
+        estateSuggest.insert("Landing", "Landing St", "link/to/Landing St");
+        estateSuggest.insert("Lamda", "Lambda rd", "link/to/Lambda rd");
+        estateSuggest.insert("Linder", "Linder Av", "link/to/Lindel Av");
+    });
     
-//     // test("Search converts all letters in words to lower case", () =>{
-//     //     expect(estateSuggest.find('lAnTErN'))
-//     // });
-// });
+    test("Search converts all letters in words to lower case", () =>{
+        expect(estateSuggest.find('lAnTErN')).toMatchObject([{"link": "link/to/Lanter St", "name": "Lantern St"}])
+    });
+    
+    
+    test("Search for 'l' returns tree resulst", () =>{
+        expect(estateSuggest.find('l')).toMatchObject(
+            [
+                { "link": "link/to/Lanter St", "name": "Lantern St",},
+                { "link": "link/to/Landing St", "name": "Landing St",},
+                { "link": "link/to/Lambda rd", "name": "Lambda rd",},
+                { "link": "link/to/Lindel Av", "name": "Linder Av",},
+            ]
+        );
+    });
+    test("Search for 'la' returns two resulst", () =>{
+        expect(estateSuggest.find('la')).toMatchObject(
+            [
+                { "link": "link/to/Lanter St", "name": "Lantern St",},
+                { "link": "link/to/Landing St", "name": "Landing St",},
+                { "link": "link/to/Lambda rd", "name": "Lambda rd",},
+            ]
+        );
+    });
+    
+    test("Search return resuls wen gets to end node ignoring other letters", () =>{
+        expect(estateSuggest.find('Lanternsom3Text')).toMatchObject([{"link": "link/to/Lanter St", "name": "Lantern St"}])
+        
+        
+    });
+    
+    test("Search return similar results when there is an spelling mistake afther tree letters", () =>{
+        expect(estateSuggest.find('lanmistake')).toMatchObject(
+            [
+                { "link": "link/to/Lanter St", "name": "Lantern St",},
+                { "link": "link/to/Landing St", "name": "Landing St",},
+            ]
+        );
+    });
+    test("Search return no results when there is an spelling mistake before tree letters", () =>{
+        expect(estateSuggest.find('laOtern')).toMatchObject([]);
+    });
+});

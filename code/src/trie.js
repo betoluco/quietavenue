@@ -34,12 +34,23 @@ const Trie = function () {
         for (let i = 0; i < prefix.length; i++) {
             if (node.children[prefix[i].toLowerCase()]) {
                 node = node.children[prefix[i].toLowerCase()];
-            } else {
+            } 
+            else {
+                
                 if (node.end) {
                     output.push({
                         "name": node.name,
                         "link": node.link
                     });
+                } 
+                else {
+                    if (i > 2) {
+                        findAllWords(
+                            node, 
+                            output
+                        );
+                        return output;
+                    }
                 }
                 return output;
             }
