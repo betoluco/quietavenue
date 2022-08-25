@@ -6,6 +6,7 @@ import { select } from "d3-selection";
 import { timeFormat } from "d3-time-format";
 import { pointers } from "d3-selection";
 import { mean } from "d3-array";
+import { area, curveBasis, curveLinear } from "d3-shape";
 
 import AudioPlayer from "./AudioPlayer";
 import ColorScale from "./ColorScale";
@@ -15,6 +16,8 @@ import minusSign from "./minusSignOp.svg";
 class Graph extends Component{
   //A class componets is necesary so that events linstener can access the state
   //If a functional component is used, the state becomes stale
+  
+//=============================================================================
   constructor (props){
     super(props);
     this.xAxisRef = React.createRef();
@@ -27,40 +30,46 @@ class Graph extends Component{
       oneFinger: false,
       index: undefined
     };
-    this.margin = { top: 4, right: 0, bottom: 115, left: 124};
-    this.width = 834; //16:9 screen ratio
-    this.height = 1560;
+    this.margin = { top: 0, right: 5, bottom: 150, left: 115};
+    this.width = 1080;
+    this.height = 1920;
     
-    this.colorScale = scaleLinear()
-    .domain([0, 1])
-    .range(["#ffc9c9", "#ff0000"]);
-      
-    this.firstDay = timeDay.floor(new Date(this.props.dataPoints[0].time));
-    this.lastDay = timeDay.ceil(new Date(this.props.dataPoints[this.props.dataPoints.length - 1].time));
+    this.firstDay = new Date([0]);
+    this.lastDay = timeDay.ceil(new Date(Object.keys(this.props.dataPoints)[Object.keys(this.props.dataPoints).length - 1]));
     this.recordingDates = `Extracted form recodings taken from ${this.firstDay.toLocaleDateString("en-US")} to ${this.lastDay.toLocaleDateString("en-US")}`;
-    this.domainDays = timeDay.range(this.firstDay, this.lastDay);
+    this.domainDays = Object.keys(this.props.dataPoints).map( (day) => new Date(day));
     
-    this.xScale = scaleBand()
+    this.yScale = scaleBand()
       .domain(this.domainDays)
-      .range([ this.margin.left, this.width - this.margin.right ])
+      .range([this.margin.top, this.height - this.margin.bottom])
       .paddingInner(0.1);
     
-    this.xAxis = axisBottom(this.xScale)
-      .tickFormat(timeFormat("%d %a"))
-      .tickSizeOuter(0);
-      
-    this.widthScale = scaleLinear()
-    .domain([0, 1])
-    .range([0, this.xScale.bandwidth()]);
+    this.yAxis = axisLeft(this.yScale)
+      .tickFormat(timeFormat("%d %a"));
+      //.tickSizeOuter(0);
+    
+    this.y1Scale = scaleLinear()
+    .domain([0, 32767])  // 0 to  32767 the size of a 16 bit signed integer
+    .range([0, this.yScale.bandwidth()]);
     
     //using today date for the domain of Y axis for simplicity
     this.today = new Date();
     
-    this.yScale = scaleTime()
-      .domain([timeDay.ceil(this.today), timeDay.floor(this.today)])
-      .range([this.height - this.margin.bottom, this.margin.top]);
+    this.xScale = scaleTime()
+      .domain([timeDay.floor(this.today), timeDay.ceil(this.today)])
+      .range([ this.margin.left, this.width - this.margin.right - this.margin.left ]);
     
-    this.yAxis = axisLeft(this.yScale).tickFormat(timeFormat("%I:%M %p"));
+    this.xAxis = axisBottom(this.xScale).tickFormat(timeFormat("%I:%M %p"));
+    
+    this.path = area()
+        .curve(curveLinear)
+        .x( (d) =>{
+          const time = new Date(d.time);
+          this.today.setHours(time.getHours(), time.getMinutes(), time.getSeconds(), 0);
+          return this.xScale(this.today);
+        })
+        .y0(this.yScale.bandwidth())
+        .y1( (d) => this.yScale.bandwidth() - this.y1Scale(d.maxLoudness));
     
     this.zoomButtons = (magnification) =>{
       const center = [this.width/2, this.height/2];
@@ -74,33 +83,23 @@ class Graph extends Component{
         center[0] - inverseTranformationCoordinates[0] * zoom,
         center[1] - inverseTranformationCoordinates[1] * zoom
       ];
-      this.setState({a:zoom, d:zoom, e:move[0], f:move[1]});
-      this.adjustAxis();
+      this.setState( (state, props) => ({
+        a:zoom, d:zoom, e:move[0], f:move[1]
+      }));
     };
     
     this.resetZoom = () =>{
-      this.setState({a:1, d:1, e:0, f:0});
-      select(this.yAxisRef.current).call(this.yAxis.scale(this.yScale));
+      this.setState((state, props) => ({a:1, d:1, e:0, f:0}))
     };
     
-    this.adjustAxis = () =>{
-      const invertY = y => {
-        return (y - this.state.f) / this.state.d;
-      };
-      
-      const rescaleY = y => {
-        return y.copy().domain(y.range().map(invertY).map(y.invert, y));
-      };
-      
-      select(this.yAxisRef.current).call(this.yAxis.scale(rescaleY(this.yScale)));
-    };
+    
     
     this.setIndex = (index) =>{
       this.setState({index:index });
     };
-    
   }
   
+//============================================================================
   componentDidMount(){
     select(this.xAxisRef.current)
     .style("font-size","2rem")
@@ -110,9 +109,9 @@ class Graph extends Component{
     .attr("dx", "-.6em")
     .attr("dy", ".15em")
     .attr("transform", "rotate(-65)");
-
+  
     select(this.yAxisRef.current)
-    .style("font-size","1.7rem")
+    .style("font-size","2rem")
     .call(this.yAxis);
     
     select(this.graphRef.current)
@@ -120,6 +119,7 @@ class Graph extends Component{
       const t =  pointers(event);
       this.setState({pointerPosition: [mean(t, d => d[0]), mean(t, d => d[1])]});
     })
+    
     .on("touchstart", (event) => {
       const t =  pointers(event);
       if (t.length > 1) {
@@ -135,12 +135,15 @@ class Graph extends Component{
         
       }
     })
+    
     .on("mouseup touchend", (event) => {
       this.setState({pointerPosition: null, oneFinger: false});
     })
+    
     .on("mouseleave", (event) => {
       this.setState({pointerPosition: null});
     })
+    
     .on("mousemove", (event) => {
       if (this.state.pointerPosition){
         const t = pointers(event);
@@ -154,7 +157,6 @@ class Graph extends Component{
           previousPosition[1] + pointerPosition[1]
         ];
         this.setState({e: move[0], f: move[1], pointerPosition: pointerPosition});
-        this.adjustAxis();
       }
     })
     .on("touchmove", (event) => {
@@ -202,7 +204,6 @@ class Graph extends Component{
             pointerPosition: pointerPosition,
             pointerDistance: pointerDistance
           });
-          this.adjustAxis();
         }
       }else{
         this.setState({oneFinger: true});
@@ -220,40 +221,43 @@ class Graph extends Component{
       
       const zoom = this.state.d * 1 + (event.wheelDelta * 4) / 1000;
       const yZoom = zoom > 1? zoom : 1;
-      const xZoom = 1;
+      const xZoom = zoom > 1? zoom : 1;
       const move = [ 
         pointerPosition[0] - inverseTranformationCoordinates[0] * xZoom,
         pointerPosition[1] - inverseTranformationCoordinates[1] * yZoom
       ];
       this.setState({a:xZoom, d:yZoom, e:move[0], f:move[1]});
-      this.adjustAxis();
     });
   }
   
+  componentDidUpdate(){
+    const invertX = x =>{
+      return (x - this.state.e) / this.state.a;
+    };
+    
+    const rescaleX = x =>{
+      return x.copy().domain(x.range().map(invertX).map(x.invert, x));
+    };
+    
+    select(this.xAxisRef.current)
+    .style("font-size","2rem")
+    .call(this.xAxis.scale(rescaleX(this.xScale)))
+    .selectAll("text")  
+    .style("text-anchor", "end")
+    .attr("dx", "-.6em")
+    .attr("dy", ".15em")
+      .attr("transform", "rotate(-65)");
+  }
+  
+//===============================================================================
   render(){
-    const rects = this.props.dataPoints.map( (point, index) =>{
-      const time = new Date(point.time);
-      const xPosition = this.xScale(timeDay.floor(time)) + (this.xScale.bandwidth()/2 - this.widthScale(point.maxLoudness)/2);
-      this.today.setHours(time.getHours(), time.getMinutes(), time.getSeconds(), 0);
-      const yPosition = this.yScale(this.today);
-      if (this.state.index === index) {
-        return <rect 
-        key={point.mp3Link}
-        width={ this.xScale.bandwidth() }
-        height="1"
-        x={this.xScale(timeDay.floor(time))}
-        y={yPosition}
-        fill={ "green" }
-        onClick={() => this.setIndex(index)}/>;
-      }
-      return <rect 
-      key={point.mp3Link}
-      width={ this.widthScale(point.maxLoudness) }
-      height="1"
-      x={xPosition}
-      y={yPosition}
-      fill={this.colorScale(point.maxLoudness)}
-      onClick={() => this.setIndex(index)}/>;
+    const ridgeline = Object.keys(this.props.dataPoints).map( (day) =>{
+    
+      return (
+        <g transform={`translate(0, ${this.yScale(timeDay.floor(new Date(day)))})`}>
+          <path fill="#1c1917" d={this.path(this.props.dataPoints[day])} />;
+        </g>
+      );
     });
     
     return (
@@ -286,25 +290,35 @@ class Graph extends Component{
             ref={this.graphRef}
             viewBox={`0 0 ${this.width} ${this.height}`}
             preserveAspectRatio="xMidYMid meet">
+              <clipPath id="yAxisClip">
+                <rect 
+                x={0}
+                y={this.margin.top}
+                width={this.margin.left} 
+                height={this.height - this.margin.bottom} />
+              </clipPath>
+              <g clipPath="url(#yAxisClip)">
+                <g ref={this.yAxisRef} 
+                  transform={`matrix(1, 0, 0, ${this.state.d}, ${this.margin.left}, ${this.state.f})`} 
+                  className="select-none"
+                />
+              </g>
               <clipPath id="graphClip">
                 <rect 
                 x={this.margin.left}
                 y={this.margin.top}
                 width={this.width - this.margin.right - this.margin.left} 
-                height={this.height - this.margin.top - this.margin.bottom -2} />
+                height={this.height - this.margin.top - this.margin.bottom} />
               </clipPath>
-              <g ref={this.yAxisRef} transform={`translate(${this.margin.left}, ${this.margin.top})`} className="select-none"/>
-                <g clipPath="url(#graphClip)">
-                  <g transform={
-                    `matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`
-                  }>
-                    {rects}
-                  </g>
+              <g clipPath="url(#graphClip)">
+                <g transform={`matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`}>
+                  {ridgeline}
                 </g>
-                <g ref={this.xAxisRef} transform={
-                `matrix(${this.state.a}, 0, 0, 1, ${this.state.e}, ${this.height - this.margin.bottom - this.margin.top})`}
-                className="select-none"
-                />
+              </g>
+              <g ref={this.xAxisRef} 
+                transform={`translate(0, ${this.margin.top + this.height - this.margin.bottom})`} 
+                className="select-none" 
+              />
             </svg>
           </div>
         </div>
