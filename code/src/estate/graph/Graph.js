@@ -6,7 +6,7 @@ import { select } from "d3-selection";
 import { timeFormat } from "d3-time-format";
 import { pointers } from "d3-selection";
 import { mean } from "d3-array";
-import { area, curveBasis, curveLinear } from "d3-shape";
+import { lineRadial } from "d3-shape";
 
 import AudioPlayer from "./AudioPlayer";
 import ColorScale from "./ColorScale";
@@ -23,53 +23,36 @@ class Graph extends Component{
     this.xAxisRef = React.createRef();
     this.yAxisRef = React.createRef();
     this.graphRef = React.createRef();
+    this.margin = { top: 0, right: 0, bottom: 0, left: 0};
+    this.width = 1080;
+    this.height = 1080;
+    this.innerRadius = 200;
+    this.outerRadiou = 520;
     this.state = {
-      a:1, d:1, e:0, f:0, 
+      a:1, d:1, e:this.width/2, f:this.height/2, 
       pointerPosition:null,
       pointerDistance:null,
       oneFinger: false,
       index: undefined
     };
-    this.margin = { top: 0, right: 5, bottom: 150, left: 115};
-    this.width = 1080;
-    this.height = 1920;
     
-    this.firstDay = new Date([0]);
-    this.lastDay = timeDay.ceil(new Date(Object.keys(this.props.dataPoints)[Object.keys(this.props.dataPoints).length - 1]));
+    this.firstDay = new Date( this.props.dataPoints[0].time);
+    this.lastDay = timeDay.ceil(new Date(this.props.dataPoints[this.props.dataPoints.length - 1].time));
     this.recordingDates = `Extracted form recodings taken from ${this.firstDay.toLocaleDateString("en-US")} to ${this.lastDay.toLocaleDateString("en-US")}`;
-    this.domainDays = Object.keys(this.props.dataPoints).map( (day) => new Date(day));
     
-    this.yScale = scaleBand()
-      .domain(this.domainDays)
-      .range([this.margin.top, this.height - this.margin.bottom])
-      .paddingInner(0.1);
     
-    this.yAxis = axisLeft(this.yScale)
-      .tickFormat(timeFormat("%d %a"));
-      //.tickSizeOuter(0);
+    this.radiusScale = scaleLinear()
+    .domain([0, 1]) 
+    .range([this.innerRadius, this.outerRadiou]);
     
-    this.y1Scale = scaleLinear()
-    .domain([0, 32767])  // 0 to  32767 the size of a 16 bit signed integer
-    .range([0, this.yScale.bandwidth()]);
-    
-    //using today date for the domain of Y axis for simplicity
+    //using today date for the domain of angle scale for simplicity
     this.today = new Date();
     
-    this.xScale = scaleTime()
+    this.angleScale = scaleTime()
       .domain([timeDay.floor(this.today), timeDay.ceil(this.today)])
-      .range([ this.margin.left, this.width - this.margin.right - this.margin.left ]);
-    
-    this.xAxis = axisBottom(this.xScale).tickFormat(timeFormat("%I:%M %p"));
-    
-    this.path = area()
-        .curve(curveLinear)
-        .x( (d) =>{
-          const time = new Date(d.time);
-          this.today.setHours(time.getHours(), time.getMinutes(), time.getSeconds(), 0);
-          return this.xScale(this.today);
-        })
-        .y0(this.yScale.bandwidth())
-        .y1( (d) => this.yScale.bandwidth() - this.y1Scale(d.maxLoudness));
+      .range([ 0, Math.PI * 2 ]);
+      
+    this.lineRadial = lineRadial();
     
     this.zoomButtons = (magnification) =>{
       const center = [this.width/2, this.height/2];
@@ -89,30 +72,24 @@ class Graph extends Component{
     };
     
     this.resetZoom = () =>{
-      this.setState((state, props) => ({a:1, d:1, e:0, f:0}))
-    };
-    
-    
-    
-    this.setIndex = (index) =>{
-      this.setState({index:index });
+      this.setState((state, props) => ({a:1, d:1, e:0, f:0}));
     };
   }
   
 //============================================================================
   componentDidMount(){
-    select(this.xAxisRef.current)
-    .style("font-size","2rem")
-    .call(this.xAxis)
-    .selectAll("text")  
-    .style("text-anchor", "end")
-    .attr("dx", "-.6em")
-    .attr("dy", ".15em")
-    .attr("transform", "rotate(-65)");
+    // select(this.xAxisRef.current)
+    // .style("font-size","2rem")
+    // .call(this.xAxis)
+    // .selectAll("text")  
+    // .style("text-anchor", "end")
+    // .attr("dx", "-.6em")
+    // .attr("dy", ".15em")
+    // .attr("transform", "rotate(-65)");
   
-    select(this.yAxisRef.current)
-    .style("font-size","2rem")
-    .call(this.yAxis);
+    // select(this.yAxisRef.current)
+    // .style("font-size","2rem")
+    // .call(this.yAxis);
     
     select(this.graphRef.current)
     .on("mousedown", (event) => {
@@ -230,35 +207,33 @@ class Graph extends Component{
     });
   }
   
-  componentDidUpdate(){
-    const invertX = x =>{
-      return (x - this.state.e) / this.state.a;
-    };
+  // componentDidUpdate(){
+  //   const invertX = x =>{
+  //     return (x - this.state.e) / this.state.a;
+  //   };
     
-    const rescaleX = x =>{
-      return x.copy().domain(x.range().map(invertX).map(x.invert, x));
-    };
+  //   const rescaleX = x =>{
+  //     return x.copy().domain(x.range().map(invertX).map(x.invert, x));
+  //   };
     
-    select(this.xAxisRef.current)
-    .style("font-size","2rem")
-    .call(this.xAxis.scale(rescaleX(this.xScale)))
-    .selectAll("text")  
-    .style("text-anchor", "end")
-    .attr("dx", "-.6em")
-    .attr("dy", ".15em")
-      .attr("transform", "rotate(-65)");
-  }
+  //   select(this.xAxisRef.current)
+  //   .style("font-size","2rem")
+  //   .call(this.xAxis.scale(rescaleX(this.xScale)))
+  //   .selectAll("text")  
+  //   .style("text-anchor", "end")
+  //   .attr("dx", "-.6em")
+  //   .attr("dy", ".15em")
+  //     .attr("transform", "rotate(-65)");
+  // }
   
 //===============================================================================
   render(){
-    const ridgeline = Object.keys(this.props.dataPoints).map( (day) =>{
-    
-      return (
-        <g transform={`translate(0, ${this.yScale(timeDay.floor(new Date(day)))})`}>
-          <path fill="#1c1917" d={this.path(this.props.dataPoints[day])} />;
-        </g>
-      );
+    const path = this.props.dataPoints.map( (data) =>{
+      const time = new Date(data.time);
+      this.today.setHours(time.getHours(), time.getMinutes(), time.getSeconds(), 0);
+      return [this.angleScale(this.today), this.radiusScale(data.maxLoudness)];
     });
+    
     
     return (
       <Fragment>
@@ -312,7 +287,7 @@ class Graph extends Component{
               </clipPath>
               <g clipPath="url(#graphClip)">
                 <g transform={`matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`}>
-                  {ridgeline}
+                  <path stroke="red" fill="none" d={this.lineRadial(path)} />
                 </g>
               </g>
               <g ref={this.xAxisRef} 
