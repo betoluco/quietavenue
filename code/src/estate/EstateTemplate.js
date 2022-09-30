@@ -5,11 +5,9 @@ import Logo from "../common/Logo";
 import BackArrow from "../common/BackArrow";
 import Search from "../common/Search";
 import Vimeo from "./Vimeo";
-import Graph from "./graph/Graph";
 import HamburgerMenu from "../common/HamburgerMenu";
 
 const EstateTemplate = (props) => {
-  
   return (
     <React.Fragment>
       <header className="pb-8 border-b border-green-600">
@@ -91,11 +89,9 @@ const EstateTemplate = (props) => {
             </h3>
           </div>
         }
-        
-        {props.estate.graphData &&
-          <Graph dataPoints={props.estate.graphData} />
+        {props.graphs.length > 0 &&
+          props.graphs
         }
-        
       </div>
     </React.Fragment>
   );

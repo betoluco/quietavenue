@@ -1,17 +1,14 @@
 import React, { Component, Fragment } from "react";
-import { scaleBand, scaleTime, scaleLinear } from "d3-scale";
+import { scaleTime, scaleLinear} from "d3-scale";
 import { timeDay } from "d3-time";
 import { axisBottom, axisLeft} from "d3-axis";
 import { select } from "d3-selection";
-import { timeFormat } from "d3-time-format";
 import { pointers } from "d3-selection";
 import { mean } from "d3-array";
-import { lineRadial } from "d3-shape";
+import { lineRadial, pointRadial, pie, arc } from "d3-shape";
 
 import AudioPlayer from "./AudioPlayer";
-import ColorScale from "./ColorScale";
-import plusSign from "./plusSignOp.svg";
-import minusSign from "./minusSignOp.svg";
+import Controls from "./Controls";
 
 class Graph extends Component{
   //A class componets is necesary so that events linstener can access the state
@@ -20,14 +17,17 @@ class Graph extends Component{
 //=============================================================================
   constructor (props){
     super(props);
-    this.xAxisRef = React.createRef();
-    this.yAxisRef = React.createRef();
     this.graphRef = React.createRef();
     this.margin = { top: 0, right: 0, bottom: 0, left: 0};
-    this.width = 1080;
-    this.height = 1080;
-    this.innerRadius = 200;
-    this.outerRadiou = 520;
+    this.width = 375;
+    this.height = 375;
+    this.innerRadius = 70;
+    this.outerRadius = 180;
+    this.hoursLabelRadius = 55;
+    this.hourLaberYOffset = 5;
+    this.hourTickLength = 65;
+    this.sunrise = "2020-02-13T05:43:00";
+    this.sunset = "2020-02-13T20:19:00"
     this.state = {
       a:1, d:1, e:this.width/2, f:this.height/2, 
       pointerPosition:null,
@@ -36,14 +36,17 @@ class Graph extends Component{
       index: undefined
     };
     
-    this.firstDay = new Date( this.props.dataPoints[0].time);
-    this.lastDay = timeDay.ceil(new Date(this.props.dataPoints[this.props.dataPoints.length - 1].time));
-    this.recordingDates = `Extracted form recodings taken from ${this.firstDay.toLocaleDateString("en-US")} to ${this.lastDay.toLocaleDateString("en-US")}`;
+    // this.firstDay = new Date(Object.keys(this.props.dataPoints)[0]);
+    // this.lastDay = timeDay.ceil(new Date(Object.keys(this.props.dataPoints)[Object.keys(this.props.dataPoints).length - 1]));
+    // this.recordingDates = `Extracted form recodings taken from ${this.firstDay.toLocaleDateString("en-US")} to ${this.lastDay.toLocaleDateString("en-US")}`;
     
+    this.lineRadial = lineRadial();
+    this.pie = pie();
+    this.arc = arc()
     
     this.radiusScale = scaleLinear()
     .domain([0, 1]) 
-    .range([this.innerRadius, this.outerRadiou]);
+    .range([this.innerRadius, this.outerRadius]);
     
     //using today date for the domain of angle scale for simplicity
     this.today = new Date();
@@ -51,8 +54,6 @@ class Graph extends Component{
     this.angleScale = scaleTime()
       .domain([timeDay.floor(this.today), timeDay.ceil(this.today)])
       .range([ 0, Math.PI * 2 ]);
-      
-    this.lineRadial = lineRadial();
     
     this.zoomButtons = (magnification) =>{
       const center = [this.width/2, this.height/2];
@@ -72,24 +73,13 @@ class Graph extends Component{
     };
     
     this.resetZoom = () =>{
-      this.setState((state, props) => ({a:1, d:1, e:0, f:0}));
+      this.setState((state, props) => ({a:1, d:1, e:this.width/2, f:this.height/2}));
     };
   }
   
 //============================================================================
   componentDidMount(){
-    // select(this.xAxisRef.current)
-    // .style("font-size","2rem")
-    // .call(this.xAxis)
-    // .selectAll("text")  
-    // .style("text-anchor", "end")
-    // .attr("dx", "-.6em")
-    // .attr("dy", ".15em")
-    // .attr("transform", "rotate(-65)");
-  
-    // select(this.yAxisRef.current)
-    // .style("font-size","2rem")
-    // .call(this.yAxis);
+   
     
     select(this.graphRef.current)
     .on("mousedown", (event) => {
@@ -102,8 +92,8 @@ class Graph extends Component{
       if (t.length > 1) {
         event.preventDefault();
         const pointerPosition = [
-          Math.abs((t[1][0] - t[0][0])/2) + t[0][0],
-          Math.abs((t[1][1] - t[0][1])/2) + t[0][1]
+          Math.abs((t[1][0] - t[0][0])/2) + t[0][0],  
+          Math.abs((t[1][1] - t[0][1])/2) + t[0][1] 
         ];
         this.setState({
           pointerPosition: pointerPosition,
@@ -208,7 +198,7 @@ class Graph extends Component{
   }
   
   // componentDidUpdate(){
-  //   const invertX = x =>{
+  //   const invertAngelScale = x =>{
   //     return (x - this.state.e) / this.state.a;
   //   };
     
@@ -228,55 +218,63 @@ class Graph extends Component{
   
 //===============================================================================
   render(){
-    const path = this.props.dataPoints.map( (data) =>{
+    const d = this.props.dataPoints.map( (data) =>{
       const time = new Date(data.time);
       this.today.setHours(time.getHours(), time.getMinutes(), time.getSeconds(), 0);
       return [this.angleScale(this.today), this.radiusScale(data.maxLoudness)];
     });
     
+    const sunrise = new Date(this.sunrise);
+    const sunset = new Date(this.sunset);
+    const todaySunrise =this.today.setHours(sunrise.getHours(), sunrise.getMinutes(), 0, 0);
+    const todaySunset = this.today.setHours(sunset.getHours(), sunset.getMinutes(), 0, 0);
+    
+    const day = arc()
+      .innerRadius(0)
+      .outerRadius(40)
+      .startAngle(this.angleScale(todaySunrise))
+      .endAngle(this.angleScale(todaySunset))
+    
+    console.log(day.centroid())
+    const night = arc()
+      .innerRadius(0)
+      .outerRadius(40)
+      .startAngle(this.angleScale(todaySunset) - Math.PI * 2)
+      .endAngle(this.angleScale(todaySunrise))
+    
+    const angleAxis = this.angleScale.ticks().map(tick =>{
+      let x = this.hoursLabelRadius * Math.sin(this.angleScale(tick));
+      let y = -this.hoursLabelRadius * Math.cos(this.angleScale(tick)) + this.hourLaberYOffset;
+      return (
+        <g>
+          <text textAnchor="middle" x={x} y={y}>{tick.getHours()}</text>
+          <path stroke="#292524" d={`
+            M${pointRadial(this.angleScale(tick), this.innerRadius)} 
+            L${pointRadial(this.angleScale(tick), this.hourTickLength)}`} />
+        </g>
+      );
+    });
     
     return (
       <Fragment>
-        <h5 className="text-stone-800 text-center max-w-screen-md text-sm mb-6">
+        {/* <h5 className="text-stone-800 text-center max-w-screen-md text-sm mb-6">
           {this.recordingDates}
-        </h5>
-        <ColorScale />
+        </h5>*/}
+        
         <div className="mb-7" data-cy="estateAudioGraph">
-          <div className="flex absolute items-center mt-3 ml-48 select-none" >
-            <button 
-            onClick={this.resetZoom}
-            className="bg-stone-900 text-white tracking-wider text-sm font-medium p-2 mr-3 rounded">
-              Reset
-            </button>
-            <div className="flex flex-col">
-              <button onClick={() =>{this.zoomButtons(1.12)}}>
-                <img className="w-8 transform hover:scale-125 mb-1" src={plusSign} alt="Zoom in"/>
-              </button>
-              <button onClick={() =>{this.zoomButtons(0.88)}}>
-                <img className="w-8 transform hover:scale-125 mt-1" src={minusSign} alt="Zoom out"/>
-              </button>
-            </div>
-          </div>
           {this.state.oneFinger && <h3 className="absolute mt-60 ml-9 w-64 z-20 text-center text-xl font-semibold">
             Use two fingers to move the map
           </h3>}
-          <div style={{width:"318px"}}>
+          <div style={{width:"375px"}}>
+            <Controls zoomButtons={this.zoomButtons} resetZoom={this.resetZoom}/>
             <svg 
             ref={this.graphRef}
             viewBox={`0 0 ${this.width} ${this.height}`}
             preserveAspectRatio="xMidYMid meet">
-              <clipPath id="yAxisClip">
-                <rect 
-                x={0}
-                y={this.margin.top}
-                width={this.margin.left} 
-                height={this.height - this.margin.bottom} />
-              </clipPath>
-              <g clipPath="url(#yAxisClip)">
-                <g ref={this.yAxisRef} 
-                  transform={`matrix(1, 0, 0, ${this.state.d}, ${this.margin.left}, ${this.state.f})`} 
-                  className="select-none"
-                />
+              <g ref={this.yAxisRef} 
+              transform={`matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`} 
+              className="select-none">
+                <circle cx="0" cy="0" r={this.innerRadius} fill="none" stroke="#292524" strokeWidth=".5"/>
               </g>
               <clipPath id="graphClip">
                 <rect 
@@ -287,7 +285,12 @@ class Graph extends Component{
               </clipPath>
               <g clipPath="url(#graphClip)">
                 <g transform={`matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`}>
-                  <path stroke="red" fill="none" d={this.lineRadial(path)} />
+                  <path stroke="red" strokeWidth=".3" fill="none" d={this.lineRadial(d)} />
+                  {angleAxis}
+                  <path id="dayPath" fill="#fde047" d={day()} />
+                  <text textAnchor="middle" font-weight="bold" font-size="0.75rem" x={day.centroid()[0]} y={day.centroid()[1]}>DAY</text>
+                  <path id="nightPath" fill="#60a5fa" d={night()} />
+                  <text textAnchor="middle" font-weight="bold" font-size="0.75rem" x={night.centroid()[0]} y={night.centroid()[1]}>NIGHT</text>
                 </g>
               </g>
               <g ref={this.xAxisRef} 
@@ -298,10 +301,10 @@ class Graph extends Component{
           </div>
         </div>
         
-        <AudioPlayer 
+        {/*<AudioPlayer 
         dataPoints={this.props.dataPoints}
         index={this.state.index}
-        setIndex={this.setIndex}/>
+        setIndex={this.setIndex}/>*/}
       </Fragment>
     );
   }

@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 
 import EstateTemplate from "./EstateTemplate";
 import { fetchEstates } from "../estatesReducer";
+import Graph from "./graph/Graph";
 
 const Estate = (props) =>{
     const estateId = props.match.params.estateId;
@@ -23,7 +24,15 @@ const Estate = (props) =>{
     if(estate.price){
         price = money.format(parseFloat(estate.price));
     }
-    return <EstateTemplate estate={estate} price={price}/>;
+    
+    let graphs = []
+    if (estate.graphData){
+        Object.keys(estate.graphData).forEach((day) => {
+            graphs.push(<Graph dataPoints={estate.graphData[day]} />)
+        });
+    }
+    
+    return <EstateTemplate estate={estate} price={price} graphs={graphs}/>;
 };
 
 const loadData = (store, req) => {
