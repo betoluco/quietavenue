@@ -21,13 +21,15 @@ class Graph extends Component{
     this.margin = { top: 0, right: 0, bottom: 0, left: 0};
     this.width = 375;
     this.height = 375;
-    this.innerRadius = 70;
-    this.outerRadius = 180;
+    this.graphInnerRadius = 70;
+    this.graphOuterRadius = 180;
+    this.dayInnerRadius = 0;
+    this.dayOuterRadius = 40;
     this.hoursLabelRadius = 55;
     this.hourLaberYOffset = 5;
     this.hourTickLength = 65;
     this.sunrise = "2020-02-13T05:43:00";
-    this.sunset = "2020-02-13T20:19:00"
+    this.sunset = "2020-02-13T20:19:00";
     this.state = {
       a:1, d:1, e:this.width/2, f:this.height/2, 
       pointerPosition:null,
@@ -42,11 +44,11 @@ class Graph extends Component{
     
     this.lineRadial = lineRadial();
     this.pie = pie();
-    this.arc = arc()
+    this.arc = arc();
     
     this.radiusScale = scaleLinear()
     .domain([0, 1]) 
-    .range([this.innerRadius, this.outerRadius]);
+    .range([this.graphInnerRadius, this.graphOuterRadius]);
     
     //using today date for the domain of angle scale for simplicity
     this.today = new Date();
@@ -197,50 +199,62 @@ class Graph extends Component{
     });
   }
   
-  // componentDidUpdate(){
-  //   const invertAngelScale = x =>{
-  //     return (x - this.state.e) / this.state.a;
-  //   };
+  componentDidUpdate() {
+      
+    // const invertScale = scale =>{
+    //   return (scale - this.state.e) / this.state.a;
+    // };
     
-  //   const rescaleX = x =>{
-  //     return x.copy().domain(x.range().map(invertX).map(x.invert, x));
-  //   };
+    // const rescaleScale = scale =>{
+    //   return scale.copy().domain(scale.range().map(invertScale).map(scale.invert, scale));
+    // };
     
-  //   select(this.xAxisRef.current)
-  //   .style("font-size","2rem")
-  //   .call(this.xAxis.scale(rescaleX(this.xScale)))
-  //   .selectAll("text")  
-  //   .style("text-anchor", "end")
-  //   .attr("dx", "-.6em")
-  //   .attr("dy", ".15em")
-  //     .attr("transform", "rotate(-65)");
-  // }
+    // const newAngleScale = rescaleScale(this.angleScale);
+    // console.log(newAngleScale.ticks())
+    
+    // select(this.xAxisRef.current)
+    // .style("font-size","2rem")
+    // .call(this.xAxis.scale(rescaleX(this.xScale)))
+    // .selectAll("text")  
+    // .style("text-anchor", "end")
+    // .attr("dx", "-.6em")
+    // .attr("dy", ".15em")
+    // .attr("transform", "rotate(-65)");
+  }
   
 //===============================================================================
   render(){
-    const d = this.props.dataPoints.map( (data) =>{
-      const time = new Date(data.time);
-      this.today.setHours(time.getHours(), time.getMinutes(), time.getSeconds(), 0);
-      return [this.angleScale(this.today), this.radiusScale(data.maxLoudness)];
-    });
+    let bars = []
+    for ( let i = 0; i < this.props.dataPoints.length-2; i ++ ){ 
+      const startTime = new Date(this.props.dataPoints[i].time)
+      startTime.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay())
+      const endTime = new Date(this.props.dataPoints[i + 1].time)
+      endTime.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay())
+      const rectangles = arc()
+        .innerRadius(this.graphInnerRadius)
+        .outerRadius(this.radiusScale(this.props.dataPoints[i].maxLoudness))
+        .startAngle(this.angleScale(startTime))
+        .endAngle(this.angleScale(endTime));
+      bars.push(<path stroke="red" strokeWidth="0.5" fill="none" d={rectangles()}/>)
+    }
+    
     
     const sunrise = new Date(this.sunrise);
     const sunset = new Date(this.sunset);
-    const todaySunrise =this.today.setHours(sunrise.getHours(), sunrise.getMinutes(), 0, 0);
-    const todaySunset = this.today.setHours(sunset.getHours(), sunset.getMinutes(), 0, 0);
+    sunrise.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay())
+    sunset.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay())
     
     const day = arc()
-      .innerRadius(0)
-      .outerRadius(40)
-      .startAngle(this.angleScale(todaySunrise))
-      .endAngle(this.angleScale(todaySunset))
+      .innerRadius(this.dayInnerRadius)
+      .outerRadius(this.dayOuterRadius)
+      .startAngle(this.angleScale(sunrise))
+      .endAngle(this.angleScale(sunset));
     
-    console.log(day.centroid())
     const night = arc()
-      .innerRadius(0)
-      .outerRadius(40)
-      .startAngle(this.angleScale(todaySunset) - Math.PI * 2)
-      .endAngle(this.angleScale(todaySunrise))
+      .innerRadius(this.dayInnerRadius)
+      .outerRadius(this.dayOuterRadius)
+      .startAngle(this.angleScale(sunset) - Math.PI * 2)
+      .endAngle(this.angleScale(sunrise));
     
     const angleAxis = this.angleScale.ticks().map(tick =>{
       let x = this.hoursLabelRadius * Math.sin(this.angleScale(tick));
@@ -249,7 +263,7 @@ class Graph extends Component{
         <g>
           <text textAnchor="middle" x={x} y={y}>{tick.getHours()}</text>
           <path stroke="#292524" d={`
-            M${pointRadial(this.angleScale(tick), this.innerRadius)} 
+            M${pointRadial(this.angleScale(tick), this.graphInnerRadius)} 
             L${pointRadial(this.angleScale(tick), this.hourTickLength)}`} />
         </g>
       );
@@ -271,11 +285,6 @@ class Graph extends Component{
             ref={this.graphRef}
             viewBox={`0 0 ${this.width} ${this.height}`}
             preserveAspectRatio="xMidYMid meet">
-              <g ref={this.yAxisRef} 
-              transform={`matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`} 
-              className="select-none">
-                <circle cx="0" cy="0" r={this.innerRadius} fill="none" stroke="#292524" strokeWidth=".5"/>
-              </g>
               <clipPath id="graphClip">
                 <rect 
                 x={this.margin.left}
@@ -285,18 +294,15 @@ class Graph extends Component{
               </clipPath>
               <g clipPath="url(#graphClip)">
                 <g transform={`matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`}>
-                  <path stroke="red" strokeWidth=".3" fill="none" d={this.lineRadial(d)} />
+                  <circle cx="0" cy="0" r={this.graphInnerRadius} fill="none" stroke="#292524" strokeWidth=".5"/>
+                  {bars}
                   {angleAxis}
-                  <path id="dayPath" fill="#fde047" d={day()} />
+                  <path id="dayPath" fill="#facc15" d={day()} />
                   <text textAnchor="middle" font-weight="bold" font-size="0.75rem" x={day.centroid()[0]} y={day.centroid()[1]}>DAY</text>
-                  <path id="nightPath" fill="#60a5fa" d={night()} />
+                  <path id="nightPath" fill="#1e40af" d={night()} />
                   <text textAnchor="middle" font-weight="bold" font-size="0.75rem" x={night.centroid()[0]} y={night.centroid()[1]}>NIGHT</text>
                 </g>
               </g>
-              <g ref={this.xAxisRef} 
-                transform={`translate(0, ${this.margin.top + this.height - this.margin.bottom})`} 
-                className="select-none" 
-              />
             </svg>
           </div>
         </div>
