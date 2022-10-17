@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { scaleTime, scaleLinear} from "d3-scale";
 import { timeDay } from "d3-time";
-import { axisBottom, axisLeft} from "d3-axis";
 import { select } from "d3-selection";
 import { pointers } from "d3-selection";
 import { mean } from "d3-array";
