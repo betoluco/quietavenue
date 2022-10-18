@@ -25,10 +25,10 @@ const Estate = (props) =>{
         price = money.format(parseFloat(estate.price));
     }
     
-    let graphs = []
+    let graphs = [];
     if (estate.graphData){
         Object.keys(estate.graphData).forEach((day) => {
-            graphs.push(<Graph dataPoints={estate.graphData[day]} />)
+            graphs.push(<Graph dataPoints={estate.graphData[day]} day={day}/>);
         });
     }
     

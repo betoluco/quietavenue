@@ -90,7 +90,9 @@ const EstateTemplate = (props) => {
           </div>
         }
         {props.graphs.length > 0 &&
-          props.graphs
+          <div className="grid grid-cols-1 md:m-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {props.graphs}
+          </div>
         }
       </div>
     </React.Fragment>

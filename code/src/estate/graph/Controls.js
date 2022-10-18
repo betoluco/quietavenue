@@ -5,7 +5,7 @@ import minusSign from "./minusSignOp.svg";
 
 const Controls = (props) => {
     return(
-        <div className="flex flex-row-reverse relative mr-6 -mb-12">
+        <div className="flex flex-row-reverse relative mr-6 -mb-16">
             <div className="flex items-center select-none" >
                 <button 
                 onClick={props.resetZoom}

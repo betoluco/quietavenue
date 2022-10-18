@@ -4,7 +4,7 @@ import { timeDay } from "d3-time";
 import { select } from "d3-selection";
 import { pointers } from "d3-selection";
 import { mean } from "d3-array";
-import { lineRadial, pointRadial, pie, arc } from "d3-shape";
+import { pointRadial, arc } from "d3-shape";
 
 import AudioPlayer from "./AudioPlayer";
 import Controls from "./Controls";
@@ -20,13 +20,13 @@ class Graph extends Component{
     this.margin = { top: 0, right: 0, bottom: 0, left: 0};
     this.width = 375;
     this.height = 375;
-    this.graphInnerRadius = 70;
+    this.graphInnerRadius = 80;
     this.graphOuterRadius = 180;
     this.dayInnerRadius = 0;
     this.dayOuterRadius = 40;
-    this.hoursLabelRadius = 55;
+    this.hoursLabelRadius = 65;
     this.hourLaberYOffset = 5;
-    this.hourTickLength = 65;
+    this.hourTickLength = 75;
     this.sunrise = "2020-02-13T05:43:00";
     this.sunset = "2020-02-13T20:19:00";
     this.state = {
@@ -37,13 +37,7 @@ class Graph extends Component{
       index: undefined
     };
     
-    // this.firstDay = new Date(Object.keys(this.props.dataPoints)[0]);
-    // this.lastDay = timeDay.ceil(new Date(Object.keys(this.props.dataPoints)[Object.keys(this.props.dataPoints).length - 1]));
-    // this.recordingDates = `Extracted form recodings taken from ${this.firstDay.toLocaleDateString("en-US")} to ${this.lastDay.toLocaleDateString("en-US")}`;
-    
-    this.lineRadial = lineRadial();
-    this.pie = pie();
-    this.arc = arc();
+    this.title  = new Date(this.props.day);
     
     this.radiusScale = scaleLinear()
     .domain([0, 1]) 
@@ -223,25 +217,24 @@ class Graph extends Component{
   
 //===============================================================================
   render(){
-    let bars = []
+    let bars = [];
     for ( let i = 0; i < this.props.dataPoints.length-2; i ++ ){ 
-      const startTime = new Date(this.props.dataPoints[i].time)
-      startTime.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay())
-      const endTime = new Date(this.props.dataPoints[i + 1].time)
-      endTime.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay())
+      const startTime = new Date(this.props.dataPoints[i].time);
+      startTime.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay());
+      const endTime = new Date(this.props.dataPoints[i + 1].time);
+      endTime.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay());
       const rectangles = arc()
         .innerRadius(this.graphInnerRadius)
         .outerRadius(this.radiusScale(this.props.dataPoints[i].maxLoudness))
         .startAngle(this.angleScale(startTime))
         .endAngle(this.angleScale(endTime));
-      bars.push(<path stroke="red" strokeWidth="0.5" fill="none" d={rectangles()}/>)
+      bars.push(<path stroke="red" strokeWidth="0.5" fill="none" d={rectangles()}/>);
     }
-    
     
     const sunrise = new Date(this.sunrise);
     const sunset = new Date(this.sunset);
-    sunrise.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay())
-    sunset.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay())
+    sunrise.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay());
+    sunset.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay());
     
     const day = arc()
       .innerRadius(this.dayInnerRadius)
@@ -269,12 +262,12 @@ class Graph extends Component{
     });
     
     return (
-      <Fragment>
-        {/* <h5 className="text-stone-800 text-center max-w-screen-md text-sm mb-6">
-          {this.recordingDates}
-        </h5>*/}
+      <div className='border stone-800 '>
+        <h5 className="text-stone-800 text-center max-w-screen-md text-sm mb-4 mt-4 font-semibold">
+          {this.title.toLocaleDateString("en-US", {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'})}
+        </h5>
         
-        <div className="mb-7" data-cy="estateAudioGraph">
+        <div className="" data-cy="estateAudioGraph">
           {this.state.oneFinger && <h3 className="absolute mt-60 ml-9 w-64 z-20 text-center text-xl font-semibold">
             Use two fingers to move the map
           </h3>}
@@ -310,7 +303,7 @@ class Graph extends Component{
         dataPoints={this.props.dataPoints}
         index={this.state.index}
         setIndex={this.setIndex}/>*/}
-      </Fragment>
+      </div>
     );
   }
 }
