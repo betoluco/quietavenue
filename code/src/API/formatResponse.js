@@ -1,4 +1,4 @@
-import getGraphData from "./getGraphData";
+import getAudioData from "./getAudioData";
 
 const formatResults = async (estate) =>{
     const item = {id: estate.PK};
@@ -45,8 +45,8 @@ const formatResults = async (estate) =>{
     }
     
     try{
-        if (data.hasOwnProperty("graphDataLink")) {
-            item.graphData = await getGraphData(data.graphDataLink);
+        if (data.hasOwnProperty("audioDataLink")) {
+            item.audioData = await getAudioData(data.audioDataLink);
         }
     }catch (error){
         console.log(error);
