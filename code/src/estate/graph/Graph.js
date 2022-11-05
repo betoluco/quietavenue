@@ -34,7 +34,7 @@ class Graph extends Component{
       pointerPosition:null,
       pointerDistance:null,
       oneFinger: false,
-      index: undefined
+      elapsedTime: undefined
     };
     
     this.title  = new Date(this.props.day);
@@ -68,7 +68,11 @@ class Graph extends Component{
     };
     
     this.resetZoom = () =>{
-      this.setState((state, props) => ({a:1, d:1, e:this.width/2, f:this.height/2}));
+      this.setState({a:1, d:1, e:this.width/2, f:this.height/2});
+    };
+    
+    this.setElapsedTime = (elapsedTime) =>{
+      this.setState({elapsedTime:elapsedTime});
     };
   }
   
@@ -218,17 +222,26 @@ class Graph extends Component{
 //===============================================================================
   render(){
     let bars = [];
-    for ( let i = 0; i < this.props.dataPoints.length-2; i ++ ){ 
-      const startTime = new Date(this.props.dataPoints[i].time);
+    for ( let i = 0; i < this.props.graphData.length-2; i ++ ){ 
+      const startTime = new Date(this.props.graphData[i].time);
       startTime.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay());
-      const endTime = new Date(this.props.dataPoints[i + 1].time);
+      const endTime = new Date(this.props.graphData[i + 1].time);
       endTime.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay());
       const rectangles = arc()
         .innerRadius(this.graphInnerRadius)
-        .outerRadius(this.radiusScale(this.props.dataPoints[i].maxLoudness))
+        .outerRadius(this.radiusScale(this.props.graphData[i].maxLoudness))
         .startAngle(this.angleScale(startTime))
         .endAngle(this.angleScale(endTime));
-      bars.push(<path stroke="red" strokeWidth="0.5" fill="none" d={rectangles()}/>);
+      if (
+        this.props.graphData[i].hasOwnProperty('sound_start') && 
+        this.props.graphData[i].hasOwnProperty('sound_end') &&
+        this.props.graphData[i].sound_start < this.state.elapsedTime && 
+        this.state.elapsedTime < this.props.graphData[i].sound_end
+      ){
+        bars.push(<path stroke="green" strokeWidth="0.5" fill="green" d={rectangles()}/>);
+      }else {
+        bars.push(<path stroke="red" strokeWidth="0.5" fill="none" d={rectangles()}/>);
+      }
     }
     
     const sunrise = new Date(this.sunrise);
@@ -236,8 +249,7 @@ class Graph extends Component{
     sunrise.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay());
     sunset.setFullYear(this.today.getFullYear(), this.today.getMonth(), this.today.getDay());
     
-    const day = arc()
-      .innerRadius(this.dayInnerRadius)
+    const day = arc()      .innerRadius(this.dayInnerRadius)
       .outerRadius(this.dayOuterRadius)
       .startAngle(this.angleScale(sunrise))
       .endAngle(this.angleScale(sunset));
@@ -299,10 +311,9 @@ class Graph extends Component{
           </div>
         </div>
         
-        {/*<AudioPlayer 
-        dataPoints={this.props.dataPoints}
-        index={this.state.index}
-        setIndex={this.setIndex}/>*/}
+        <AudioPlayer 
+        mp3Link={this.props.mp3Link}
+        setElapsedTime={this.setElapsedTime}/>
       </div>
     );
   }

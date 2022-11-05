@@ -1,6 +1,4 @@
-import React, { Fragment, useRef, useEffect, useState} from "react";
-import playNextIcon from "./playNextOp.svg";
-import playPreviousIcon from "./playPreviousOp.svg";
+import React, {useRef, useEffect, useState} from "react";
 import playIcon from "./playOp.svg";
 import pauseIcon from "./pauseOp.svg";
 import speakerIcon from "./speakerOp.svg";
@@ -10,16 +8,9 @@ const AudioPlayer = props =>{
     const [duration, setDuration] = useState(0);
     const [timeUpdate, setTimeUpdate] = useState(0);
     const [volume, setVolume] = useState(1);
-    const [title, setTitle] = useState(undefined);
     const audio = useRef();
     
-    const playNextPrevious = delta =>{
-        const newIndex = props.index + delta || 0;
-        if (newIndex >= 0  && newIndex < props.dataPoints.length){
-            console.log(newIndex)
-            props.setIndex(newIndex);
-        }
-    };
+    
     
     const changePlayTime = (event) => {
         audio.current.currentTime = event.target.value;
@@ -28,6 +19,7 @@ const AudioPlayer = props =>{
     
     const onTimeUpdate = () => {
         setTimeUpdate(Math.floor(audio.current.currentTime));
+        props.setElapsedTime(audio.current.currentTime)
     };
     
     const updateTrack = (trackProgress, max) =>{
@@ -53,7 +45,6 @@ const AudioPlayer = props =>{
     
     const play = () => {
         isPlaying? audio.current.pause(): audio.current.play();
-        if(props.index === undefined) props.setIndex(0);
     };
     
     const onPlay = () => {
@@ -65,25 +56,12 @@ const AudioPlayer = props =>{
     };
     
     useEffect(() =>{
-        if (props.index >= 0 && props.index < props.dataPoints.length){
-            const audioLink = new URL(props.dataPoints[props.index].mp3Link, `${process.env.REACT_APP_DOMAIN}`);
-            audio.current.setAttribute('src', audioLink);
-            audio.current.autoplay = true;
-            setTitle(new Date(props.dataPoints[props.index].time));
-        }
-    }, [props.index]);
+        const audioLink = new URL(props.mp3Link, `${process.env.REACT_APP_DOMAIN}`);
+        audio.current.setAttribute('src', audioLink);
+    }, []);
     
     return(
         <div className="flex flex-col items-center mb-40 ">
-            <div className="mb-4 text-lg text-stone-800">
-                { title 
-                    ?<h3>
-                        {title.toLocaleDateString("en-US")} <span> </span>
-                        {title.toLocaleTimeString("en-US")}
-                    </h3>
-                    :<h3>Select a minute from the graph</h3>
-                }
-            </div>
             <input className="w-72" 
             style={{ 
                 background: updateTrack(timeUpdate, duration),  
@@ -98,17 +76,11 @@ const AudioPlayer = props =>{
                 {convertTime(duration)}
             </p>
             <div className="flex justify-between w-52 mb-6">
-                <button className="w-10" onClick={() => playNextPrevious(-1)}>
-                    <img src={playPreviousIcon} alt="Play Previous"/>
-                </button>
                 <button className="w-10" onClick={play}>
                     {isPlaying
                         ?<img src={pauseIcon} alt="Pause"/>
                         :<img src={playIcon} alt="Play"/>
                     }
-                </button>
-                <button className="w-10" onClick={() => playNextPrevious(1)}>
-                    <img src={playNextIcon} alt="Play Next"/>
                 </button>
             </div>
             <div className="flex items-center -ml-6">
