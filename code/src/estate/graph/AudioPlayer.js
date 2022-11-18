@@ -10,8 +10,6 @@ const AudioPlayer = props =>{
     const [volume, setVolume] = useState(1);
     const audio = useRef();
     
-    
-    
     const changePlayTime = (event) => {
         audio.current.currentTime = event.target.value;
         setTimeUpdate(event.target.value);
@@ -61,28 +59,32 @@ const AudioPlayer = props =>{
     }, []);
     
     return(
-        <div className="flex flex-col items-center mb-40 ">
-            <input className="w-72" 
-            style={{ 
-                background: updateTrack(timeUpdate, duration),  
-                border: '0.2px solid #292524',
-                borderRadius: '4px',
-                height: '10px'
-            }}
-            type="range" min="0" max={duration} step="1" 
-            value={timeUpdate} onChange={ event => changePlayTime(event)}/>
-            <p className="mb-6 text-stone-800">
-                {convertTime(timeUpdate)}<span> / </span>
-                {convertTime(duration)}
-            </p>
-            <div className="flex justify-between w-52 mb-6">
-                <button className="w-10" onClick={play}>
-                    {isPlaying
-                        ?<img src={pauseIcon} alt="Pause"/>
-                        :<img src={playIcon} alt="Play"/>
-                    }
-                </button>
+        <div className="flex flex-col items-center mb-4">
+            <div className="flex items-center w-full px-2">
+                
+                    <button className="w-10 mr-2" onClick={play}>
+                        {isPlaying
+                            ?<img src={pauseIcon} alt="Pause"/>
+                            :<img src={playIcon} alt="Play"/>
+                        }
+                    </button>
+                    
+                    <input 
+                    className="w-full" 
+                    style={{ 
+                        background: updateTrack(timeUpdate, duration),  
+                        border: '0.2px solid #292524',
+                        borderRadius: '4px',
+                        height: '10px'
+                    }}
+                    type="range" min="0" max={duration} step="1" 
+                    value={timeUpdate} onChange={ event => changePlayTime(event)}/>
+               
             </div>
+            <p className="text-stone-800 mb-3 -mt-2">
+                    {convertTime(timeUpdate)}<span> / </span>
+                    {convertTime(duration)}
+            </p>
             <div className="flex items-center -ml-6">
                 <img className="w-6 mr-2.5" src={speakerIcon} alt="speaker"/>
                 <input className="w-28" 

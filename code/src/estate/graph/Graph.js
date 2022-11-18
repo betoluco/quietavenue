@@ -18,15 +18,14 @@ class Graph extends Component{
     super(props);
     this.graphRef = React.createRef();
     this.margin = { top: 0, right: 0, bottom: 0, left: 0};
-    this.width = 375;
-    this.height = 375;
-    this.graphInnerRadius = 80;
-    this.graphOuterRadius = 180;
+    this.width = 300;
+    this.height = 320;
+    this.graphInnerRadius = 73;
+    this.graphOuterRadius = 150;
     this.dayInnerRadius = 0;
     this.dayOuterRadius = 40;
-    this.hoursLabelRadius = 65;
-    this.hourLaberYOffset = 5;
-    this.hourTickLength = 75;
+    this.hoursLabelRadius = 57;
+    this.hourTickLength = 67;
     this.sunrise = "2020-02-13T05:43:00";
     this.sunset = "2020-02-13T20:19:00";
     this.state = {
@@ -238,6 +237,7 @@ class Graph extends Component{
         this.props.graphData[i].sound_start < this.state.elapsedTime && 
         this.state.elapsedTime < this.props.graphData[i].sound_end
       ){
+        rectangles.innerRadius(0)
         bars.push(<path stroke="green" strokeWidth="0.5" fill="green" d={rectangles()}/>);
       }else {
         bars.push(<path stroke="red" strokeWidth="0.5" fill="none" d={rectangles()}/>);
@@ -260,9 +260,31 @@ class Graph extends Component{
       .startAngle(this.angleScale(sunset) - Math.PI * 2)
       .endAngle(this.angleScale(sunrise));
     
+    const radiusAxis = this.radiusScale.ticks(2).map( tick =>{
+      const tickPercent = tick * 100 + "%";
+      if (tick == 0) {
+        return ( 
+          <g> <circle cx="0" cy="0" r={this.radiusScale(tick)} fill="none" stroke="#292524" strokeWidth=".5"/></g>
+        ); 
+      }
+      return ( 
+        <g>
+          <circle cx="0" cy="0" r={this.radiusScale(tick)} fill="none" stroke="#292524" strokeWidth=".5"/>
+          {/* The first text has a stroke white to work as the background of the second text */}
+          <text stroke="#fff" strokeWidth="4" font-size="smaller" textAnchor="middle" x="0" y={- this.radiusScale(tick) + 5}>
+            {tickPercent}
+          </text>
+          <text fill="#292524" stroke="none" font-size="smaller" textAnchor="middle" x="0" y={- this.radiusScale(tick) + 5}>
+            {tickPercent}
+          </text>
+         
+        </g>
+      );
+    });
+    
     const angleAxis = this.angleScale.ticks().map(tick =>{
       let x = this.hoursLabelRadius * Math.sin(this.angleScale(tick));
-      let y = -this.hoursLabelRadius * Math.cos(this.angleScale(tick)) + this.hourLaberYOffset;
+      let y = -this.hoursLabelRadius * Math.cos(this.angleScale(tick)) + 5;
       return (
         <g>
           <text textAnchor="middle" x={x} y={y}>{tick.getHours()}</text>
@@ -274,18 +296,19 @@ class Graph extends Component{
     });
     
     return (
-      <div className='border stone-800 '>
+      <div className='border-stone-300 border-2'>
         <h5 className="text-stone-800 text-center max-w-screen-md text-sm mb-4 mt-4 font-semibold">
           {this.title.toLocaleDateString("en-US", {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'})}
         </h5>
         
-        <div className="" data-cy="estateAudioGraph">
+        <div className="mb-5 flex flex-col items-center" data-cy="estateAudioGraph">
           {this.state.oneFinger && <h3 className="absolute mt-60 ml-9 w-64 z-20 text-center text-xl font-semibold">
             Use two fingers to move the map
           </h3>}
-          <div style={{width:"375px"}}>
+          <div style={{width: this.width + "px"}}>
             <Controls zoomButtons={this.zoomButtons} resetZoom={this.resetZoom}/>
             <svg 
+            className="mx-2"
             ref={this.graphRef}
             viewBox={`0 0 ${this.width} ${this.height}`}
             preserveAspectRatio="xMidYMid meet">
@@ -298,12 +321,12 @@ class Graph extends Component{
               </clipPath>
               <g clipPath="url(#graphClip)">
                 <g transform={`matrix(${this.state.a}, 0, 0, ${this.state.d}, ${this.state.e}, ${this.state.f})`}>
-                  <circle cx="0" cy="0" r={this.graphInnerRadius} fill="none" stroke="#292524" strokeWidth=".5"/>
+                  {radiusAxis}
                   {bars}
                   {angleAxis}
-                  <path id="dayPath" fill="#facc15" d={day()} />
-                  <text textAnchor="middle" font-weight="bold" font-size="0.75rem" x={day.centroid()[0]} y={day.centroid()[1]}>DAY</text>
-                  <path id="nightPath" fill="#1e40af" d={night()} />
+                  <path id="dayPath" fill="#fff069"  d={day()} />
+                  <text textAnchor="middle" font-weight="bold" font-size="0.75rem"x={day.centroid()[0]} y={day.centroid()[1]}>DAY</text>
+                  <path id="nightPath" fill="#5269fa" d={night()} />
                   <text textAnchor="middle" font-weight="bold" font-size="0.75rem" x={night.centroid()[0]} y={night.centroid()[1]}>NIGHT</text>
                 </g>
               </g>
