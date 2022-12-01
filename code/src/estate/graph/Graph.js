@@ -3,7 +3,6 @@ import { scaleTime, scaleLinear} from "d3-scale";
 import { timeDay } from "d3-time";
 import { select } from "d3-selection";
 import { pointers } from "d3-selection";
-import { mean } from "d3-array";
 import { pointRadial, arc } from "d3-shape";
 
 import AudioPlayer from "./AudioPlayer";
@@ -17,7 +16,7 @@ class Graph extends Component{
   constructor (props){
     super(props);
     this.graphRef = React.createRef();
-    this.margin = { top: 0, right: 0, bottom: 0, left: 0};
+    this.margin = { top:0, right: 0, bottom: 0, left: 0};
     this.width = 300;
     this.height = 320;
     this.graphInnerRadius = 73;
@@ -51,19 +50,33 @@ class Graph extends Component{
     
     this.zoomButtons = (magnification) =>{
       const center = [this.width/2, this.height/2];
+      const zoom = this.state.a * magnification;
+      const move = this.calculateZoomMove(center, zoom);
+      this.setState( (state, props) => ({
+        a:zoom, d:zoom, e:move[0], f:move[1]
+      }));
+    };
+    
+    this.calculateZoomMove = (center, zoom) =>{
       const inverseTranformationCoordinates = [
         center[0]/this.state.a - this.state.e/this.state.a,
         center[1]/this.state.d - this.state.f/this.state.d,
       ];
-      
-      const zoom = this.state.a * magnification;
-      const move = [ 
+      return [ 
         center[0] - inverseTranformationCoordinates[0] * zoom,
         center[1] - inverseTranformationCoordinates[1] * zoom
       ];
-      this.setState( (state, props) => ({
-        a:zoom, d:zoom, e:move[0], f:move[1]
-      }));
+    };
+    
+    this.calculateMove = (pointerPosition) =>{
+      const previousPosition = [
+        this.state.e - this.state.pointerPosition[0],
+        this.state.f - this.state.pointerPosition[1]
+      ];
+      return [ 
+        previousPosition[0] + pointerPosition[0],
+        previousPosition[1] + pointerPosition[1]
+      ];
     };
     
     this.resetZoom = () =>{
@@ -77,12 +90,9 @@ class Graph extends Component{
   
 //============================================================================
   componentDidMount(){
-   
-    
     select(this.graphRef.current)
     .on("mousedown", (event) => {
-      const t =  pointers(event);
-      this.setState({pointerPosition: [mean(t, d => d[0]), mean(t, d => d[1])]});
+      this.setState({pointerPosition: [pointers(event)[0][0], pointers(event)[0][1]]});
     })
     
     .on("touchstart", (event) => {
@@ -97,7 +107,6 @@ class Graph extends Component{
           pointerPosition: pointerPosition,
           pointerDistance: Math.hypot(t[1][1] - t[0][1], t[1][0] - t[0][0])
         });
-        
       }
     })
     
@@ -111,16 +120,8 @@ class Graph extends Component{
     
     .on("mousemove", (event) => {
       if (this.state.pointerPosition){
-        const t = pointers(event);
-        const previousPosition = [
-          this.state.e - this.state.pointerPosition[0],
-          this.state.f - this.state.pointerPosition[1]
-        ];
-        const pointerPosition = [mean(t, d => d[0]), mean(t, d => d[1])];
-        const move = [
-          previousPosition[0] + pointerPosition[0],
-          previousPosition[1] + pointerPosition[1]
-        ];
+        const pointerPosition = [pointers(event)[0][0], pointers(event)[0][1]];
+        const move = this.calculateMove(pointerPosition);
         this.setState({e: move[0], f: move[1], pointerPosition: pointerPosition});
       }
     })
@@ -134,15 +135,7 @@ class Graph extends Component{
         ];
         const pointerDistance = Math.hypot(t[1][1] - t[0][1], t[1][0] - t[0][0]);
         if ( Math.abs(pointerDistance - this.state.pointerDistance) < 7){
-          const previousPosition = [
-            this.state.e - this.state.pointerPosition[0],
-            this.state.f - this.state.pointerPosition[1]
-          ];
-          const move = [
-            previousPosition[0] + pointerPosition[0],
-            previousPosition[1] + pointerPosition[1]
-          ];
-          
+          const move = this.calculateMove(pointerPosition);
           this.setState({
             e: move[0], 
             f: move[1], 
@@ -151,19 +144,11 @@ class Graph extends Component{
           });
           
         }else{
-          const inverseTranformationCoordinates = [
-            pointerPosition[0]/this.state.a - this.state.e/this.state.a,
-            pointerPosition[1]/this.state.d - this.state.f/this.state.d,
-          ];
-          const yZoom = this.state.d * (pointerDistance / this.state.pointerDistance);
-          const xZoom = 1;
-          const move = [ 
-            pointerPosition[0] - inverseTranformationCoordinates[0] * xZoom,
-            pointerPosition[1] - inverseTranformationCoordinates[1] * yZoom
-          ];
+          const zoom = this.state.a * (pointerDistance / this.state.pointerDistance);
+          const move = this.calculateZoomMove(pointerPosition, zoom);
           this.setState({
-            a:xZoom, 
-            d:yZoom, 
+            a:zoom, 
+            d:zoom, 
             e:move[0], 
             f:move[1], 
             pointerPosition: pointerPosition,
@@ -173,29 +158,10 @@ class Graph extends Component{
       }else{
         this.setState({oneFinger: true});
       }
-    })
-    .on("wheel", (event) => {
-      event.preventDefault();
-      const t = pointers(event);
-      const pointerPosition = [mean(t, d => d[0]), mean(t, d => d[1])];
-      
-      const inverseTranformationCoordinates = [
-        pointerPosition[0]/this.state.a - this.state.e/this.state.a,
-        pointerPosition[1]/this.state.d - this.state.f/this.state.d,
-      ];
-      
-      const zoom = this.state.d * 1 + (event.wheelDelta * 4) / 1000;
-      const yZoom = zoom > 1? zoom : 1;
-      const xZoom = zoom > 1? zoom : 1;
-      const move = [ 
-        pointerPosition[0] - inverseTranformationCoordinates[0] * xZoom,
-        pointerPosition[1] - inverseTranformationCoordinates[1] * yZoom
-      ];
-      this.setState({a:xZoom, d:yZoom, e:move[0], f:move[1]});
     });
   }
   
-  componentDidUpdate() {
+  // componentDidUpdate() {
       
     // const invertScale = scale =>{
     //   return (scale - this.state.e) / this.state.a;
@@ -216,7 +182,7 @@ class Graph extends Component{
     // .attr("dx", "-.6em")
     // .attr("dy", ".15em")
     // .attr("transform", "rotate(-65)");
-  }
+  // }
   
 //===============================================================================
   render(){
@@ -237,10 +203,20 @@ class Graph extends Component{
         this.props.graphData[i].sound_start < this.state.elapsedTime && 
         this.state.elapsedTime < this.props.graphData[i].sound_end
       ){
-        rectangles.innerRadius(0)
-        bars.push(<path stroke="green" strokeWidth="0.5" fill="green" d={rectangles()}/>);
+        rectangles.innerRadius(0);
+        bars.push(<path 
+                  key={this.props.graphData[i].time} 
+                  stroke="green" 
+                  strokeWidth="0.5" 
+                  fill="green" 
+                  d={rectangles()}/>);
       }else {
-        bars.push(<path stroke="red" strokeWidth="0.5" fill="none" d={rectangles()}/>);
+        bars.push(<path 
+                  key={this.props.graphData[i].time} 
+                  stroke="red" 
+                  strokeWidth="0.5" 
+                  fill="none" 
+                  d={rectangles()}/>);
       }
     }
     
@@ -264,20 +240,21 @@ class Graph extends Component{
       const tickPercent = tick * 100 + "%";
       if (tick == 0) {
         return ( 
-          <g> <circle cx="0" cy="0" r={this.radiusScale(tick)} fill="none" stroke="#292524" strokeWidth=".5"/></g>
+          <g key={this.radiusScale(tick)}> 
+            <circle  cx="0" cy="0" r={this.radiusScale(tick)} fill="none" stroke="#292524" strokeWidth=".5"/>
+          </g>
         ); 
       }
       return ( 
-        <g>
+        <g key={this.radiusScale(tick)}> 
           <circle cx="0" cy="0" r={this.radiusScale(tick)} fill="none" stroke="#292524" strokeWidth=".5"/>
           {/* The first text has a stroke white to work as the background of the second text */}
-          <text stroke="#fff" strokeWidth="4" font-size="smaller" textAnchor="middle" x="0" y={- this.radiusScale(tick) + 5}>
+          <text stroke="#fff" strokeWidth="4" fontSize="smaller" textAnchor="middle" x="0" y={- this.radiusScale(tick) + 5}>
             {tickPercent}
           </text>
-          <text fill="#292524" stroke="none" font-size="smaller" textAnchor="middle" x="0" y={- this.radiusScale(tick) + 5}>
+          <text fill="#292524" stroke="none" fontSize="smaller" textAnchor="middle" x="0" y={- this.radiusScale(tick) + 5}>
             {tickPercent}
           </text>
-         
         </g>
       );
     });
@@ -286,7 +263,7 @@ class Graph extends Component{
       let x = this.hoursLabelRadius * Math.sin(this.angleScale(tick));
       let y = -this.hoursLabelRadius * Math.cos(this.angleScale(tick)) + 5;
       return (
-        <g>
+        <g key={tick}>
           <text textAnchor="middle" x={x} y={y}>{tick.getHours()}</text>
           <path stroke="#292524" d={`
             M${pointRadial(this.angleScale(tick), this.graphInnerRadius)} 
@@ -303,7 +280,7 @@ class Graph extends Component{
         
         <div className="mb-5 flex flex-col items-center" data-cy="estateAudioGraph">
           {this.state.oneFinger && <h3 className="absolute mt-60 ml-9 w-64 z-20 text-center text-xl font-semibold">
-            Use two fingers to move the map
+            Use two fingers to move the graph
           </h3>}
           <div style={{width: this.width + "px"}}>
             <Controls zoomButtons={this.zoomButtons} resetZoom={this.resetZoom}/>
@@ -325,9 +302,9 @@ class Graph extends Component{
                   {bars}
                   {angleAxis}
                   <path id="dayPath" fill="#fff069"  d={day()} />
-                  <text textAnchor="middle" font-weight="bold" font-size="0.75rem"x={day.centroid()[0]} y={day.centroid()[1]}>DAY</text>
+                  <text textAnchor="middle" fontWeight="bold" fontSize="0.75rem"x={day.centroid()[0]} y={day.centroid()[1]}>DAY</text>
                   <path id="nightPath" fill="#5269fa" d={night()} />
-                  <text textAnchor="middle" font-weight="bold" font-size="0.75rem" x={night.centroid()[0]} y={night.centroid()[1]}>NIGHT</text>
+                  <text textAnchor="middle" fontWeight="bold" fontSize="0.75rem" x={night.centroid()[0]} y={night.centroid()[1]}>NIGHT</text>
                 </g>
               </g>
             </svg>

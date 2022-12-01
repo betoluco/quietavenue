@@ -12,7 +12,6 @@
     "aws-serverless-express": "^3.4.0",
     "axios": "^0.18.0",
     "cors": "^2.8.5",
-    "d3-array": "^2.12.1",
     "d3-scale": "^3.3.0",
     "d3-selection": "^2.0.0",
     "d3-shape": "^2.1.0",

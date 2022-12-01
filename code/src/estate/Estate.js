@@ -32,6 +32,7 @@ const Estate = (props) =>{
                 <Graph 
                 graphData={estate.audioData[day].graph_data}
                 mp3Link = {estate.audioData[day].mp3_link}
+                key={day}
                 day={day}/>
             );
         });

@@ -4,6 +4,9 @@ import plusSign from "./plusSignOp.svg";
 import minusSign from "./minusSignOp.svg";
 
 const Controls = (props) => {
+    const zoomIn = 1.2;
+    const zoomOut = 0.8;
+    
     return(
         <div className="flex flex-row-reverse relative mr-6 -mb-16">
             <div className="flex items-center select-none" >
@@ -13,10 +16,10 @@ const Controls = (props) => {
                     Reset
                 </button>
                 <div className="flex flex-col">
-                    <button onClick={() =>{props.zoomButtons(1.12)}}>
+                    <button onClick={() =>{props.zoomButtons(zoomIn)}}>
                         <img className="w-8 transform hover:scale-125 mb-1" src={plusSign} alt="Zoom in"/>
                     </button>
-                    <button onClick={() =>{props.zoomButtons(0.88)}}>
+                    <button onClick={() =>{props.zoomButtons(zoomOut)}}>
                         <img className="w-8 transform hover:scale-125 mt-1" src={minusSign} alt="Zoom out"/>
                     </button>
                 </div>
