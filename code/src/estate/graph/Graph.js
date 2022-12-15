@@ -25,8 +25,8 @@ class Graph extends Component{
     this.dayOuterRadius = 40;
     this.hoursLabelRadius = 57;
     this.hourTickLength = 67;
-    this.sunrise = "2020-02-13T05:43:00";
-    this.sunset = "2020-02-13T20:19:00";
+    this.sunrise = props.sunrise;
+    this.sunset = props.sunset;
     this.state = {
       a:1, d:1, e:this.width/2, f:this.height/2, 
       pointerPosition:null,

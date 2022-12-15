@@ -45,7 +45,9 @@ const formatResults = async (estate) =>{
     }
     
     try{
-        if (data.hasOwnProperty("audioDataLink")) {
+        if (data.hasOwnProperty("audioDataLink") && data.hasOwnProperty("sunrise") && data.hasOwnProperty("sunset")) {
+            item.sunrise = data.sunrise;
+            item.sunset = data.sunset;
             item.audioData = await getAudioData(data.audioDataLink);
         }
     }catch (error){

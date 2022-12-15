@@ -33,7 +33,9 @@ const Estate = (props) =>{
                 graphData={estate.audioData[day].graph_data}
                 mp3Link = {estate.audioData[day].mp3_link}
                 key={day}
-                day={day}/>
+                day={day}
+                sunset={estate.sunset}
+                sunrise={estate.sunrise}/>
             );
         });
     }
