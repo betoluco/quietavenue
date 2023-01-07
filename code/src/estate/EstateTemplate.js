@@ -22,16 +22,17 @@ const EstateTemplate = (props) => {
       <div className=" mt-7 mb-8 p-2 flex flex-col items-center" >
         <div className="flex flex-col lg:flex-row flex-wrap items-center mb-4">
           <img 
+          data-cy="profilePicture"
           src={props.estate.profilePicture} 
           alt="Property" 
           className="h-28 w-28 mb-3 rounded-full object-cover border border-stone-400" />
-          <h2 className="ml-4 text-center text-2xl text-stone-800">
+          <h2 
+          data-cy="address"
+          className="ml-4 text-center text-2xl text-stone-800">
             {props.estate.address1+ " " + props.estate.address2}
           </h2>
         </div>
-        <Link to={{ pathname: "https://zillow.com"}} target="_blank"  data-cy="linkToRealEstatePage" >
-          <h3 className="text-lg text-center text-stone-800 font-semibold underline mb-4">Click here to se more pictures</h3>
-        </Link>
+        
         {props.price &&
           <h2 className="text-lg text-center text-stone-800 mb-4" data-cy="estatePrice">
             {props.price}
@@ -90,7 +91,9 @@ const EstateTemplate = (props) => {
           </div>
         }
         {props.graphs.length > 0 &&
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+          <div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4" 
+          data-cy="sampletest">
             {props.graphs}
           </div>
         }
