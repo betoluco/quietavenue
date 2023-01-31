@@ -68,7 +68,7 @@ const EstateTemplate = (props) => {
         <Vimeo iframeSRC={props.estate.videoLink} />
       }
         
-      <div className="flex flex-col items-center p-2.5">
+      <div className="flex flex-col items-center px-3 ">
         {props.estate.soundScore &&
           <div className="flex flex-col mb-4" data-cy="estateSoundScore">
             <h2 className="text-2xl mb-1 text-stone-800 font-semibold">Noise Score</h2>
@@ -85,14 +85,14 @@ const EstateTemplate = (props) => {
         {props.estate.audioDescription &&
           <div className=" space-x-4 " data-cy="estateAudioDescription">
             <h3 className=" text-xl text-stone-800 max-w-xl text-center 
-            mb-10 ">
+            mb-14 ">
               {props.estate.audioDescription}
             </h3>
           </div>
         }
         {props.graphs.length > 0 &&
           <div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4" 
+          className="w-full lg:w-9/12 xl:w-6/12" 
           data-cy="sampletest">
             {props.graphs}
           </div>

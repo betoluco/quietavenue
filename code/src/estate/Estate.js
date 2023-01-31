@@ -4,7 +4,9 @@ import { Redirect } from "react-router-dom";
 
 import EstateTemplate from "./EstateTemplate";
 import { fetchEstates } from "../estatesReducer";
-import Graph from "./graph/Graph";
+import AudioPlayer from "./graph/AudioPlayer";
+
+
 
 const Estate = (props) =>{
     const estateId = props.match.params.estateId;
@@ -29,7 +31,7 @@ const Estate = (props) =>{
     if (estate.audioData){
         Object.keys(estate.audioData).forEach((day) => {
             graphs.push(
-                <Graph 
+                <AudioPlayer
                 graphData={estate.audioData[day].graph_data}
                 mp3Link = {estate.audioData[day].mp3_link}
                 key={day}
