@@ -12,9 +12,9 @@ capabilities = "CAPABILITY_IAM"
 [production]
 [production.deploy]
 [production.deploy.parameters]
-stack_name = "quietavenue"
+stack_name = "quietavenue-prod"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1x27nddmanbga"
-s3_prefix = "quietavenue"
+s3_prefix = "quietavenue-prod"
 region = "us-west-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
