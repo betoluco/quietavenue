@@ -19,10 +19,12 @@
     "react-redux": "^7.2.2",
     "react-router-config": "^5.1.1",
     "react-router-dom": "^5.2.0",
+    "react-scripts": "^5.0.1",
     "serialize-javascript": "^5.0.1",
     "webpack-node-externals": "^3.0.0"
   },
   "scripts": {
+    "start": " react-scripts start",
     "unit-test": "jest",
     "dev": "NODE_ENV=development REACT_APP_DOMAIN=https://d14gjrmy4gfvfp.cloudfront.net CORS=* npm run build  && npm run upload-assets",
     "test": "NODE_ENV=production REACT_APP_DOMAIN=https://d14gjrmy4gfvfp.cloudfront.net CORS=* npm run build && npm run clear-assets && npm run upload-assets",
@@ -52,7 +54,19 @@
     "postcss-preset-env": "^7.4.1",
     "style-loader": "^2.0.0",
     "tailwindcss": "^3.0.23",
-    "webpack": "^5.37.1",
-    "webpack-cli": "^4.7.0"
+    "webpack": "^5.75.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
