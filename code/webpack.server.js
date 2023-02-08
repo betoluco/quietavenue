@@ -11,7 +11,7 @@ module.exports = function(env, argv) {
         entry: "./src/lambda.js",
         
         output: {
-            filename: "serverBundle.js",
+            filename: "server/serverBundle.js", //the bundle has to be inside of a folder so that sam build only builds that file
             path: path.resolve(__dirname, "./"),
             libraryTarget: "commonjs2",
             assetModuleFilename: 'dist/[hash][ext][query]',
