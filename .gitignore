@@ -16,7 +16,7 @@ jspm_packages/
 # Webpack output
 code/clientBuild/
 code/dist/
-code/server/
+code/serverBundle.js
 
 #Cypress
 code/cypress/screenshots
