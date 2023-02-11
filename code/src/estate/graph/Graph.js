@@ -62,15 +62,26 @@ const Graph = props =>{
         canvas.height);
     }
     
-    // sun rectangle
+    // background
     const sunrise = transformDateToToday(today, props.sunrise);
     const sunset = transformDateToToday(today, props.sunset);
-    const rectWidth =  timeScale(sunset) - timeScale(sunrise);
-    var grd = ctx.createLinearGradient(0, loudnessScale(0), 0, 0);
-    grd.addColorStop(0, "#FFFEDA");
-    grd.addColorStop(1, "white");
-    ctx.fillStyle = grd;
-    ctx.fillRect(timeScale(sunrise), 0, rectWidth, loudnessScale(0));
+    const day =  timeScale(sunset) - timeScale(sunrise);
+    //const night 
+    const dayGradient = ctx.createLinearGradient(0, loudnessScale(0), 0, 0);
+    dayGradient.addColorStop(0, "#ffffcc");
+    dayGradient.addColorStop(1, "white");
+    ctx.fillStyle = dayGradient;
+    ctx.fillRect(timeScale(sunrise), 0, day, loudnessScale(0));
+    const morning = timeScale(sunrise);
+    var morningGradient = ctx.createLinearGradient(0, loudnessScale(0), 0, 0);
+    morningGradient.addColorStop(0, "#ccccff");
+    morningGradient.addColorStop(.8, "white");
+    ctx.fillStyle = morningGradient;
+    ctx.fillRect(0, 0, morning, loudnessScale(0));
+    const night = canvas.width - timeScale(sunset);
+    ctx.fillRect(timeScale(sunset), 0, night, loudnessScale(0));
+    
+    
     
     //Draw the graph
     for ( let i = 0; i < props.graphData.length; i++ ){ 
