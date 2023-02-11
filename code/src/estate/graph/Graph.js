@@ -102,7 +102,7 @@ const Graph = props =>{
   }, [index]);
   
   return (
-    <div className="mb-5 flex flex-col items-center w-full">
+    <div className="mb-2 flex flex-col items-center w-full">
       <canvas ref={canvasRef} className="w-full h-28"/>  
     </div>
   );

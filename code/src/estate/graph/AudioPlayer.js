@@ -53,16 +53,10 @@ const AudioPlayer = props =>{
     
     
     return(
-        <div className="flex flex-col items-center mb-6">
-            <h5 className="text-stone-800 text-center max-w-screen-md text-sm mb-6 font-semibold">
+        <div className="flex flex-col items-center mb-4">
+            <h5 className="text-stone-800 text-center max-w-screen-md text-lg font-semibold -mb-1">
                 {new Date(props.day).toLocaleDateString("en-US", {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'})}
             </h5>
-            <button className="w-16 mb-6" onClick={play}>
-                {isPlaying
-                    ?<img src={pauseIcon} alt="Pause"/>
-                    :<img src={playIcon} alt="Play"/>
-                }
-            </button>
             
             <Graph
             elapsedTime={elapsedTime}
@@ -71,22 +65,32 @@ const AudioPlayer = props =>{
             sunset={props.sunset}
             day={props.day}/>
             
-            <input 
-            className="w-full" 
-            style={{ 
-                background: updateTrack(elapsedTime, duration),  
-                border: '0.2px solid #292524',
-                borderRadius: '4px',
-                height: '10px'
-            }}
-            type="range" min="0" max={duration} step="1" 
-            value={elapsedTime} onChange={ event => changePlayTime(event)}/>
-               
+            <div className="w-full flex items-center">
+                <button className="w-12 mr-3" onClick={play}>
+                    {isPlaying
+                        ?<img src={pauseIcon} alt="Pause"/>
+                        :<img src={playIcon} alt="Play"/>
+                    }
+                </button>
+                
+                <input 
+                className="w-full" 
+                style={{ 
+                    background: updateTrack(elapsedTime, duration),  
+                    border: '0.2px solid #292524',
+                    borderRadius: '4px',
+                    height: '10px'
+                }}
+                type="range" min="0" max={duration} step="1" 
+                value={elapsedTime} onChange={ event => changePlayTime(event)}/>
+            </div> 
             
-            <p className="text-stone-800 mb-3 mt-3">
-                {convertTime(Math.floor(elapsedTime))}<span> / </span>
-                {convertTime(duration)}
-            </p>
+            <div className="w-full flex justify-end">
+                <p className="text-stone-800 text-xs -mt-3">
+                    {convertTime(Math.floor(elapsedTime))}<span> / </span>
+                    {convertTime(duration)}
+                </p>
+            </div>
             <audio ref={audio} onPlay={onPlay} onPause={onPause} 
             onLoadedMetadata={getDuration} onTimeUpdate={onTimeUpdate}>
                 <source  type="audio/mp3" />
