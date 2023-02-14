@@ -7,7 +7,24 @@ const AudioPlayer = props =>{
     const [isPlaying, setIsPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
     const [elapsedTime, setElapsedTime] = useState(0);
+    const [index, setIndex] = useState(undefined);
     const audio = useRef();
+    
+    useEffect(() =>{
+    if (elapsedTime > 0){
+      for ( let i = 0; i < props.graphData.length-1; i++ ){
+        if (props.graphData[i].hasOwnProperty("sound_start")){
+          if (props.graphData[i].sound_start < elapsedTime && 
+          elapsedTime< props.graphData[i].sound_end){
+            setIndex(i);
+            break;
+          }
+        }
+      }
+    }else{
+      setIndex(undefined);
+    }
+  }, [elapsedTime]);
     
     const changePlayTime = (event) => {
         audio.current.currentTime = event.target.value;
@@ -54,12 +71,12 @@ const AudioPlayer = props =>{
     
     return(
         <div className="flex flex-col items-center mb-4">
-            <h5 className="text-stone-800 text-center max-w-screen-md text-lg font-semibold -mb-1">
+            <h5 className="text-stone-800 text-center max-w-screen-md text-lg -mb-1">
                 {new Date(props.day).toLocaleDateString("en-US", {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'})}
             </h5>
             
             <Graph
-            elapsedTime={elapsedTime}
+            index={index}
             graphData={props.graphData}
             sunrise={props.sunrise}
             sunset={props.sunset}
