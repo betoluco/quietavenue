@@ -12,9 +12,7 @@ const Graph = props =>{
   let timeScale = scaleTime().domain([today, nextDay]);
   let loudnessScale = scaleLinear().domain([0, 1]);
   const margin = {bottom: 15, top: 0, left: 12, rigth: 12};
-  const ticksOffset = 12;
-  const playingMinuteYOffset = 15;
-  const playingMinuteXOffset = 15;
+  const playingMinuteYOffset = 12;
   
   const transformDateToToday = (today, date) =>{
     const dateToTransform = new Date(date);
@@ -36,10 +34,11 @@ const Graph = props =>{
     //x axis
     const ticks = timeScale.ticks();
     ctx.font = "12px Arial";
+    ctx.textAlign = "center";
     for ( let i = 0; i < ticks.length; i++){
       ctx.fillText(
         ticks[i].getHours() + ":00", 
-        timeScale(ticks[i]) - ticksOffset, 
+        timeScale(ticks[i]), 
         canvasBackground.height);
     }
     
@@ -55,7 +54,7 @@ const Graph = props =>{
     // Nigth background
     const morningGradient = ctx.createLinearGradient(0, loudnessScale(0), 0, 0);
     morningGradient.addColorStop(0, "#ccccff");
-    morningGradient.addColorStop(.8, "white");
+    morningGradient.addColorStop(.9, "white");
     ctx.fillStyle = morningGradient;
     const morning = timeScale(sunrise);
     ctx.fillRect(0, 0, morning, loudnessScale(0));
@@ -83,10 +82,11 @@ const Graph = props =>{
       if ( yPossition < 0){
         yPossition = 10;
       }
-      ctx.font = "11px Arial";
+      ctx.font = "bold 11px Arial";
+      ctx.textAlign = "center";
       ctx.fillText(
         playingMinute.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        timeScale(playingMinute) - playingMinuteXOffset, 
+        timeScale(playingMinute), 
         yPossition
       );
     }   
