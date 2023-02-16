@@ -6,13 +6,14 @@ const Graph = props =>{
   
   const canvasGraphRef = useRef(null);
   const canvasBackgroundRef = useRef(null);
-  const devicePixelRatio = window.devicePixelRatio || 1;
+  let devicePixelRatio =  1;
   const today  = new Date(props.day);
   const nextDay = new Date(today.getTime() + 60 * 60 * 24 * 1000);
   let timeScale = scaleTime().domain([today, nextDay]);
   let loudnessScale = scaleLinear().domain([0, 1]);
   const margin = {bottom: 15, top: 0, left: 12, rigth: 12};
   const playingMinuteYOffset = 12;
+  const fontSize = '0.75rem sans-serif';
   
   const transformDateToToday = (today, date) =>{
     const dateToTransform = new Date(date);
@@ -23,6 +24,7 @@ const Graph = props =>{
   };
   
   useEffect(() =>{
+    devicePixelRatio = window.devicePixelRatio;
     const canvasBackground = canvasBackgroundRef.current;
     const ctx = canvasBackground.getContext('2d');
     canvasBackground.width = canvasBackground.clientWidth * devicePixelRatio;
@@ -33,7 +35,7 @@ const Graph = props =>{
     
     //x axis
     const ticks = timeScale.ticks();
-    ctx.font = "12px Arial";
+    ctx.font = fontSize;
     ctx.textAlign = "center";
     for ( let i = 0; i < ticks.length; i++){
       ctx.fillText(
@@ -82,7 +84,7 @@ const Graph = props =>{
       if ( yPossition < 0){
         yPossition = 10;
       }
-      ctx.font = "bold 11px Arial";
+      ctx.font = fontSize;
       ctx.textAlign = "center";
       ctx.fillText(
         playingMinute.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
