@@ -70,7 +70,7 @@ const AudioPlayer = props =>{
     
     
     return(
-        <div className="flex flex-col items-center mb-4">
+        <div className="flex flex-col items-center w-full mb-4">
             <h5 className="text-stone-800 text-center max-w-screen-md text-lg -mb-1">
                 {new Date(props.day).toLocaleDateString("en-US", {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'})}
             </h5>

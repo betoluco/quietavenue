@@ -68,7 +68,7 @@ const EstateTemplate = (props) => {
         <Vimeo iframeSRC={props.estate.videoLink} />
       }
         
-      <div className="flex flex-col items-center px-3 ">
+      <div className="flex flex-col items-center px-2 ">
         {props.estate.soundScore &&
           <div className="flex flex-col mb-4" data-cy="estateSoundScore">
             <h2 className="text-2xl mb-1 text-stone-800 font-semibold">Noise Score</h2>
