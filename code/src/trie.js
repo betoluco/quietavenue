@@ -6,6 +6,9 @@ const TrieNode = function (key) {
     
 };
 
+//Trie are created in Root.js component
+//and used in Search.js component
+
 const Trie = function () {
     this.root = new TrieNode(null);
     
