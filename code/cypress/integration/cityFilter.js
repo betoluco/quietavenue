@@ -4,7 +4,7 @@ describe('cityFilter', () =>{
         cy.visit('/');
         cy.wait(['@apiCall'])
         cy.get('[data-cy=inputField]').type("fo");
-        cy.get(`[data-cy=${CSS.escape('?filter=cityId&filterId=Foster-City-CA')}]`).click()
+        cy.get('a[href*="?filter=cityId&filterId=Foster-City-CA"]').click()
         cy.location('search').should('eq', '?filter=cityId&filterId=Foster-City-CA')
     });
     it("filter page has filter indicator", () =>{

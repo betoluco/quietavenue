@@ -4,7 +4,7 @@ describe('zipCodeFilter', () =>{
         cy.visit('/');
         cy.wait(['@apiCall'])
         cy.get('[data-cy=inputField]').type("944");
-        cy.get(`[data-cy=${CSS.escape('?filter=zipCode&filterId=94404')}]`).click()
+        cy.get('a[href*="?filter=zipCode&filterId=94404"]').click()
         cy.location('search').should('eq', '?filter=zipCode&filterId=94404')
     });
     it("filter page has filter indicator", () =>{

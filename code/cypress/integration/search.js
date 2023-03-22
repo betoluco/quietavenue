@@ -37,7 +37,29 @@ describe('Search', () =>{
         cy.visit('/');
         cy.wait(['@apiCall'])
         cy.get('[data-cy=inputField]').type("10");
-        cy.get(`[data-cy=${CSS.escape('estate/1020-Helm-Ln-Foster-City-Ca-94404')}]`).click()
+        cy.get('[data-cy=resultsList]').find('a[href*="/estate/1020-Helm-Ln-Foster-City-Ca-94404"]').click()
         cy.location('pathname').should('eq', '/estate/1020-Helm-Ln-Foster-City-Ca-94404')
+    });
+    it("Can apply a city filter inside a property", () =>{
+        cy.intercept('/api/estates*').as('apiCall')
+        cy.visit('/');
+        cy.wait(['@apiCall'])
+        cy.get('a[href*="/estate/1020-Helm-Ln-Foster-City-Ca-94404"]').click()
+        cy.location('pathname').should('eq', '/estate/1020-Helm-Ln-Foster-City-Ca-94404')
+        cy.get('[data-cy=inputField]').type("fo");
+        cy.get('a[href*="?filter=cityId&filterId=Foster-City-CA"]').click()
+        cy.location('search').should('eq', '?filter=cityId&filterId=Foster-City-CA')
+        cy.get('[data-cy=filterName]').contains('Filter: Foster City CA')
+    });
+    it("Can apply a zip code filter inside a property", () =>{
+        cy.intercept('/api/estates*').as('apiCall')
+        cy.visit('/');
+        cy.wait(['@apiCall'])
+        cy.get('a[href*="/estate/1020-Helm-Ln-Foster-City-Ca-94404"]').click()
+        cy.location('pathname').should('eq', '/estate/1020-Helm-Ln-Foster-City-Ca-94404')
+        cy.get('[data-cy=inputField]').type("9");
+        cy.get('a[href*="?filter=zipCode&filterId=94404"]').click()
+        cy.location('search').should('eq', '?filter=zipCode&filterId=94404')
+        cy.get('[data-cy=filterName]').contains('Filter: 94404')
     });
 });

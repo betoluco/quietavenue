@@ -1,5 +1,5 @@
 import React, {useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import searchButton from "./images/magnifyingGlassOp.svg";
 import { estateSuggest } from "../trie";
@@ -7,7 +7,6 @@ import { citySuggest } from "../trie";
 import { zipCodeSuggest } from "../trie";
 
 const Search = props =>{
-  let history = useHistory();
   
   const [searchInputText, setSearchInputText] = useState("");
   const [suggest, setSuggest] = useState([]);
@@ -30,13 +29,13 @@ const Search = props =>{
         );
         estateSuggestions.forEach( element =>{
           suggestList.push(
-            <li 
+            <Link 
+            to={element.link}
             key={element.link}
-            onMouseDown={ () => onMouseDown(element.link)}
-            className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200"
-            data-cy={element.link}>
+            onClick={onSuggestClick}
+            className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
               {element.name}
-            </li>
+            </Link>
           );
         });
       }
@@ -51,13 +50,13 @@ const Search = props =>{
         );
         citySuggestions.forEach( element =>{
           suggestList.push(
-            <li 
+            <Link
+            to={element.link}
             key={element.link}
-            onMouseDown={ () => onMouseDown(element.link)}
-            className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200"
-            data-cy={element.link}>
+            onClick={onSuggestClick}
+            className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
               {element.name}
-            </li>
+            </Link>
           );
         });
       }
@@ -72,13 +71,13 @@ const Search = props =>{
         );
         zipCodeSuggestions.forEach( element =>{
           suggestList.push(
-            <li 
+            <Link
+            to={element.link}
             key={element.link}
-            onMouseDown={ () => onMouseDown(element.link)}
-            className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200"
-            data-cy={element.link}>
+            onClick={onSuggestClick}
+            className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
               {element.name}
-            </li>
+            </Link>
           );
         });
       }
@@ -107,27 +106,28 @@ const Search = props =>{
     setSearchInputText(event.target.value);
   };
   
-  const onMouseDown = link =>{
-    history.push(link);
+  const onSuggestClick = link =>{
     setSearchInputText("");
   };
   
-  const onBlurHandler = event =>{
-    setShowSuggest(false);
-  };
-  
-  const onFocusHandler = event => {
+  const onFormFocus = event => {
     if(searchInputText.length > 0){
       setShowSuggest(true);
     }
   };
   
+  const onFormBlur = event =>{
+    if(!event.currentTarget.contains(event.relatedTarget)){
+      setShowSuggest(false);
+    }
+  };
+  
   return (
-    <div 
-    className="flex justify-center w-full">
-      <form className="w-11/12 md:w-8/12 lg:w-6/12 xl:w-4/12"
-      onFocus={onFocusHandler}
-      onBlur={onBlurHandler}>
+    <div className="flex justify-center w-full">
+      <form 
+      onFocus={onFormFocus}
+      onBlur={onFormBlur}
+      className="w-11/12 md:w-8/12 lg:w-6/12 xl:w-4/12">
         <div className="flex">
           <label htmlFor="search" className="hidden">Search by zip code, city or address</label>
           <input 
@@ -146,7 +146,8 @@ const Search = props =>{
           className="relative w-5 -ml-7"/>
         </div>
         {showSuggest &&
-          <ul className="absolute w-11/12 md:w-8/12 lg:w-6/12 xl:w-4/12 rounded-md 
+          <ul
+          className="absolute w-11/12 md:w-8/12 lg:w-6/12 xl:w-4/12 rounded-md 
           border border border-green-600 overflow-hidden" data-cy="resultsList">
             {suggest}
           </ul>

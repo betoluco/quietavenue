@@ -15,15 +15,15 @@ const Root = ( props ) => {
             estates.estates.forEach( estate => {
                 estate.estateSuggest.map( suggest =>{
                     const name = estate.address1 + " " + estate.address2;
-                    const link = 'estate/'+ estate.id;
+                    const link = '/estate/'+ estate.id;
                     estateSuggest.insert(suggest, name, link);
                 });
                 estate.citySuggest.map( suggest =>{
-                    const link = "?filter=cityId&filterId=" + estate.cityId;
+                    const link = "/?filter=cityId&filterId=" + estate.cityId;
                     citySuggest.insert(suggest, estate.city, link); 
                 });
                 estate.zipCodeSuggest.map( suggest =>{
-                    const link = "?filter=zipCode&filterId=" + estate.zipCode;
+                    const link = "/?filter=zipCode&filterId=" + estate.zipCode;
                     zipCodeSuggest.insert(suggest, estate.zipCode, link) ;
                 });
             });
