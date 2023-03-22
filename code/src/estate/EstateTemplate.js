@@ -93,7 +93,7 @@ const EstateTemplate = (props) => {
         {props.graphs.length > 0 &&
           <div 
           className="w-full lg:w-9/12 xl:w-6/12" 
-          data-cy="sampletest">
+          data-cy="estateAudioGraph">
             {props.graphs}
           </div>
         }
