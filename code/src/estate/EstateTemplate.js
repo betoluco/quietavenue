@@ -9,8 +9,8 @@ import HamburgerMenu from "../common/HamburgerMenu";
 const EstateTemplate = (props) => {
   return (
     <React.Fragment>
-      <header className="pb-8 border-b border-green-600">
-        <div className="flex flex-row justify-between p-2 mb-5">
+      <header className="pb-6 border-b border-green-600">
+        <div className="flex flex-row justify-between p-2 mb-12">
           <Logo />
           <HamburgerMenu/>
         </div>

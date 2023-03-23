@@ -26,9 +26,11 @@ const HamburgerMenu = props =>{
         </span>
       </button>
       { showMenu &&
-        <div className="fixed inset-0 z-10 w-full h-full bg-gray-400 bg-opacity-80">
+        <div 
+        onClick={onClickHandler}
+        className="fixed inset-0 z-10 w-full h-full bg-gray-400 bg-opacity-80">
           <ul className="absolute right-0 w-5/6 sm:w-1/2 md:w-72 bg-white p-3 border-l 
-          border-b border-green-600 rounded-l-md rounded-br-md" 
+          border-b border-green-600 rounded-l-md rounded-br-md"
           data-cy="hamburgerMenu">
             <li>
               <div 
@@ -46,7 +48,6 @@ const HamburgerMenu = props =>{
             </li>
             <Link 
             to="/"
-            onClick={onClickHandler}
             data-cy="hamburgerMenuHome">
               <li className="py-4 pl-2 hover:bg-green-200 rounded-md" >
                 <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
@@ -57,7 +58,6 @@ const HamburgerMenu = props =>{
             </Link>
             <Link
             to="/trial"
-            onClick={onClickHandler}
             data-cy="hamburgerMenuForAgents">
               <li className="py-4 pl-2 hover:bg-green-200 rounded-md" >
                 <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
@@ -68,7 +68,6 @@ const HamburgerMenu = props =>{
             </Link>
             <Link 
             to="/contact"
-            onClick={onClickHandler}
             data-cy="hamburgerMenuContatUs">
               <li className="py-4 pl-2 mb-80 hover:bg-green-200 rounded-md">
                 <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
