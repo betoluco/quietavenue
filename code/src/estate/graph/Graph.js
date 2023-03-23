@@ -1,27 +1,34 @@
-import React, {useLayoutEffect,  useRef, useState} from "react";
+import React, {useLayoutEffect, useRef, useState} from "react";
 import {scaleTime, scaleLinear} from "d3-scale";
 
 const Graph = props =>{
   const ref = useRef(null);
-  const [width, setWidth] = useState(1);
   
-  const margin = { top:0, right: 15, bottom: 12, left: 30};
-  const height = 120;
+  const [clientWidth, setClientWidth] = useState(2560);
+  let remSize = 16
+  
+  useLayoutEffect(() => {
+    setClientWidth(ref.current.clientWidth);
+    // gets the root 
+    remSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+  }, []);
+  
   const today  = new Date(props.day);
   const nextDay = new Date(today.getTime() + 60 * 60 * 24 * 1000);
-  const fontSize = "11px";
+  const width = 2560;
+  const height = 1000;
+  const scale = width / clientWidth;
+  // 0.75 is the rem size of tailwind sm font size
+  //mutiply rem size for the scale to get corret size
+  const fontSize =  0.75 * scale;
+  const margin = { top:0, right: 10, bottom: scale * remSize, left: 10};
   const middleAxisYPosition = 0.2;
   const strongAxisYPosition = 0.5;
   const yAxisLineSpace = 3;
   const yAxisIndentation = 3;
-  const playingMinuteYOffset = 12;
-  const playingMinuteTopHeight = 10;
+  const playingMinuteYOffset =6;
+  const playingMinuteTopHeight = scale * remSize *0.5;
   const oneHour = 60 * 60 * 1000;
-  const strokeWidth = "1";
-  
-  useLayoutEffect(() =>{
-    setWidth(ref.current.clientWidth);
-  });
   
   // X scale
   const timeScale = scaleTime()
@@ -29,14 +36,21 @@ const Graph = props =>{
   .range([ 0 + margin.left, width - margin.right ]);
   
   // X axis
-  const xAxis = timeScale.ticks().map( tick =>{
+  const xAxis = timeScale.ticks().map( (tick, index, array) =>{
+    let textAnchor = "middle";
+    if (index === 0){
+      textAnchor = "start";
+    }else if (index === array.length -1){
+      textAnchor = "end";
+    }
+    
     return (
       <text 
       key={tick}
       x={timeScale(tick)}
       y={height} 
-      fontSize={fontSize}
-      textAnchor="middle">
+      fontSize={`${fontSize}rem`}
+      textAnchor={textAnchor}>
         {tick.getHours() + ":00"}
       </text>
     );
@@ -46,7 +60,7 @@ const Graph = props =>{
   const loudnessScale = scaleLinear()
   .domain([0, 1])
   .range([height - margin.bottom , 0]);
-  
+
   const bars = props.graphData.map( (dataPoints, i) =>{
     const xPosition = timeScale(new Date(dataPoints.time));
     const yLineStart = loudnessScale(dataPoints.maxLoudness); 
@@ -59,8 +73,8 @@ const Graph = props =>{
       y1={yLineStart} 
       x2={xPosition}
       y2={yLineEnd} 
+      strokeWidth="2"
       shapeRendering="crispEdges"
-      strokeWidth={strokeWidth}
       stroke={color}/>;
   });
   
@@ -74,7 +88,7 @@ const Graph = props =>{
     playingMinuteText = <text 
     x={timeScale(new Date(props.graphData[props.index].time))}
     y={yPossition}
-    fontSize={fontSize}
+    fontSize={`${fontSize}rem`}
     textAnchor="middle">
       {new Date(props.graphData[props.index].time)
       .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
@@ -99,7 +113,10 @@ const Graph = props =>{
   const dayEnd =  new Date(sunsetStart.getTime() - oneHour );
     
   return (
-    <svg ref={ref} className="mb-3 w-full h-28" style={{height:`${height}px`}}>
+    <svg 
+    ref={ref}
+    viewBox={`0 0 ${width} ${height}`} 
+    className="mb-3 w-full">
       <defs>
         <linearGradient id="background" x2={width} y2="0" gradientUnits="userSpaceOnUse">
           <stop 
@@ -155,11 +172,10 @@ const Graph = props =>{
       {playingMinuteText &&
         playingMinuteText
       }
-      {bars}
       <text 
       x={yAxisIndentation} 
       y={loudnessScale(strongAxisYPosition) - yAxisLineSpace} 
-      fontSize={fontSize}>
+      fontSize={`${fontSize}rem`}>
         Strong
       </text>
       <line 
@@ -175,7 +191,7 @@ const Graph = props =>{
       <text 
       x={yAxisIndentation} 
       y={loudnessScale(middleAxisYPosition) - yAxisLineSpace} 
-      fontSize={fontSize}>
+      fontSize={`${fontSize}rem`}>
         Middle
       </text>
       {bars}
