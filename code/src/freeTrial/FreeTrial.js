@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 
 import Logo from "../common/Logo"
 import HamburgerMenu from "../common/HamburgerMenu";
-import BackArrow from "../common/BackArrow";
 import Slogan from "../common/Slogan";
 import logo from "../common/images/quietavenueLogoOp.svg";
 
@@ -11,7 +10,6 @@ const FreeTrial = (props) =>{
     <Fragment>
       <header className="mb-10 pb-8 border-b border-green-600" >
         <div className="flex flex-row justify-between mx-3 mt-2.5 mb-4">
-          <BackArrow />
           <Logo />
           <HamburgerMenu/>
         </div>

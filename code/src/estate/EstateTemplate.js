@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 
 import Logo from "../common/Logo";
-import BackArrow from "../common/BackArrow";
 import Search from "../common/Search";
 import Vimeo from "./Vimeo";
 import HamburgerMenu from "../common/HamburgerMenu";
@@ -12,7 +11,6 @@ const EstateTemplate = (props) => {
     <React.Fragment>
       <header className="pb-8 border-b border-green-600">
         <div className="flex flex-row justify-between p-2 mb-5">
-          <BackArrow />
           <Logo />
           <HamburgerMenu/>
         </div>
