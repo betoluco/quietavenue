@@ -8,11 +8,11 @@ const FreeTrial = (props) =>{
   return(
     <Fragment>
       <header className="mb-3" >
-        <div className="flex flex-row justify-between mx-3 mt-2.5 pb-2 mb-2 border-b border-strone-100">
+        <div className="flex flex-row justify-between mx-3 mt-2.5 pb-2 mb-4 border-b border-strone-100">
           <Logo />
           <HamburgerMenu/>
         </div>
-        <div className="flex flex-col items-center p-2.5">
+        <div className="flex flex-col items-center">
           <img src={realtor} className="aspect-auto border border-strone-100 max-w-screen-md w-full h-auto"/>
         </div>
       </header>
