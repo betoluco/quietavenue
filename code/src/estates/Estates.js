@@ -49,7 +49,7 @@ const Estates = (props) =>{
                 </div>
                 <div className="border-y rounded-sm border-stone-100 bg-no-repeat bg-cover bg-center lg:bg-bottom h-96 lg:h-[30] xl:h-[36]"
                 style={{
-                backgroundImage: `linear-gradient(to bottom, hsla(0, 0%, 0%, 0.4), hsla(0, 0%, 0%, 0)),
+                backgroundImage: `linear-gradient(to bottom, hsla(0, 0%, 0%, 0.2), hsla(0, 0%, 0%, 0)),
                 url(${headerImage})`,
                 }}>
                     <h2 
