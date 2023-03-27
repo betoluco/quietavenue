@@ -7,7 +7,8 @@ import InternalServerError from "../common/InternalServerError";
 import Spinner from "../common/Spinner";
 import Logo from "../common/Logo";
 import HamburgerMenu from "../common/HamburgerMenu";
-import Slogan from "../common/Slogan";
+import headerImage from "./headerImage.jpg"
+import Search from "../common/Search"
 
 const Estates = (props) =>{
     const dispatch = useDispatch();
@@ -42,11 +43,22 @@ const Estates = (props) =>{
     return (
         <Fragment>
             <header className="mb-12" >
-                <div className="flex flex-row justify-between mx-3 mt-2.5 mb-4">
+                <div className="flex flex-row justify-between mx-3 mt-2.5 pb-2 mb-4 border-b border-strone-100">
                     <Logo />
                     <HamburgerMenu />
                 </div>
-                <Slogan />
+                <div className="border-y rounded-sm border-stone-100 bg-no-repeat bg-cover bg-center lg:bg-bottom h-96 lg:h-[30] xl:h-[36]"
+                style={{
+                backgroundImage: `linear-gradient(to bottom, hsla(0, 0%, 0%, 0.4), hsla(0, 0%, 0%, 0)),
+                url(${headerImage})`,
+                }}>
+                    <h2 
+                    className="text-center text-lg md:text-3xl text-white font-medium tracking-wide
+                    mb-10 mt-12 px-3 mx-auto max-w-xl drop-shadow-lg">
+                        See and hear what goes on in front of your future home
+                    </h2>
+                    <Search />
+                </div>
             </header>
             {content}
         </Fragment>

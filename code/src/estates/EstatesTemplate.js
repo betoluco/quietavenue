@@ -27,10 +27,12 @@ const EstatesTemaplate = (props) =>{
       }
       { !filter && 
         <div className="flex justify-center m-2 mb-8">
-        <Link to="/trial" className="flex flex-col items-center p-4 bg-green-600 border border-stone-400 rounded-md shadow-xl">
-          <h2 className="text-2xl text-white font-semibold pb-2 ">Are you an agent?</h2>
-          <h3 className="text-lg text-white text-center">Click here to learn more about our <span className="font-semibold underline">free trial.</span></h3>
-        </Link>
+          <div className="flex flex-col items-center">
+            <h2 className="text-3xl text-stone-800 font-semibold pb-4 ">Are you an agent?</h2>
+            <Link to="/trial" className="flex flex-col items-center p-4 bg-green-500 border border-stone-400 rounded-md shadow-xl">
+              <h3 className="text-lg text-white text-center">learn about our <span className="font-semibold">free trial >></span></h3>
+            </Link>
+          </div>
         </div>
       }
       <div 
