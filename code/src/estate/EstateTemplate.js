@@ -9,27 +9,24 @@ import HamburgerMenu from "../common/HamburgerMenu";
 const EstateTemplate = (props) => {
   return (
     <React.Fragment>
-      <header className="pb-6 border-b border-green-600">
-        <div className="flex flex-row justify-between p-2 mb-12">
-          <Logo />
-          <HamburgerMenu/>
-        </div>
-        <Search />
+      <header className="flex flex-row justify-between mx-3 mt-2.5 pb-2 mb-2 border-b border-strone-100 ">
+        <Logo />
+        <HamburgerMenu/>
       </header>
       
-      <div className=" mt-7 mb-8 p-2 flex flex-col items-center" >
-        <div className="flex flex-col lg:flex-row flex-wrap items-center mb-4">
           <img 
           data-cy="profilePicture"
           src={props.estate.profilePicture} 
           alt="Property" 
-          className="h-28 w-28 mb-3 rounded-full object-cover border border-stone-400" />
-          <h2 
-          data-cy="address"
-          className="ml-4 text-center text-2xl text-stone-800">
-            {props.estate.address1+ " " + props.estate.address2}
-          </h2>
-        </div>
+          className="aspect-auto rounded-md border border-strone-100 max-w-screen-md w-full h-auto" />
+          <div className="flex justify-start">
+           <h2 
+            data-cy="address"
+            className="text-2xl text-stone-800">
+              {props.estate.address1+ " " + props.estate.address2}
+            </h2>
+          </div>
+        
         
         {props.price &&
           <h2 className="text-lg text-center text-stone-800 mb-4" data-cy="estatePrice">
@@ -60,7 +57,7 @@ const EstateTemplate = (props) => {
             </li>
           }
         </ul>
-      </div>
+      
         
       {props.estate.videoLink &&
         <Vimeo iframeSRC={props.estate.videoLink} />
@@ -71,7 +68,7 @@ const EstateTemplate = (props) => {
           <div className="flex flex-col mb-4" data-cy="estateSoundScore">
             <h2 className="text-2xl mb-1 text-stone-800 font-semibold">Noise Score</h2>
             <div className="flex justify-center">
-              <h2 className="text-4xl text-stone-800 leading-9 bg-green-600 
+              <h2 className="text-4xl text-stone-800 leading-9 bg-green-500 
               rounded-full border border-stone-400"
               style={{padding: "0.5rem 0.5rem 0.7rem 0.5rem"}}>
                 {props.estate.soundScore}

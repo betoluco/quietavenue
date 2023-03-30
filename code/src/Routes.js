@@ -1,7 +1,7 @@
 import Root from "./Root";
 import Estate from "./estate/Estate";
-import Estates from "./estates/Estates";
-import FreeTrial from "./freeTrial/FreeTrial";
+import Home from "./home/Home";
+import WorkFlow from "./workFlow/WorkFlow";
 import NotFound from "./notFound/NotFound";
 import Contact from "./contact/Contact";
 
@@ -16,8 +16,8 @@ const Routes = [
                 exact: true
             },
             {
-                component: FreeTrial,
-                path: "/trial",
+                component: WorkFlow,
+                path: "/workFlow",
                 exact: true
             },
             {
@@ -26,7 +26,7 @@ const Routes = [
                 exact: true
             },
             {
-                ...Estates,
+                ...Home,
                 path: "/",
                 exact: true
             },

@@ -13,7 +13,7 @@ const HamburgerMenu = props =>{
   
   return (
     <Fragment>
-      <button onClick={onClickHandler} data-cy="openHamburgerMenu" className="">
+      <button onClick={onClickHandler} data-cy="openHamburgerMenu" className="mr-2">
         <span className="hidden">menu button</span>
         <span 
         className="block w-6 md:w-8 h-1 bg-stone-800 rounded-sm mb-1 md:mb-1.5">
@@ -57,12 +57,12 @@ const HamburgerMenu = props =>{
               </li>
             </Link>
             <Link
-            to="/trial"
-            data-cy="hamburgerMenuForAgents">
+            to="/workFlow"
+            data-cy="hamburgerMenuHowItWorks">
               <li className="py-4 pl-2 hover:bg-green-200 rounded-md" >
                 <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
                   <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
-                  For Agents
+                  How it works?
                 </div>
               </li>
             </Link>

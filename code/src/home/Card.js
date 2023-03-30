@@ -9,7 +9,7 @@ const Card = props =>{
       <Link to={link}>
         <img 
         data-cy="profilePicture"
-        className="w-full h-64 object-cover rounded-t-md" 
+        className="w-full border-b border-stone-300 h-64 object-cover rounded-t-md" 
         src={props.estate.profilePicture} 
         alt="Estate" />
         <div key={props.estate.id} className="m-2 ml-6">

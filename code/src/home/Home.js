@@ -2,15 +2,14 @@ import React, { Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { fetchEstates } from "../estatesReducer";
-import EstatesTemplate from "./EstatesTemplate";
+import HomeTemplate from "./HomeTemplate";
 import InternalServerError from "../common/InternalServerError";
 import Spinner from "../common/Spinner";
 import Logo from "../common/Logo";
 import HamburgerMenu from "../common/HamburgerMenu";
-import headerImage from "./headerImage.jpg"
-import Search from "../common/Search"
+import headerImage from "./headerImage.jpg";
 
-const Estates = (props) =>{
+const Home = (props) =>{
     const dispatch = useDispatch();
     const estateStatus = useSelector( state => state.estates.status );
     
@@ -35,29 +34,27 @@ const Estates = (props) =>{
     if (estateStatus === 'loading') {
         content = <Spinner/>;
     } else if (estateStatus === 'succeeded') {
-        content = <EstatesTemplate estates={estates} filter={searchParams.get('filter')}/>;
+        content = <HomeTemplate estates={estates} filter={searchParams.get('filter')}/>;
     } else if (estateStatus === 'failed') {
         content = <InternalServerError />;
     }
     
     return (
         <Fragment>
-            <header className="mb-12" >
-                <div className="flex flex-row justify-between mx-3 mt-2.5 pb-2 mb-4 border-b border-strone-100">
+            <header className="mb-10" >
+                <div className="flex flex-row justify-between px-3 mt-2.5 pb-4 mb-12 border-b border-stone-200">
                     <Logo />
                     <HamburgerMenu />
                 </div>
-                <div className="border-y rounded-sm border-stone-100 bg-no-repeat bg-cover bg-center lg:bg-bottom h-96 lg:h-[30] xl:h-[36]"
-                style={{
-                backgroundImage: `linear-gradient(to bottom, hsla(0, 0%, 0%, 0.2), hsla(0, 0%, 0%, 0)),
-                url(${headerImage})`,
-                }}>
-                    <h2 
-                    className="text-center text-lg md:text-3xl text-white font-medium tracking-wide
-                    mb-10 mt-12 px-3 mx-auto max-w-xl drop-shadow-lg">
-                        See and hear what goes on in front of your future home
-                    </h2>
-                    <Search />
+                <div className="">
+                    <div className="text-center text-xl sm:text-3xl md:text-4xl xl:text-5xl font-bold tracking-wide mb-16 px-3">
+                        <h2 className="mb-2 text-stone-800">
+                            <span className="text-green-600">See</span> and <span className="text-green-600">hear</span> what goes on 
+                        </h2>
+                        <h2 className="text-stone-800text-green-600">
+                            in front of your <span className="text-green-600" >future home</span>
+                        </h2>
+                    </div>
                 </div>
             </header>
             {content}
@@ -69,9 +66,9 @@ const loadData = (store, req) => {
     return store.dispatch( fetchEstates());
 };
 
-const estatesExport = {
+const HomeExport = {
     loadData,
-    component: Estates
+    component: Home
 };
 
-export default estatesExport;
+export default HomeExport;

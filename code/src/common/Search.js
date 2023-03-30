@@ -123,27 +123,29 @@ const Search = props =>{
   };
   
   return (
-    <div className="flex justify-center w-full">
+    <div className="flex justify-center w-full mb-10">
       <form 
       onFocus={onFormFocus}
       onBlur={onFormBlur}
       className="w-11/12 md:w-8/12 lg:w-6/12 xl:w-4/12">
-        <div className="flex">
-          <label htmlFor="search" className="hidden">Search by zip code, city or address</label>
-          <input 
-          id="search"
-          autoComplete="off"
-          className="w-full p-3 pr-7 rounded-md placeholder-stone-400 focus:ring 
-          focus:ring-green-600 ring-inset focus:outline-none border border-stone-400"
-          onChange={onChangeHandler}
-          value={searchInputText}
-          type="text"
-          placeholder="zip code, city or address"
-          data-cy="inputField"/>
-          <img 
-          src={searchButton}
-          alt="search button"
-          className="relative w-5 -ml-7"/>
+        <div className="flex flex-col">
+          <label htmlFor="search" className="mb-1 ml-3 text-sm text-stone-800">Search by zip code, city or address</label>
+          <div className="flex">
+            <input 
+            id="search"
+            autoComplete="off"
+            className="w-full p-3 pr-7 rounded-md placeholder-stone-400 focus:ring 
+            focus:ring-green-600 ring-inset focus:outline-none border border-stone-400"
+            onChange={onChangeHandler}
+            value={searchInputText}
+            type="text"
+            placeholder="zip code, city or address"
+            data-cy="inputField"/>
+            <img 
+            src={searchButton}
+            alt="search button"
+            className="relative w-5 -ml-7"/>
+          </div>
         </div>
         {showSuggest &&
           <ul
