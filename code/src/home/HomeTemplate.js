@@ -18,18 +18,18 @@ const HomeTemaplate = (props) =>{
   
   return (
     <Fragment>
-      <div className="px-3 flex justify-center py-12 mb-12 bg-stone-200">
+      <div className="px-3 flex justify-center py-16 mb-12 bg-stone-200">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-screen-lg">
           <div className="flex flex-col bg-white rounded-md px-2 py-2">
             <h3 className="text-xl sm:text-2xl mb-2 text-stone-800 font-semibold"> 
-              Buying a house is <span className="text-green-600" >stressfull!</span>
+              Buying a house is stressfull!
             </h3>
             <img src={frustrated} className="mb-2 aspect-auto border border-strone-200 w-full "/>
             <p className="text-justify text-base text-stone-800">A mortgage can easily be a 30-year commitment. While you won’t need to live in your home for the length of your mortgage term, you’ll still need to make a long-term commitment to the area where you buy.</p>
           </div>
           <div className="flex flex-col bg-white rounded-md px-2 pt-2 pb-4">
             <h3 className="text-xl sm:text-2xl mb-2 text-stone-800 font-semibold"> 
-              We can <span className="text-green-600">help you!</span>
+              We can help you!
             </h3>
             <img src={happy} className="mb-2 aspect-auto border border-strone-200 w-full "/>
             <p className=" mb-4 text-justify text-base text-stone-800">In QuietAvenue.com we use audio and video recorded on site that is analyzed with our AI, so you can find out what it will be like to live in that area</p>
@@ -44,8 +44,8 @@ const HomeTemaplate = (props) =>{
         </div>
       </div>
       
-      <h2 className="text-2xl text-center px-3 mb-10 text-stone-800 font-semibold">
-          Current properties on sale
+      <h2 className="text-xl sm:text-2xl text-center px-3 mb-10 text-stone-800 font-semibold">
+          Current properties <span className="text-green-600"> on sale</span> 
       </h2>
       <Search/>
       { filter &&

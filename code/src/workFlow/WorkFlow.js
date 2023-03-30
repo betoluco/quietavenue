@@ -10,19 +10,21 @@ const WorkFlow = (props) =>{
   return(
     <Fragment>
       <header className="mb-3" >
-        <div className="flex flex-row justify-between mx-3 mt-2.5 pb-2 mb-4 border-b border-strone-100">
+        <div className="flex flex-row justify-between mx-3 mt-2.5 pb-2 mb-10 border-b border-strone-100">
           <Logo />
           <HamburgerMenu/>
         </div>
       </header>
       <h2 className="text-2xl sm:text-3xl md:text-4xl xl:text-5xl text-center mb-12 text-stone-800 font-semibold">
-        How it works?
+        How it <span className="text-green-600" >works?</span>
       </h2>
       
       <div className="flex justify-center px-3 mb-16 py-16 bg-stone-200">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-screen-lg">
           <div className="flex flex-col bg-white rounded-md px-2 py-2">
-            <h3 className="mb-0.5 text-center text-lg text-stone-800 font-semibold">Call us!</h3>
+            <h3 className="mb-0.5 text-center text-lg text-stone-800 font-semibold">
+              <span className="text-green-600 text-xl">1. </span>Call us!
+            </h3>
             <img src={callUs} className="mb-2 aspect-auto border border-strone-200 w-full"/>
             <p className="text-center text-base text-stone-800">Schedule an appointment by calling</p>
             <h2 className="text-center text-2xl text-green-600 font-semibold">
@@ -35,13 +37,17 @@ const WorkFlow = (props) =>{
           </div>
           
           <div className="flex flex-col bg-white rounded-md px-2 py-2">
-            <h3 className="mb-0.5 text-center text-lg text-stone-800 font-semibold">Get a visit form our technician</h3>
+            <h3 className="mb-0.5 text-center text-lg text-stone-800 font-semibold">
+              <span className="text-green-600 text-xl">2. </span>Get a visit form our technician
+            </h3>
             <img src={technician} className="mb-2 aspect-auto border border-strone-200 w-full"/>
             <p className=" mb-4 text-center text-base text-stone-800">A technician will go to your property and set up discrete recording equipment</p>
           </div>
           
           <div className="flex flex-col bg-white rounded-md px-2 py-2">
-            <h3 className="mb-0.5 text-center text-lg text-stone-800 font-semibold">See the analysis of your property</h3>
+            <h3 className="mb-0.5 text-center text-lg text-stone-800 font-semibold">
+              <span className="text-green-600 text-xl">3. </span>See the analysis of your property
+            </h3>
             <img src={dataAnalysis} className="mb-2 aspect-auto border border-strone-200 w-full"/>
             <p className=" mb-4 text-center text-base text-stone-800">A week later the analysis of your property’s data will be available in our website</p>
           </div>

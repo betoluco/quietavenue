@@ -41,20 +41,20 @@ const Home = (props) =>{
     
     return (
         <Fragment>
-            <header className="mb-10" >
+            <header className="" >
                 <div className="flex flex-row justify-between px-3 mt-2.5 pb-4 mb-12 border-b border-stone-200">
                     <Logo />
                     <HamburgerMenu />
                 </div>
-                <div className="">
-                    <div className="text-center text-xl sm:text-3xl md:text-4xl xl:text-5xl font-bold tracking-wide mb-16 px-3">
-                        <h2 className="mb-2 text-stone-800">
-                            <span className="text-green-600">See</span> and <span className="text-green-600">hear</span> what goes on 
-                        </h2>
-                        <h2 className="text-stone-800text-green-600">
-                            in front of your <span className="text-green-600" >future home</span>
-                        </h2>
-                    </div>
+                <div className="flex justify-center">
+                    <h2 className="text-center text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-bold tracking-wide text-stone-800 
+                    mb-12 md:mb-16 px-3 max-w-sm sm:max-w-md md:max-w-xl xl:max-w-3xl">
+                        <span className="text-green-600">See </span> 
+                        and 
+                        <span className="text-green-600"> hear </span> 
+                        what goes on in front of your 
+                        <span className="text-green-600" > future home</span>
+                    </h2>
                 </div>
             </header>
             {content}
