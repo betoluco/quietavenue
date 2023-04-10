@@ -129,7 +129,6 @@ const Search = props =>{
       onBlur={onFormBlur}
       className="w-11/12 md:w-8/12 lg:w-6/12 xl:w-4/12">
         <div className="flex flex-col">
-          <label htmlFor="search" className="mb-1 ml-3 text-sm text-stone-800">Search by zip code, city or address</label>
           <div className="flex">
             <input 
             id="search"

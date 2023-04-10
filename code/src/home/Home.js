@@ -1,13 +1,13 @@
 import React, { Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import Search from "../common/Search";
 
 import { fetchEstates } from "../estatesReducer";
 import HomeTemplate from "./HomeTemplate";
 import InternalServerError from "../common/InternalServerError";
 import Spinner from "../common/Spinner";
-import Logo from "../common/Logo";
-import HamburgerMenu from "../common/HamburgerMenu";
-import headerImage from "./headerImage.jpg";
+import Header from "../common/Header";
+import neighborhood from "./neighborhood.jpg"
 
 const Home = (props) =>{
     const dispatch = useDispatch();
@@ -41,22 +41,21 @@ const Home = (props) =>{
     
     return (
         <Fragment>
-            <header className="" >
-                <div className="flex flex-row justify-between px-3 mt-2.5 pb-4 mb-12 border-b border-stone-200">
-                    <Logo />
-                    <HamburgerMenu />
-                </div>
-                <div className="flex justify-center">
-                    <h2 className="text-center text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-bold tracking-wide text-stone-800 
+            <Header/>
+            <div 
+            className="flex flex-col h-96 bg-center bg-no-repeat border-y border-stone-400"
+            style={{ 
+                    backgroundImage: `url(${neighborhood})` 
+            }}>
+                <div className="flex justify-center mt-10">
+                    <h2 className="text-center text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-bold tracking-wide text-white 
                     mb-12 md:mb-16 px-3 max-w-sm sm:max-w-md md:max-w-xl xl:max-w-3xl">
-                        <span className="text-green-600">See </span> 
-                        and 
-                        <span className="text-green-600"> hear </span> 
-                        what goes on in front of your 
-                        <span className="text-green-600" > future home</span>
+                        See and hear what goes on in front of your future home
                     </h2>
+                    
                 </div>
-            </header>
+                <Search/>
+            </div>
             {content}
         </Fragment>
     );

@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 
-import Logo from "../common/Logo";
+import Header from "../common/Header";
 import HamburgerMenu from "../common/HamburgerMenu";
 import callUs from "./callUs.jpg";
 import technician from "./technician.jpg";
@@ -9,12 +9,7 @@ import dataAnalysis from "./dataAnalysis.jpg";
 const WorkFlow = (props) =>{
   return(
     <Fragment>
-      <header className="mb-3" >
-        <div className="flex flex-row justify-between mx-3 mt-2.5 pb-2 mb-10 border-b border-strone-100">
-          <Logo />
-          <HamburgerMenu/>
-        </div>
-      </header>
+      <Header />
       <h2 className="text-2xl sm:text-3xl md:text-4xl xl:text-5xl text-center mb-12 text-stone-800 font-semibold">
         How it <span className="text-green-600" >works?</span>
       </h2>
