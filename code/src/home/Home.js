@@ -43,12 +43,12 @@ const Home = (props) =>{
         <Fragment>
             <Header/>
             <div 
-            className="flex flex-col h-96 bg-center bg-no-repeat border-y border-stone-400"
-            style={{ 
-                    backgroundImage: `url(${neighborhood})` 
+            className="flex flex-col border-y border-stone-400 py-10 mb-12 bg-center bg-no-repeat bg-cover"
+            style={{
+                backgroundImage: `url(${neighborhood})` 
             }}>
-                <div className="flex justify-center mt-10">
-                    <h2 className="text-center text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-bold tracking-wide text-white 
+                <div className="flex justify-center ">
+                    <h2 className="text-center text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-bold tracking-wide text-stone-50
                     mb-12 md:mb-16 px-3 max-w-sm sm:max-w-md md:max-w-xl xl:max-w-3xl">
                         See and hear what goes on in front of your future home
                     </h2>
