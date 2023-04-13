@@ -15,7 +15,7 @@ const WorkFlow = (props) =>{
       </h2>
       
       <div className="flex justify-center px-3 mb-16 py-16 bg-stone-200">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-screen-lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-screen-lg">
           <div className="flex flex-col bg-white rounded-md px-2 py-2">
             <h3 className="mb-0.5 text-center text-lg text-stone-800 font-semibold">
               <span className="text-green-600 text-xl">1. </span>Call us!
