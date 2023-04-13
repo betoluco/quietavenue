@@ -28,7 +28,7 @@ const Graph = props =>{
   const yAxisIndentation = 3;
   const playingMinuteYOffset =6;
   const playingMinuteTopHeight = scale * remSize *0.5;
-  const oneHour = 60 * 60 * 1000;
+  const transitionTime =20 * 60 * 1000;
   
   // X scale
   const timeScale = scaleTime()
@@ -104,13 +104,12 @@ const Graph = props =>{
  
   // background
   const sunrise = transformDateToToday(today, props.sunrise);
-  const sunriseStart = new Date(sunrise.getTime() - oneHour ); 
-  const sunriseEnd = new Date(sunrise.getTime() + oneHour ); 
-  const dayStart =  new Date(sunriseEnd.getTime() + oneHour );
+  const nightEnd = new Date(sunrise.getTime() - transitionTime ); 
+  const dayStart =  new Date(sunrise.getTime() + transitionTime );
   const sunset = transformDateToToday(today, props.sunset);
-  const sunsetStart = new Date(sunset.getTime() - oneHour ); 
-  const sunsetEnd = new Date(sunset.getTime() + oneHour );
-  const dayEnd =  new Date(sunsetStart.getTime() - oneHour );
+  const dayEnd =  new Date(sunset.getTime() - transitionTime );
+  const nightStart = new Date(sunset.getTime() + transitionTime );
+  
     
   return (
     <svg 
@@ -120,29 +119,23 @@ const Graph = props =>{
       <defs>
         <linearGradient id="background" x2={width} y2="0" gradientUnits="userSpaceOnUse">
           <stop 
-          offset={timeScale(sunriseStart)/width * 100 + "%"} 
-          stopColor="#cce6ff" />
+          offset={timeScale(nightEnd)/width * 100 + "%"} 
+          stopColor="#66b3ff" />
           <stop 
           offset={timeScale(sunrise)/width * 100 + "%"} 
-          stopColor="#ffcccc" />
-          <stop 
-          offset={timeScale(sunriseEnd)/width * 100 + "%"} 
-          stopColor="#ffe6cc" />
+          stopColor="#ffffff" />
           <stop 
           offset={timeScale(dayStart)/width * 100 + "%"} 
-          stopColor="#ffffcc" />
+          stopColor="#ffff99" />
           <stop 
           offset={timeScale(dayEnd)/width * 100 + "%"} 
-          stopColor="#ffffcc" />
-          <stop 
-          offset={timeScale(sunsetStart)/width * 100 + "%"} 
-          stopColor="#ffe6cc" />
+          stopColor="#ffff99" />
           <stop 
           offset={timeScale(sunset)/width * 100 + "%"} 
-          stopColor="#ffcccc" />
+          stopColor="#ffffff" />
           <stop 
-          offset={timeScale(sunsetEnd)/width * 100 + "%"} 
-          stopColor="#cce6ff" />
+          offset={timeScale(nightStart)/width * 100 + "%"} 
+          stopColor="#66b3ff" />
         </linearGradient>
         <linearGradient id="fade" x2="0" y2={height - margin.bottom} gradientUnits="userSpaceOnUse">
           <stop offset="10%" stopColor="white" />
