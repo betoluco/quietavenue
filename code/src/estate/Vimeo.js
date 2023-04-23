@@ -1,9 +1,11 @@
-import React from "react";
+import React, {Fragment} from "react";
 
 const Vimeo = props => {
   return(
-    <div className="mb-4 flex justify-center"  data-cy="estateVideo">
-      <div className= "relative w-full pb-[56.25%] lg:w-9/12 lg:pb-[42.1%] xl:w-6/12 xl:pb-[28.1%]">
+    <Fragment>
+      <div 
+      data-cy="estateVideo"
+      className="mb-12 w-full relative pb-[56.25%] ">
         <iframe 
           src={props.iframeSRC} 
           frameBorder="0"
@@ -15,7 +17,7 @@ const Vimeo = props => {
         </iframe>
       </div>
       <script src="https://player.vimeo.com/api/player.js"></script>
-    </div>
+    </Fragment>
   );
 };
 

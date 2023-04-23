@@ -60,7 +60,7 @@ const Graph = props =>{
   const loudnessScale = scaleLinear()
   .domain([0, 1])
   .range([height - margin.bottom , 0]);
-
+  
   const bars = props.graphData.map( (dataPoints, i) =>{
     const xPosition = timeScale(new Date(dataPoints.time));
     const yLineStart = loudnessScale(dataPoints.maxLoudness); 
@@ -106,6 +106,7 @@ const Graph = props =>{
   const sunrise = transformDateToToday(today, props.sunrise);
   const nightEnd = new Date(sunrise.getTime() - transitionTime ); 
   const dayStart =  new Date(sunrise.getTime() + transitionTime );
+  
   const sunset = transformDateToToday(today, props.sunset);
   const dayEnd =  new Date(sunset.getTime() - transitionTime );
   const nightStart = new Date(sunset.getTime() + transitionTime );
@@ -115,7 +116,7 @@ const Graph = props =>{
     <svg 
     ref={ref}
     viewBox={`0 0 ${width} ${height}`} 
-    className="mb-3 w-full">
+    className="w-full">
       <defs>
         <linearGradient id="background" x2={width} y2="0" gradientUnits="userSpaceOnUse">
           <stop 

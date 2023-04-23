@@ -13,9 +13,9 @@ const AudioPlayer = props =>{
     useEffect(() =>{
     if (elapsedTime > 0){
       for ( let i = 0; i < props.graphData.length-1; i++ ){
-        if (props.graphData[i].hasOwnProperty("sound_start")){
-          if (props.graphData[i].sound_start < elapsedTime && 
-          elapsedTime< props.graphData[i].sound_end){
+        if (props.graphData[i].hasOwnProperty("soundStart")){
+          if (props.graphData[i].soundStart < elapsedTime && 
+          elapsedTime< props.graphData[i].soundEnd){
             setIndex(i);
             break;
           }
@@ -71,10 +71,6 @@ const AudioPlayer = props =>{
     
     return(
         <div className="flex flex-col items-center w-full mb-4">
-            <h5 className="text-stone-800 text-center max-w-screen-md text-lg -mb-1">
-                {new Date(props.day).toLocaleDateString("en-US", {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'})}
-            </h5>
-            
             <Graph
             index={index}
             graphData={props.graphData}
@@ -113,6 +109,9 @@ const AudioPlayer = props =>{
                 <source  type="audio/mp3" />
                 Your browser does not support the audio element.
             </audio>
+            <h5 className="text-stone-800 text-center max-w-screen-md text-lg">
+                {new Date(props.day).toLocaleDateString("en-US", {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'})}
+            </h5>
         </div>
     );
 };

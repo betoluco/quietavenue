@@ -32,8 +32,8 @@ const Estate = (props) =>{
         Object.keys(estate.audioData).forEach((day) => {
             graphs.push(
                 <AudioPlayer
-                graphData={estate.audioData[day].graph_data}
-                mp3Link = {estate.audioData[day].mp3_link}
+                graphData={estate.audioData[day].graphData}
+                mp3Link = {estate.audioData[day].mp3Link}
                 key={day}
                 day={day}
                 sunset={estate.sunset}
