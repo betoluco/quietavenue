@@ -41,7 +41,7 @@ module.exports = function(env, argv) {
                     use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
                 },
                 {
-                    test: /\.(png|svg|jpg|jpeg)$/i,
+                    test: /\.(png|svg|jpg|jpeg|webp)$/i,
                     type: 'asset/resource',
                 },
             ]

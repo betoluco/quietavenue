@@ -40,7 +40,7 @@ module.exports = function(env, argv) {
                     }
                 },
                 {
-                    test: /(clientBundle\.js)|\.(ico|png|svg|jpg|jpeg|css)$/i,
+                    test: /(clientBundle\.js)|\.(ico|png|svg|jpg|jpeg|css|webp)$/i,
                     type: 'asset/resource',
                 },
             ]
