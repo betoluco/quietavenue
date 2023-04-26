@@ -2,13 +2,11 @@ import React, {Fragment} from "react";
 import { Link } from "react-router-dom";
 
 import HamburgerMenu from "../common/HamburgerMenu";
-import Header from "../common/Header";
 
 const NotFound = ({ staticContext = {} }) => {
     staticContext.notFound = true;
     return(
         <Fragment>
-            <Header /> 
             <h1 className="text-center text-3xl mb-3">Ooops!, not found</h1>
             <h4 className="text-center text-xl">
                 To go home click 

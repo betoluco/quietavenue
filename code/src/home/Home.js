@@ -1,12 +1,11 @@
 import React, { Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Search from "../common/Search";
 
+import Search from "../common/Search";
 import { fetchEstates } from "../estatesReducer";
 import HomeTemplate from "./HomeTemplate";
 import InternalServerError from "../common/InternalServerError";
 import Spinner from "../common/Spinner";
-import Header from "../common/Header";
 import neighborhood from "./neighborhood.jpg"
 
 const Home = (props) =>{
@@ -41,7 +40,6 @@ const Home = (props) =>{
     
     return (
         <Fragment>
-            <Header/>
             <div 
             className="flex flex-col border-y border-stone-400 py-10 mb-12 bg-center bg-no-repeat bg-cover"
             style={{
@@ -52,7 +50,6 @@ const Home = (props) =>{
                     mb-12 md:mb-16 px-3 max-w-sm sm:max-w-md md:max-w-xl xl:max-w-3xl">
                         See and hear what goes on in front of your future home
                     </h2>
-                    
                 </div>
                 <Search/>
             </div>

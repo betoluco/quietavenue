@@ -62,6 +62,16 @@ const HamburgerMenu = props =>{
               <li className="py-4 pl-2 hover:bg-green-200 rounded-md" >
                 <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
                   <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
+                  Hire US!
+                </div>
+              </li>
+            </Link>
+            <Link
+            to="/mission"
+            data-cy="hamburgerMenuHowItWorks">
+              <li className="py-4 pl-2 hover:bg-green-200 rounded-md" >
+                <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
+                  <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
                   How it works?
                 </div>
               </li>

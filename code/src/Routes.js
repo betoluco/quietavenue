@@ -4,6 +4,7 @@ import Home from "./home/Home";
 import WorkFlow from "./workFlow/WorkFlow";
 import NotFound from "./notFound/NotFound";
 import Contact from "./contact/Contact";
+import Mission from "./mission/Mission";
 
 
 const Routes = [
@@ -23,6 +24,11 @@ const Routes = [
             {
                 component: Contact,
                 path: "/contact",
+                exact: true
+            },
+            {
+                component: Mission,
+                path: "/mission",
                 exact: true
             },
             {
