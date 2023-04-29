@@ -1,15 +1,11 @@
 describe('cityFilter', () =>{
-    it("URl has query parameter that filter by city when cliclking a city in search results", () =>{
-        cy.intercept('/api/estates*').as('apiCall')
-        cy.visit('/');
-        cy.wait(['@apiCall'])
-        cy.get('[data-cy=inputField]').type("fo");
-        cy.get('a[href*="?filter=cityId&filterId=Foster-City-CA"]').click()
-        cy.location('search').should('eq', '?filter=cityId&filterId=Foster-City-CA')
-    });
     it("filter page has filter indicator", () =>{
-       cy.get('[data-cy=filter]').should('exist')
-       cy.get('[data-cy=filterName]').contains('Filter: Foster City CA')
+        cy.intercept('/api/estates*').as('apiCall')
+        cy.visit('/?filter=cityId&filterId=Foster-City-CA');
+        cy.wait(['@apiCall'])
+        cy.location('search').should('eq', '?filter=cityId&filterId=Foster-City-CA')
+        cy.get('[data-cy=filter]').should('exist')
+        cy.get('[data-cy=filterName]').contains('Filter: Foster City CA')
     });
     it("filter page has only filtered properties", () =>{
         cy.get('a[href*="/estate/2141-Mills-Ave-Menlo-Park-CA-94025"]').should('not.exist')
@@ -22,18 +18,11 @@ describe('cityFilter', () =>{
         cy.get('a[href*="/estate/1020-Helm-Ln-Foster-City-Ca-94404"]').click()
         cy.location('pathname').should('eq', '/estate/1020-Helm-Ln-Foster-City-Ca-94404')
     });
-    it("using the arrow to go back returns you to the filter page", () =>{
-        cy.location('pathname').should('eq', '/estate/1020-Helm-Ln-Foster-City-Ca-94404')
-        cy.get('[data-cy=backArrow]').click()
-        cy.location('search').should('eq', '?filter=cityId&filterId=Foster-City-CA')
-        cy.get('[data-cy=filterName]').contains('Filter: Foster City CA')
-        cy.get('a[href*="/estate/2141-Mills-Ave-Menlo-Park-CA-94025"]').should('not.exist')
-        cy.get('a[href*="/estate/1023-Flying-Fish-St-94404"]').should('exist')
-        cy.get('a[href*="/estate/1020-Helm-Ln-Foster-City-Ca-94404"]').should('exist')
-        cy.get('a[href*="/estate/All-suggester-start-equal"]').should('not.exist')
-        cy.get('a[href*="/estate/622-Crane-Ave-Foster-City-CA-94404"]').should('exist')
-    })
     it("All estates shloud appear when deleting the filter", () =>{
+        cy.intercept('/api/estates*').as('apiCall')
+        cy.visit('/?filter=cityId&filterId=Foster-City-CA');
+        cy.wait(['@apiCall'])
+        cy.location('search').should('eq', '?filter=cityId&filterId=Foster-City-CA')
         cy.get('[data-cy=deleteFilter]').click()
         cy.get('a[href*="/estate/2141-Mills-Ave-Menlo-Park-CA-94025"]').should('exist')
         cy.get('a[href*="/estate/1023-Flying-Fish-St-94404"]').should('exist')

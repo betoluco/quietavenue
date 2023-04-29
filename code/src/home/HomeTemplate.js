@@ -19,7 +19,7 @@ const HomeTemaplate = (props) =>{
     <Fragment>
       { !filter &&
         <Fragment>
-          <Link to="/workFlow" className="">
+          <Link to="/workFlow" className="" data-cy="HireUSLink">
             <div className="flex justify-center mb-12">
               <h2 className="drop-shadow-lg bg-green-600 rounded-md py-3 px-8 text-3xl font-bold text-white">
                 Hire US!
@@ -41,7 +41,7 @@ const HomeTemaplate = (props) =>{
                 </h3>
                 <img src={happy} className="mb-2 aspect-auto border border-strone-200 w-full "/>
                 <p className=" mb-4 text-justify text-base text-stone-800">In QuietAvenue.com we use audio and video recorded on site that is analyzed with our AI, so you can find out what it will be like to live in that area</p>
-                <Link to="/mission" className="">
+                <Link to="/mission" className="" data-cy="HowItWorksLink">
                   <div className="flex justify-center">
                     <h2 className="drop-shadow-lg bg-green-600 rounded-md p-3 text-2xl text-white">
                       How it works?

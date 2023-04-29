@@ -149,7 +149,7 @@ const Search = props =>{
         {showSuggest &&
           <ul
           className="absolute w-11/12 md:w-8/12 lg:w-6/12 xl:w-4/12 rounded-md 
-          border border border-green-600 overflow-hidden" data-cy="resultsList">
+          border border border-green-600 overflow-hidden z-20" data-cy="resultsList">
             {suggest}
           </ul>
         }

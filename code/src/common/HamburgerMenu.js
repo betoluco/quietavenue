@@ -28,10 +28,10 @@ const HamburgerMenu = props =>{
       { showMenu &&
         <div 
         onClick={onClickHandler}
-        className="fixed inset-0 z-10 w-full h-full bg-gray-400 bg-opacity-80">
+        className="fixed inset-0 z-10 w-full h-full bg-gray-400 bg-opacity-80"
+        data-cy="hamburgerMenu">
           <ul className="absolute right-0 w-5/6 sm:w-1/2 md:w-72 bg-white p-3 border-l 
-          border-b border-green-600 rounded-l-md rounded-br-md"
-          data-cy="hamburgerMenu">
+          border-b border-green-600 rounded-l-md rounded-br-md">
             <li>
               <div 
               className="flex flex-row items-center justify-between pb-5 border-b border-green-200 mb-2">
@@ -58,7 +58,7 @@ const HamburgerMenu = props =>{
             </Link>
             <Link
             to="/workFlow"
-            data-cy="hamburgerMenuHowItWorks">
+            data-cy="hamburgerMenuHireUS">
               <li className="py-4 pl-2 hover:bg-green-200 rounded-md" >
                 <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
                   <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>

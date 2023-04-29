@@ -10,7 +10,10 @@ describe('Menu', () =>{
         cy.get('[data-cy=closeHamburgerMenu]').should('be.visible').click();
         cy.get('[data-cy=hamburgerMenu]').should('not.exist');
     });
-    
+    it('Menu opens an closes wehn not clicking a link', () =>{
+        cy.get('[data-cy=hamburgerMenu]').should('be.visible').click();
+        cy.get('[data-cy=hamburgerMenu]').should('not.exist');
+    });
     it('Menu opens and closes when clicking "Home"', () =>{
         cy.get('[data-cy=hamburgerMenu]').should('be.visible');
         cy.get('[data-cy=hamburgerMenuHome]').should('be.visible').click();
@@ -23,16 +26,28 @@ describe('Menu', () =>{
         cy.location('pathname').should('eq', '/');
     });
     
-    it('Menu opens and closes when clicking "For Agents"', () =>{
+    it('Menu opens and closes when clicking "Hire US!"', () =>{
         cy.get('[data-cy=hamburgerMenu]').should('be.visible');
-        cy.get('[data-cy=hamburgerMenuForAgents]').should('be.visible').click();
+        cy.get('[data-cy=hamburgerMenuHireUS]').should('be.visible').click();
         cy.get('[data-cy=hamburgerMenu]').should('not.exist');
     })
     
-    it('Clicking "For Agents" in menu takes you to "/tria"', () =>{
+    it('Clicking "Hire US!" in menu takes you to "/workFlow"', () =>{
         cy.get('[data-cy=hamburgerMenu]').should('be.visible');
-        cy.get('[data-cy=hamburgerMenuForAgents]').should('be.visible').click();
-        cy.location('pathname').should('eq', '/trial');
+        cy.get('[data-cy=hamburgerMenuHireUS]').should('be.visible').click();
+        cy.location('pathname').should('eq', '/workFlow');
+    });
+    
+    it('Menu opens and closes when clicking "How it works?"', () =>{
+        cy.get('[data-cy=hamburgerMenu]').should('be.visible');
+        cy.get('[data-cy=hamburgerMenuHowItWorks]').should('be.visible').click();
+        cy.get('[data-cy=hamburgerMenu]').should('not.exist');
+    })
+    
+    it('Clicking "How it works?" in menu takes you to "/mission"', () =>{
+        cy.get('[data-cy=hamburgerMenu]').should('be.visible');
+        cy.get('[data-cy=hamburgerMenuHowItWorks]').should('be.visible').click();
+        cy.location('pathname').should('eq', '/mission');
     });
     
     it('Menu opens and closes when clicking "Contact us"', () =>{
