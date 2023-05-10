@@ -46,9 +46,9 @@ const Home = (props) =>{
                 backgroundImage: `url(${neighborhood})` 
             }}>
                 <div className="flex justify-center ">
-                    <h2 className="text-center text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-bold tracking-wide text-stone-50
-                    mb-12 md:mb-16 px-3 max-w-sm sm:max-w-md md:max-w-xl xl:max-w-3xl">
-                        See and hear what goes on in front of your future home
+                    <h2 className="text-center font-bold tracking-wide text-stone-50 mb-12 md:mb-16 px-3
+                    text-2xl sm:text-4xl xl:text-5xl md:max-w-xl xl:max-w-3xl">
+                        See and hear what goes on <br /> in front of your future home
                     </h2>
                 </div>
                 <Search/>
