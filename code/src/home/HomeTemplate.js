@@ -21,8 +21,9 @@ const HomeTemaplate = (props) =>{
         <Fragment>
           <Link to="/workFlow" className="" data-cy="HireUSLink">
             <div className="flex justify-center mb-12">
-              <h2 className="drop-shadow-lg bg-green-600 rounded-md py-3 mx-3 px-8 text-xl font-bold text-white">
-                If you are a real state professional, <span>click here</span>
+              <h2 className="drop-shadow-lg bg-green-600 rounded-md py-3 mx-3 px-8 
+              text-xl font-medium text-white text-center">
+                Real state professional ? <br /> <span className="underline" >click here</span>
               </h2>
             </div>
           </Link>
@@ -48,7 +49,7 @@ const HomeTemaplate = (props) =>{
                 </p>
                 <Link to="/mission" className="" data-cy="HowItWorksLink">
                   <div className="flex justify-center">
-                    <h2 className="drop-shadow-lg bg-green-600 rounded-md p-3 text-2xl text-white">
+                    <h2 className="drop-shadow-lg bg-green-600 rounded-md p-3 mb-3 text-2xl text-white">
                       How it works?
                     </h2>
                   </div>

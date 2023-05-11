@@ -53,7 +53,12 @@ const EstateTemplate = (props) => {
         </div>
         
         {props.estate.videoLink &&
-          <Vimeo iframeSRC={props.estate.videoLink} />
+          <div>
+            <h2 className="mb-4 text-stone-800 text-center max-w-screen-md font-medium text-lg sm:text-xl">
+              Video recorded in fron of the property  
+            </h2>
+            <Vimeo iframeSRC={props.estate.videoLink} />
+          </div>
         }
         
         {props.estate.soundScore &&
@@ -77,8 +82,8 @@ const EstateTemplate = (props) => {
           <div 
           className="" 
           data-cy="estateAudioGraph">
-            <h2 className="text-stone-800 text-center max-w-screen-md text-3xl">
-              Audio Graphs
+            <h2 className="text-stone-800 text-center max-w-screen-md text-lg sm:text-xl">
+              Audio recorded in the property
             </h2>
             {props.graphs}
           </div>
