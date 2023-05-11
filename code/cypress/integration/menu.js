@@ -10,7 +10,7 @@ describe('Menu', () =>{
         cy.get('[data-cy=closeHamburgerMenu]').should('be.visible').click();
         cy.get('[data-cy=hamburgerMenu]').should('not.exist');
     });
-    it('Menu opens an closes wehn not clicking a link', () =>{
+    it('Menu opens an closes when not clicking a link', () =>{
         cy.get('[data-cy=hamburgerMenu]').should('be.visible').click();
         cy.get('[data-cy=hamburgerMenu]').should('not.exist');
     });

@@ -11,16 +11,16 @@ const AudioPlayer = props =>{
     const audio = useRef();
     
     useEffect(() =>{
+    let currentIndex
     if (elapsedTime > 0){
       for ( let i = 0; i < props.graphData.length-1; i++ ){
         if (props.graphData[i].hasOwnProperty("soundStart")){
-          if (props.graphData[i].soundStart < elapsedTime && 
-          elapsedTime< props.graphData[i].soundEnd){
-            setIndex(i);
-            break;
+          if (props.graphData[i].soundStart < elapsedTime){
+            currentIndex = i;
           }
         }
       }
+      setIndex(currentIndex);
     }else{
       setIndex(undefined);
     }
@@ -79,10 +79,13 @@ const AudioPlayer = props =>{
             day={props.day}/>
             
             <div className="w-full flex items-center">
-                <button className="w-12 mr-3" onClick={play}>
+                <button 
+                className="w-12 mr-3" 
+                data-cy="playButton"
+                onClick={play}>
                     {isPlaying
-                        ?<img src={pauseIcon} alt="Pause"/>
-                        :<img src={playIcon} alt="Play"/>
+                        ?<img data-cy="pauseIcon" src={pauseIcon} alt="Pause"/>
+                        :<img data-cy="playIcon" src={playIcon} alt="Play"/>
                     }
                 </button>
                 
