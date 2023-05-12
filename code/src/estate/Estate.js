@@ -19,7 +19,11 @@ const Estate = (props) =>{
         return <Redirect to="/notFound" />;
     }
     
-    const moneyOptions = {style: 'currency', currency: 'USD'};
+    const moneyOptions = {
+        style: 'currency',
+        currency: 'USD',
+        maximumSignificantDigits: 3
+    };
     const money = new Intl.NumberFormat('en-US', moneyOptions);
     
     let price = undefined;
