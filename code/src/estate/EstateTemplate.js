@@ -55,7 +55,7 @@ const EstateTemplate = (props) => {
         {props.estate.videoLink &&
           <div>
             <h2 className="mb-4 text-stone-800 text-center max-w-screen-md font-medium text-lg sm:text-xl">
-              Video recorded in fron of the property  
+              Video recorded in front of the property  
             </h2>
             <Vimeo iframeSRC={props.estate.videoLink} />
           </div>

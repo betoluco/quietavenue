@@ -116,7 +116,7 @@ const Graph = props =>{
     <svg 
     ref={ref}
     viewBox={`0 0 ${width} ${height}`} 
-    className="w-full">
+    className="w-full, mb-2">
       <defs>
         <linearGradient id="background" x2={width} y2="0" gradientUnits="userSpaceOnUse">
           <stop 
@@ -170,7 +170,7 @@ const Graph = props =>{
       x={yAxisIndentation} 
       y={loudnessScale(strongAxisYPosition) - yAxisLineSpace} 
       fontSize={`${fontSize}rem`}>
-        Strong
+        High
       </text>
       <line 
       x1="0" 
