@@ -10,7 +10,7 @@ const WorkFlow = (props) =>{
   return(
     <Fragment>
       <h2 className="text-2xl sm:text-3xl md:text-4xl xl:text-5xl text-center mb-12 text-stone-800 font-semibold">
-        Call us <span className="text-green-600" >NOW!</span>
+        Schedule your <span className="text-green-600" >free trial!</span>
       </h2>
       
       <div className="flex justify-center px-3 mb-16 py-16 bg-stone-200">
@@ -24,7 +24,7 @@ const WorkFlow = (props) =>{
             <h2 className="text-center text-2xl text-green-600 font-semibold">
               <Phone />
             </h2>
-            <p className="text-center text-base text-stone-800">or writing us at</p>
+            <p className="text-center text-base text-stone-800">or send us an email</p>
             <h2 className="text-center text-2xl text-green-600 font-semibold">
               <Email />
             </h2>
