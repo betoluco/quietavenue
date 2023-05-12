@@ -90,6 +90,7 @@ const AudioPlayer = props =>{
                 </button>
                 
                 <input 
+                data-cy="seekbar"
                 className="w-full" 
                 style={{ 
                     background: updateTrack(elapsedTime, duration),  
