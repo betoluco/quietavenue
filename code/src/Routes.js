@@ -5,6 +5,7 @@ import WorkFlow from "./workFlow/WorkFlow";
 import NotFound from "./notFound/NotFound";
 import Contact from "./contact/Contact";
 import Mission from "./mission/Mission";
+import FAQ from "./FAQ/FAQ"
 
 
 const Routes = [
@@ -29,6 +30,11 @@ const Routes = [
             {
                 component: Mission,
                 path: "/mission",
+                exact: true
+            },
+            {
+                component: FAQ,
+                path: "/FAQ",
                 exact: true
             },
             {

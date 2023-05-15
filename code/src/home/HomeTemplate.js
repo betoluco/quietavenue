@@ -37,7 +37,12 @@ const HomeTemaplate = (props) =>{
                 </h3>
                 <img src={audioAndVideo} className="mb-2 aspect-auto border border-strone-200 w-full "/>
                 <p className="mb-6 text-justify text-base text-stone-800">
-                  In QuietAvenue.com we use audio and video recorded on site that is analyzed with proprietary AI so you can see and hear out what it is like to live in that area.
+                  In QuietAvenue.com we use audio and video recorded on site that is analyzed with proprietary AI so 
+                  you can see and hear out what it is like to live in that area. (
+                  <Link to="/mission" className="text-blue-600 hover:text-blue-800">
+                    lear more
+                  </Link>
+                  )
                 </p>
                 <Link to="/workFlow" className="" data-cy="callToAction">
                   <div className="flex justify-center">

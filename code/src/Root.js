@@ -5,8 +5,8 @@ import { useSelector } from "react-redux";
 import { estateSuggest } from "./trie";
 import { zipCodeSuggest } from "./trie";
 import { citySuggest } from "./trie";
-import logo from "./common/images/quietavenueLogoOp.svg";
 import Header from "./common/Header";
+import Footer from "./common/Footer";
 
 const Root = ( props ) => {
     const estates = useSelector( state => state.estates );
@@ -43,12 +43,7 @@ const Root = ( props ) => {
         <Fragment>
             <Header />
             { renderRoutes(props.route.routes) }
-            <div className="flex flex-col w-full bg-stone-100 py-6 mt-24">
-                <img src={logo} alt="Company logo" className="h-7 md:h-9 mb-3" />
-                <p className="text-center text-xs text-stone-800">
-                    quietavenue.com property of quietavenue.LLC all rights reserved
-                </p>
-            </div>
+            <Footer />
         </Fragment>
     );
 };

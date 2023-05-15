@@ -86,6 +86,7 @@ const Graph = props =>{
       yPossition = playingMinuteTopHeight;
     }
     playingMinuteText = <text 
+    data-cy="playingMinuteText"
     x={timeScale(new Date(props.graphData[props.index].time))}
     y={yPossition}
     fontSize={`${fontSize}rem`}
