@@ -6,8 +6,10 @@ const Mission = (props) =>{
     return (
         
         <div className="mb-12   flex flex-col items-center">
-            <h2 className="text-2xl px-3 sm:text-3xl md:text-4xl xl:text-5xl text-center mb-12 text-stone-800 font-semibold">
-                How it <span className="text-green-600" >works?           </span>
+            <h2
+            data-cy="howItWorksPage"
+            className="text-2xl px-3 sm:text-3xl md:text-4xl xl:text-5xl text-center mb-12 text-stone-800 font-semibold">
+                How it <span className="text-green-600" >works?</span>
             </h2>
             <div className="w-full flex flex-col items-center bg-stone-200 py-12">
                 <div className="px-3 max-w-screen-md">

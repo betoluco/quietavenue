@@ -104,8 +104,9 @@ const AudioPlayer = props =>{
             
             <div className="w-full flex justify-end">
                 <p className="text-stone-800 text-xs -mt-3">
-                    {convertTime(Math.floor(elapsedTime))}<span> / </span>
-                    {convertTime(duration)}
+                    <span data-cy="progressTimer">{convertTime(Math.floor(elapsedTime))}</span>
+                    <span> / </span>
+                    <span data-cy="duration">{convertTime(duration)}</span>
                 </p>
             </div>
             <audio ref={audio} onPlay={onPlay} onPause={onPause} 

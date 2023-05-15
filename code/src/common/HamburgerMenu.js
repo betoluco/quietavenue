@@ -47,8 +47,7 @@ const HamburgerMenu = props =>{
               </div>
             </li>
             <Link 
-            to="/"
-            data-cy="hamburgerMenuHome">
+            to="/">
               <li className="py-4 pl-2 hover:bg-green-200 rounded-md" >
                 <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
                   <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
@@ -57,8 +56,7 @@ const HamburgerMenu = props =>{
               </li>
             </Link>
             <Link
-            to="/workFlow"
-            data-cy="hamburgerMenuHireUS">
+            to="/workFlow">
               <li className="py-4 pl-2 hover:bg-green-200 rounded-md" >
                 <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
                   <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
@@ -67,8 +65,7 @@ const HamburgerMenu = props =>{
               </li>
             </Link>
             <Link
-            to="/mission"
-            data-cy="hamburgerMenuHowItWorks">
+            to="/mission">
               <li className="py-4 pl-2 hover:bg-green-200 rounded-md" >
                 <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
                   <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
@@ -76,9 +73,7 @@ const HamburgerMenu = props =>{
                 </div>
               </li>
             </Link>
-            <Link 
-            to="/contact"
-            data-cy="hamburgerMenuContatUs">
+            <Link to="/contact">
               <li className="py-4 pl-2 mb-80 hover:bg-green-200 rounded-md">
                 <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
                   <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>

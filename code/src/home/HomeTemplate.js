@@ -19,14 +19,6 @@ const HomeTemaplate = (props) =>{
     <Fragment>
       { !filter &&
         <Fragment>
-          <Link to="/workFlow" className="" data-cy="HireUSLink">
-            <div className="flex justify-center mb-12">
-              <h2 className="drop-shadow-lg bg-green-600 rounded-md py-3 mx-3 px-8 
-              text-xl font-medium text-white text-center">
-                Real state professional ? <br /> <span className="underline" >click here</span>
-              </h2>
-            </div>
-          </Link>
           <div className="px-3 flex justify-center py-16 mb-12 bg-stone-200">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-screen-lg">
               <div className="flex flex-col bg-white rounded-md px-2 py-2">
@@ -47,10 +39,10 @@ const HomeTemaplate = (props) =>{
                 <p className="mb-6 text-justify text-base text-stone-800">
                   In QuietAvenue.com we use audio and video recorded on site that is analyzed with proprietary AI so you can see and hear out what it is like to live in that area.
                 </p>
-                <Link to="/mission" className="" data-cy="HowItWorksLink">
+                <Link to="/workFlow" className="" data-cy="callToAction">
                   <div className="flex justify-center">
-                    <h2 className="drop-shadow-lg bg-green-600 rounded-md p-3 mb-3 text-2xl text-white">
-                      How it works?
+                    <h2 className="drop-shadow-lg bg-green-600 rounded-md p-3 mb-3 text-2xl text-white text-center">
+                      Real state professional? <br /> <span className="underline" >click here</span>
                     </h2>
                   </div>
                 </Link>
