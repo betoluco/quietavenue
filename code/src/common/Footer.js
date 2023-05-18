@@ -25,6 +25,11 @@ const Footer = () =>{
                         </Link>
                     </div>
                     <div className="text-xs text-stone-800 mr-3 shrink-0">
+                        <Link to="/FAQ">
+                            FAQ
+                        </Link>
+                    </div>
+                    <div className="text-xs text-stone-800 mr-3 shrink-0">
                         <Link to="/contact">
                             Contact us
                         </Link>

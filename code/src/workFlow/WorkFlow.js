@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { Link } from "react-router-dom";
 
 import Phone from "../common/Phone";
 import Email from "../common/Email";
@@ -37,7 +38,8 @@ const WorkFlow = (props) =>{
               <span className="text-green-600 text-xl">2. </span>Get a visit form our technician
             </h3>
             <img src={technician} className="mb-2 aspect-auto border border-strone-200 w-full"/>
-            <p className=" mb-4 text-center text-base text-stone-800">A QuietAvenue technician will go to your property and set up discrete recording equipment</p>
+            <p className=" mb-4 text-center text-base text-stone-800">A QuietAvenue technician will go to your 
+            property and set up discrete recording equipment</p>
           </div>
           
           <div className="flex flex-col bg-white rounded-md px-2 py-2">
@@ -45,13 +47,21 @@ const WorkFlow = (props) =>{
               <span className="text-green-600 text-xl">3. </span>See the analysis of your property
             </h3>
             <img src={dataAnalysis} className="mb-2 aspect-auto border border-strone-200 w-full"/>
-            <p className=" mb-4 text-center text-base text-stone-800">A week later the analysis of your property’s data will be available in QuietAvenue.com</p>
+            <p className=" mb-4 text-center text-base text-stone-800">A week later the analysis of your property’s 
+            data will be available in QuietAvenue.com ( 
+              <Link to="/FAQ" className="text-blue-600 hover:text-blue-800">
+                see our FAQ
+              </Link>
+            )</p>
           </div>
           
         </div>
       </div>
       <div className="flex justify-center mx-3 mb-6">
-        <p className="text-base text-stone-800 max-w-screen-md">Prospective buyers can find your property’s information through a google search, or you can provide a direct link in your marketing materials or MLS/Zillow/Redfin listing Call now to set up your listing’s recording</p>
+        <p className="text-base text-stone-800 max-w-screen-md">Prospective buyers can find your property’s 
+        information through a google search, or you can provide a direct link in your marketing materials 
+        or MLS/Zillow/Redfin listing Call now to set up your listing’s recording 
+        </p>
       </div>
     </Fragment>
   ) ; 

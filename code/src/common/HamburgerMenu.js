@@ -73,6 +73,15 @@ const HamburgerMenu = props =>{
                 </div>
               </li>
             </Link>
+            <Link
+            to="/FAQ">
+              <li className="py-4 pl-2 hover:bg-green-200 rounded-md" >
+                <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
+                  <img src={pointer} alt="pointer" className="h-2 pr-2.5"/>
+                  FAQ
+                </div>
+              </li>
+            </Link>
             <Link to="/contact">
               <li className="py-4 pl-2 mb-80 hover:bg-green-200 rounded-md">
                 <div className="flex flex-row items-center text-lg text-stone-800 font-semibold">
