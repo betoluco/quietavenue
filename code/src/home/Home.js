@@ -6,7 +6,8 @@ import { fetchEstates } from "../estatesReducer";
 import HomeTemplate from "./HomeTemplate";
 import InternalServerError from "../common/InternalServerError";
 import Spinner from "../common/Spinner";
-import neighborhood from "./neighborhood.jpg"
+import neighborhoodLG from "./neighborhoodLG.jpg";
+import neighborhoodMD from "./neighborhoodMD.jpg";
 
 const Home = (props) =>{
     const dispatch = useDispatch();
@@ -40,18 +41,25 @@ const Home = (props) =>{
     
     return (
         <Fragment>
-            <div 
-            className="flex flex-col border-y border-stone-400 py-10 mb-12 bg-center bg-no-repeat bg-cover"
-            style={{
-                backgroundImage: `url(${neighborhood})` 
-            }}>
-                <div className="flex justify-center ">
-                    <h2 className="text-center font-bold tracking-wide text-stone-50 mb-12 md:mb-16 px-3
-                    text-2xl sm:text-4xl xl:text-5xl md:max-w-xl xl:max-w-3xl">
-                        See and hear what goes on <br /> in front of your future home
-                    </h2>
+            <div className="">
+                <div className="flex flex-col  py-10 mb-12 absolute w-full">
+                    <div className="flex justify-center ">
+                        <h2 className="text-center font-bold tracking-wide text-stone-50 mb-12 md:mb-16 px-3
+                        text-2xl sm:text-4xl xl:text-5xl md:max-w-xl xl:max-w-3xl">
+                            See and hear what goes on <br /> in front of your future home
+                        </h2>
+                    </div>
+                    <Search/>
                 </div>
-                <Search/>
+                <img 
+                className="border-y border-stone-400 min-h-[300px] object-cover"
+                alt="main header"
+                srcSet={`
+                    ${neighborhoodMD} 1000w,
+                    ${neighborhoodLG} 4300w
+                `}
+                sizes="100vw"
+                src={neighborhoodLG} />
             </div>
             {content}
         </Fragment>
