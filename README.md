@@ -19,7 +19,7 @@ npm run mirror
 cd ..
 sam build
 ```
-To reduce the size of the package to upload to Lamda  you need to enter `.aws-sam` folder (created when building) and delete everything but `node_modules`, `package.json` and `serverBundle.js` after that jus run:
+To reduce the size of the package to upload to Lamda  you need to enter `.aws-sam/serverlessSideRenderingFuncton` folder (created when building) and delete everything but `node_modules`, `package.json`, `serverBundle.js`, `template.yaml`, `build.toml` after that just run:
 ```bash
 sam deploy
 ```
