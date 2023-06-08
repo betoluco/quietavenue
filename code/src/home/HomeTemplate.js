@@ -21,7 +21,14 @@ const HomeTemaplate = (props) =>{
     <Fragment>
       { !filter &&
         <Fragment>
-          <div className="px-3 flex justify-center py-16 my-12 bg-stone-200">
+          <Link to="/workFlow" className="" data-cy="callToAction">
+            <div className="flex justify-center my-8">
+              <h2 className="drop-shadow-lg bg-green-600 rounded-md p-3 mb-3 text-2xl text-white text-center">
+                Real estate professional? <br /> <span className="underline" >click here</span>
+              </h2>
+            </div>
+          </Link>
+          <div className="px-3 flex justify-center py-16 mb-12 bg-stone-200">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-screen-lg">
               <div className="flex flex-col bg-white rounded-md px-2 py-2">
                 <h3 className="text-lg sm:text-xl mb-2 text-stone-800 font-medium"> 
@@ -54,27 +61,19 @@ const HomeTemaplate = (props) =>{
                 `}
                 size="(min-width: 768px) 50vw,(min-width: px1024) 512px, 100vw"
                 src={audioAndVideoSM} />
-                <p className="mb-6 text-justify text-base text-stone-800">
+                <p className="mb-2 text-justify text-base text-stone-800">
                   In QuietAvenue.com we use audio and video recorded on site that is analyzed with proprietary AI so 
-                  you can see and hear out what it is like to live in that area. (
-                  <Link to="/mission" className="text-blue-600 hover:text-blue-800">
-                    lear more
-                  </Link>
-                  )
+                  you can see and hear out what it is like to live in that area.
                 </p>
-                <Link to="/workFlow" className="" data-cy="callToAction">
-                  <div className="flex justify-center">
-                    <h2 className="drop-shadow-lg bg-green-600 rounded-md p-3 mb-3 text-2xl text-white text-center">
-                      Real state professional? <br /> <span className="underline" >click here</span>
-                    </h2>
-                  </div>
+                <Link to="/mission" className="text-center underline text-blue-600 hover:text-blue-800 mb-3">
+                  lear more
                 </Link>
               </div>
             </div>
           </div>
         </Fragment>
       }
-      <h2 className="text-xl sm:text-2xl text-center px-3 mb-10 text-stone-800">
+      <h2 className="text-2xl sm:text-4xl text-center px-3 mb-10 text-stone-800">
           Current properties <span className="text-green-600"> on sale</span> 
       </h2>
       { filter &&
@@ -82,7 +81,7 @@ const HomeTemaplate = (props) =>{
           <div className="flex flex-row justify-center items-center p-2 
           rounded-full border border-stone-400 bg-green-600 font-medium">
             <h2 className="text-lg text-white pr-2.5" data-cy="filterName">{filter}</h2>
-            <Link to="/" data-cy="deleteFilter">
+            <Link to="/">
               <img className="w-6" src={deleteFilter} alt="delete filter"/>
             </Link>
           </div>
