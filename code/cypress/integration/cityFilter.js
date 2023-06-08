@@ -1,33 +1,37 @@
 describe('cityFilter', () =>{
-    it("filter page has filter indicator", () =>{
-        cy.intercept('/api/estates*').as('apiCall')
-        cy.visit('/?filter=cityId&filterId=Foster-City-CA');
-        cy.wait(['@apiCall'])
-        cy.location('search').should('eq', '?filter=cityId&filterId=Foster-City-CA')
+    
+    it("Searching for a city takes you to the city filter", () =>{
+        cy.visit('/');
+        cy.get('[data-cy=inputField]').type("f");
+        cy.contains('Foster City CA').should('be.visible').click()
         cy.get('[data-cy=filter]').should('exist')
         cy.get('[data-cy=filterName]').contains('Filter: Foster City CA')
-    });
-    it("filter page has only filtered properties", () =>{
-        cy.get('a[href*="/estate/2141-Mills-Ave-Menlo-Park-CA-94025"]').should('not.exist')
-        cy.get('a[href*="/estate/1023-Flying-Fish-St-94404"]').should('exist')
-        cy.get('a[href*="/estate/1020-Helm-Ln-Foster-City-Ca-94404"]').should('exist')
-        cy.get('a[href*="/estate/All-suggester-start-equal"]').should('not.exist')
-        cy.get('a[href*="/estate/622-Crane-Ave-Foster-City-CA-94404"]').should('exist')
+        cy.contains('a', '1023 Flying Fish St').should('exist')
+        cy.contains('a', '1020 Helm Ln').should('exist')
+        cy.contains('a', '622 Crane Ave').should('exist')
+        cy.contains('a', '100 Flower St').should('not.exist')
+        cy.contains('a', '2141 Mills Ave').should('not.exist')
+        cy.location().should((loc) => {
+            expect(loc.search).to.eq('?filter=cityId&filterId=Foster-City-CA')
+        })
     });
     it("clicking a filtered estate, takes you to the estate page", () =>{
-        cy.get('a[href*="/estate/1020-Helm-Ln-Foster-City-Ca-94404"]').click()
+        cy.visit('/?filter=cityId&filterId=Foster-City-CA');
+        cy.contains('a', '1020 Helm Ln').should('exist').click()
         cy.location('pathname').should('eq', '/estate/1020-Helm-Ln-Foster-City-Ca-94404')
     });
     it("All estates shloud appear when deleting the filter", () =>{
-        cy.intercept('/api/estates*').as('apiCall')
         cy.visit('/?filter=cityId&filterId=Foster-City-CA');
-        cy.wait(['@apiCall'])
-        cy.location('search').should('eq', '?filter=cityId&filterId=Foster-City-CA')
-        cy.get('[data-cy=deleteFilter]').click()
-        cy.get('a[href*="/estate/2141-Mills-Ave-Menlo-Park-CA-94025"]').should('exist')
-        cy.get('a[href*="/estate/1023-Flying-Fish-St-94404"]').should('exist')
-        cy.get('a[href*="/estate/1020-Helm-Ln-Foster-City-Ca-94404"]').should('exist')
-        cy.get('a[href*="/estate/All-suggester-start-equal"]').should('exist')
-        cy.get('a[href*="/estate/622-Crane-Ave-Foster-City-CA-94404"]').should('exist')
+        cy.contains('a', '1023 Flying Fish St').should('exist')
+        cy.contains('a', '1020 Helm Ln').should('exist')
+        cy.contains('a', '622 Crane Ave').should('exist')
+        cy.contains('a', '100 Flower St').should('not.exist')
+        cy.contains('a', '2141 Mills Ave').should('not.exist')
+        cy.get('img[alt="delete filter"]').should('exist').type("f");
+        cy.contains('a', '2141 Mills Ave').should('exist')
+        cy.contains('a', '1023 Flying Fish St').should('exist')
+        cy.contains('a', '1020 Helm Ln').should('exist')
+        cy.contains('a', '100 Flower St').should('exist')
+        cy.contains('a', '622 Crane Ave').should('exist')
     });
 });

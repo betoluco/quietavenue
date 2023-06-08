@@ -1,9 +1,6 @@
 describe('estateTemplate', () =>{
     it("Estate properties are rendered if exist", () =>{
-        cy.intercept('/api/estates*').as('apiCall')
-        cy.visit('/');
-        cy.wait(['@apiCall'])
-        cy.get('a[href*="/estate/1020-Helm-Ln-Foster-City-Ca-94404"]').click()
+        cy.visit('/estate/1020-Helm-Ln-Foster-City-Ca-94404');
         cy.get('[data-cy=profilePicture]').should('exist')
         cy.get('[data-cy=address]').should('exist')
         cy.get('[data-cy=estatePrice]').should('exist')
@@ -16,10 +13,7 @@ describe('estateTemplate', () =>{
         cy.get('[data-cy=estateAudioGraph]').should('exist')
     });
     it("Estate properties are not rendered if exist", () =>{
-        cy.intercept('/api/estates*').as('apiCall')
-        cy.visit('/');
-        cy.wait(['@apiCall'])
-        cy.get('a[href*="/estate/All-suggester-start-equal"]').click()
+        cy.visit('/estate/All-suggester-start-equal');
         cy.get('[data-cy=profilePicture]').should('exist')
         cy.get('[data-cy=address]').should('exist')
         cy.get('[data-cy=estatePrice]').should('not.exist')

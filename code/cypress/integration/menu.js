@@ -1,6 +1,9 @@
 describe('Menu', () =>{
     beforeEach(() => {
-        cy.visit('/'); 
+        cy.visit('/');
+    });
+
+    beforeEach(() => {
         cy.get('[data-cy=hamburgerMenu]').should('not.exist');
         cy.get('[data-cy=openHamburgerMenu]').should('be.visible').click();
     });

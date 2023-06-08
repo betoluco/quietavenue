@@ -18,9 +18,9 @@ describe('API', () =>{
         cy.request('/api/estates').then((response) => {
             expect(response.status).to.eq(200)
             response.body.forEach((estate, index, estatesArray) =>{
-                    if (estate.id === "1023-Flying-Fish-St-94404"){
-                        expect(estatesArray[index].id).to.not.equal('profilePicture')
-                    }
+                if (estate.id === "1023-Flying-Fish-St-94404"){
+                    expect(estatesArray[index].id).to.not.equal('profilePicture')
+                }
             })    
         });
     });

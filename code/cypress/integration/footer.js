@@ -1,7 +1,9 @@
 describe('Footer', () =>{
+    beforeEach(() => {
+        cy.visit('/');
+    });
    
     it('Footer link takes you to "home"', () =>{
-        cy.visit('/')
         cy.contains('Home').should('be.visible').click();
         cy.contains('Buying a house is stressfull!').should('be.visible');
     });
