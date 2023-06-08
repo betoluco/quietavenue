@@ -34,7 +34,7 @@ const WorkFlow = (props) =>{
             </h3>
             <img 
             className="mb-2 aspect-auto border border-strone-200 w-full"
-            alt="call us"
+            alt="girl making a call"
             srcSet={`
               ${callUsMD} 1000w,
               ${callUsSM} 500w
