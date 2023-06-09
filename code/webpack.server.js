@@ -58,8 +58,6 @@ module.exports = function(env, argv) {
         ],
         
         target: "node",
-        
-        externals: [nodeExternals()],
     };
 };
 

@@ -17,6 +17,7 @@ jspm_packages/
 code/clientBuild/
 code/dist/
 code/serverBundle.js
+serverBundle.js.LICENSE.txt
 
 #Cypress
 code/cypress/screenshots

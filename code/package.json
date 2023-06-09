@@ -20,8 +20,7 @@
     "react-router-config": "^5.1.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.1",
-    "serialize-javascript": "^5.0.1",
-    "webpack-node-externals": "^3.0.0"
+    "serialize-javascript": "^5.0.1"
   },
   "scripts": {
     "start": " react-scripts start",
