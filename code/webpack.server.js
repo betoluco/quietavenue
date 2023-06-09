@@ -1,5 +1,4 @@
 const path = require("path");
-const nodeExternals = require("webpack-node-externals");
 const webpack = require("webpack");
 
 // Client side bundle for hydration
