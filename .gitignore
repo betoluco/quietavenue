@@ -16,7 +16,7 @@ jspm_packages/
 # Webpack output
 code/clientBuild/
 code/dist/
-code/serverBundle.js
+code/serverBundle/*
 serverBundle.js.LICENSE.txt
 
 #Cypress

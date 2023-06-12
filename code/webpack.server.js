@@ -1,5 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
+const TerserPlugin = require('terser-webpack-plugin');
 
 // Client side bundle for hydration
 module.exports = function(env, argv) {
@@ -10,7 +11,7 @@ module.exports = function(env, argv) {
         entry: "./src/lambda.js",
         
         output: {
-            filename: "serverBundle.js",
+            filename: "serverBundle/serverBundle.js",
             path: path.resolve(__dirname, "./"),
             libraryTarget: "commonjs2",
             assetModuleFilename: 'dist/[hash][ext][query]',
@@ -55,6 +56,16 @@ module.exports = function(env, argv) {
                 'process.env.CORS': JSON.stringify(process.env.CORS),
             }),
         ],
+        optimization: {
+            minimizer: [new TerserPlugin({
+                extractComments: false,
+                terserOptions: {
+                    format: {
+                      comments: false,
+                    },
+                }
+            })],
+        },
         
         target: "node",
     };
