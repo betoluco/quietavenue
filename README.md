@@ -18,9 +18,6 @@ cd code
 npm run mirror
 cd ..
 sam build
-```
-To reduce the size of the package to upload to Lamda  you need to enter `.aws-sam/ServerlessSideRenderingFunction` folder (created when building) and delete everything but `node_modules`, `package.json` and `serverBundle.js` after that just run:
-```bash
 sam deploy
 ```
 Package.json `test` script uploads all the assets required for the website (js, css, images) to the S3 bucket of the test deployment
@@ -32,9 +29,6 @@ cd code
 npm run prod
 cd ..
 sam build
-```
-To reduce the size of the package to upload to Lamda  you need to enter `.aws-sam` folder (created when building) and delete everything but `node_modules`, `package.json` and `serverBundle.js` after that jus run:
-```bash
 sam deploy  --config-env production
 ```
 The assets have to be manually uploaded. This way you have the previous assets and the new ones in case there is a problem with the deployment you can return to the previous version of Lambda function
