@@ -2,22 +2,14 @@
 
 # Dependency directories
 node_modules/
-jspm_packages/
-
-# Optional npm cache directory
-.npm
-
-# dotenv environment variables file
-.env
 
 # AWS SAM 
 .aws-sam/
 
 # Webpack output
-code/clientBuild/
-code/dist/
-code/serverBundle/*
-serverBundle.js.LICENSE.txt
+backEndBundle/
+frontEnd/clientBuild/
+frontEndBundle/
 
 #Cypress
 code/cypress/screenshots
