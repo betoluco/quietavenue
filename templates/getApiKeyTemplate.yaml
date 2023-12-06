@@ -1,0 +1,89 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Creates a lambda function that gets the api key required to access
+  the lambda function, Also creates a policy with the right
+  permission to achieve that
+  
+Transform:
+- AWS::Serverless-2016-10-31
+
+Parameters:
+  Env:
+    Type: String
+    AllowedValues:
+    - dev
+    - prod
+    Description: 
+      Environment in which the application will be deployed. 
+      Allowed values [dev, prod]
+  
+  Project:
+    Type: String
+    Description: Name of the project for tags
+    
+  APIGatewayApiKey:
+    Type: String
+    Description: Reference to the AWS::ApiGateway::ApiKey
+    
+Resources:
+  GetApiKeyValueFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        !Sub
+        - ${Environment}-${Project}-get-api-key-lambda-IAM-role-${Id}
+        - Project: !Ref Project
+          Environment: !Ref Env
+          Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: 
+                - lambda.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: RotateKeysPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Sid: GetApiKey
+                Effect: Allow
+                Action: apigateway:GET
+                Resource: "*"
+      Tags:
+        - Key: Project
+          Value: !Ref Project
+        - Key: Environment
+          Value: !Ref Env
+  
+  GetApiKeyValueFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        !Sub
+        - ${Environment}-${Project}-get-api-key-lambda-${Id}
+        - Project: !Ref Project
+          Environment: !Ref Env
+          Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      CodeUri: ../getApiKey/
+      Handler: getApiKey.lambda_handler
+      Role: !GetAtt GetApiKeyValueFunctionRole.Arn
+      Runtime: python3.8
+      Timeout: 120
+      Description: lambda funtion that gets the api key and pass it to cloudfront
+      Environment:
+        Variables:
+          API_KEY: !Ref APIGatewayApiKey
+      Tags:
+        Project: !Ref Project
+        Environment: !Ref Env
+      
+Outputs:
+  GetApiKeyValueFunction:
+    Description: The ARN of function that returns the API gateway key
+    Value: !GetAtt GetApiKeyValueFunction.Arn

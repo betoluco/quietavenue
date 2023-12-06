@@ -1,0 +1,133 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Creates a database proxy, a secret from secrets
+  manager that the proxy is going to use to acces the database
+  using a read only postgre user. A AIM role to acces the secret
+Transform:
+- AWS::Serverless-2016-10-31
+
+Parameters:
+  Env:
+    Type: String
+    AllowedValues:
+    - dev
+    - prod
+    Description: 
+      Environment in which the application will be deployed. 
+      Allowed values [dev, prod]
+  
+  Project:
+    Type: String
+    Description: Name of the project for tags
+  
+  VPCPrivateSubnet1a:
+    Type: AWS::EC2::Subnet::Id
+    Description: The subnet in 1a availability zone
+  
+  VPCPrivateSubnet1b:
+    Type: AWS::EC2::Subnet::Id
+    Description: The subnet in 1a availability zone
+    
+  DBProxySecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: Id of the security group that allows ingress the database proxy to the database
+  
+  DBCluster:
+    Type: String
+    Description: Id for the database cluster
+    
+  DBProxyPasswordSecret:
+    Type: String
+    Description: ARN of the secret used for Proxy to autenticate
+    
+Conditions:
+  IsProduction: !Equals [!Ref Env, prod]
+
+Resources:
+  DBProxyIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        !Sub
+        - ${Environment}-${Project}-DBProxy-role-${Id}
+        - Project: !Ref Project
+          Environment: !Ref Env
+          Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      Description: Role allows DB proxy to acces secret password and decoded
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - rds.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      Policies:
+      - PolicyName:
+          !Sub
+          - ${Environment}-${Project}-DBProxy-policy-${Id}
+          - Project: !Ref Project
+            Environment: !Ref Env
+            Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Sid: GetSecretValue
+            Effect: Allow
+            Action: secretsmanager:GetSecretValue
+            Resource: !Ref DBProxyPasswordSecret
+          - Sid: DecryptSecretValue
+            Effect: Allow
+            Action: kms:Decrypt
+            Resource: arn:aws:kms:us-west-1:750372547871:key/f279c113-6614-45ce-8a9f-422f84badb93
+            Condition:
+              StringEquals:
+                kms: 'ViaService: secretsmanager.us-east-2.amazonaws.com'
+      Tags:
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+        
+  DBProxy:
+    Type: AWS::RDS::DBProxy
+    Properties:
+      DebugLogging: true
+      DBProxyName:
+        !Sub
+        - ${Environment}-${Project}-database-proxy-${Id}
+        - Project: !Ref Project
+          Environment: !Ref Env
+          Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      EngineFamily: POSTGRESQL
+      RequireTLS: false
+      RoleArn: !GetAtt DBProxyIAMRole.Arn
+      Auth:
+      - AuthScheme: SECRETS
+        SecretArn: !Ref DBProxyPasswordSecret
+        IAMAuth: DISABLED
+      VpcSecurityGroupIds:
+      - Ref: DBProxySecurityGroup
+      VpcSubnetIds:
+      - Ref: VPCPrivateSubnet1a
+      - Ref: VPCPrivateSubnet1b
+      Tags:
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+  
+  DBProxyTargetGroup:
+    Type: AWS::RDS::DBProxyTargetGroup
+    Properties:
+      DBClusterIdentifiers:
+      - Ref: DBCluster
+      DBProxyName: !Ref DBProxy
+      TargetGroupName: default
+      
+Outputs:
+  DBProxyEndpoint:
+    Description: Endpoint of the database proxy
+    Value: !GetAtt DBProxy.Endpoint

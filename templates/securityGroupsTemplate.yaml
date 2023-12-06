@@ -1,0 +1,155 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Creates all security groups neede for the interaction of the
+  database with database proxy and lambda function.
+  And eggress security rules for s3 enpoint
+Transform:
+- AWS::Serverless-2016-10-31
+
+Parameters:
+  Env:
+    Type: String
+    AllowedValues:
+    - dev
+    - prod
+    Description: 
+      Environment in which the application will be deployed. 
+      Allowed values [dev, prod]
+  
+  Project:
+    Type: String
+    Description: Name of the project for tags
+    
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: Id of the Virtual Private Cloud (VPC)
+    
+  Port:
+    Type: Number
+    Description: The port used to access the database
+
+Resources:
+  LambdaSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName:
+        !Sub
+        - ${Environment}-${Project}-lambda-DBProxy-${Id}
+        - Project: !Ref Project
+          Environment: !Ref Env
+          Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      GroupDescription:
+        Security group attached to Lambda function to allow them to securely connect 
+        to DB proxy, and S3 Enpoint. Modification could lead to connection loss.
+      VpcId: !Ref VPC
+      SecurityGroupEgress:
+        DestinationPrefixListId : pl-6ba54002
+        IpProtocol : -1 
+      Tags:
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+        
+  LambdaOutboundRule:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      Description: 
+        Rule to allow connections to RDS Proxy from any Lambda function 
+        this security group is attached to
+      IpProtocol: tcp
+      FromPort: !Ref Port
+      ToPort: !Ref Port
+      DestinationSecurityGroupId: !GetAtt DBProxySecurityGroup.GroupId
+      GroupId: !GetAtt LambdaSecurityGroup.GroupId
+  
+  DBProxySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName:
+        !Sub
+        - ${Environment}-${Project}-BDProxy-lambda-${Id}
+        - Project: !Ref Project
+          Environment: !Ref Env
+          Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      GroupDescription: 
+        Security group attached to DB proxy to allow Lambda function
+        to connect to the DB proxy and DB proxy to connect to the DB. Modification
+        could lead to connection loss.
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+  
+  BDProxyInboundRule:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: 
+        !Sub
+        - Rule to allow connections from Lambda function with ${SecutiryGrpuId} attached
+        - SecutiryGrpuId: !GetAtt LambdaSecurityGroup.GroupId
+      IpProtocol: tcp
+      FromPort: !Ref Port
+      ToPort: !Ref Port
+      SourceSecurityGroupId: !GetAtt LambdaSecurityGroup.GroupId
+      GroupId: !GetAtt DBProxySecurityGroup.GroupId
+  
+  BDProxyOutboundRule:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      Description: 
+        Rule to allow connections to database from any DB 
+        Proxy this security group is attached to
+      IpProtocol: tcp
+      FromPort: !Ref Port
+      ToPort: !Ref Port
+      DestinationSecurityGroupId: !GetAtt DBSecurityGroup.GroupId
+      GroupId: !GetAtt DBProxySecurityGroup.GroupId
+  
+  DBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName:
+        !Sub
+        - ${Environment}-${Project}-DB-DBProxy-${Id}
+        - Project: !Ref Project
+          Environment: !Ref Env
+          Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      GroupDescription: 
+        Security group attached to DB cluster to allow DB Proxy with
+        specific security groups attached to connect to the DB database. Modification
+        could lead to connection loss.
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+  
+  BDInboundRule:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: 
+        !Sub
+        - Rule to allow connections from RDS Proxy with ${SecutiryGrpuId} attached
+        - SecutiryGrpuId: !GetAtt DBProxySecurityGroup.GroupId
+      IpProtocol: tcp
+      FromPort: !Ref Port
+      ToPort: !Ref Port
+      SourceSecurityGroupId: !GetAtt DBProxySecurityGroup.GroupId
+      GroupId: !GetAtt DBSecurityGroup.GroupId
+      
+Outputs:
+  DBSecurityGroup:
+    Description: Id of the security group that allows ingress the database proxy to the database
+    Value: !Ref DBSecurityGroup
+  
+  DBProxySecurityGroup:
+    Description: Id of the security group that allows database proxy eggress to the database
+    Value: !Ref DBProxySecurityGroup
+    
+  LambdaSecurityGroup:
+    Description: Id of the security group that allows lambda eggress to the database proxy
+    Value: !Ref LambdaSecurityGroup

@@ -1,0 +1,84 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Creates and s3 bucket to store assets required for the api and
+  a enpoint required to access the bucket from the VPC
+Transform:
+- AWS::Serverless-2016-10-31
+
+Parameters:
+  Env:
+    Type: String
+    AllowedValues:
+    - dev
+    - prod
+    Description: 
+      Environment in which the application will be deployed. 
+      Allowed values [dev, prod]
+  
+  Project:
+    Type: String
+    Description: Name of the project for tags
+  
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: Id of the Virtual Private Cloud (VPC)
+    
+  PrivateSubnetRouteTable:
+    Type: String
+    Description: Id of the route table for the private subnets
+    
+Conditions:
+  IsProduction: !Equals [!Ref Env, prod]
+
+Resources:
+  BackEndS3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: !If [IsProduction, Retain, Delete]
+    Properties:
+      # Bucket name has to be all lowercase
+      BucketName:
+        !Sub
+        - ${Environment}-${Project}-backend-s3-bucket-${Id}
+        - Project: !Ref Project
+          Environment: !Ref Env
+          Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+      - Key: description
+        Value: S3 Bucket for assets needed for the API
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+  
+  BackEndS3BucketGatewayEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcEndpointType: Gateway
+      VpcId: !Ref VPC
+      ServiceName: !Sub com.amazonaws.${AWS::Region}.s3
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action:
+              - s3:GetObject
+            Resource:
+              - !Sub ${BackEndS3Bucket.Arn}/*
+      RouteTableIds:
+        - !Ref PrivateSubnetRouteTable
+
+Outputs:
+  BackEndS3Bucket:
+    Description: Name of the S3 bucket
+    Value: !Ref BackEndS3Bucket
+    
+  BackEndS3BucketARN:
+    Description: ARN of the S3 bucket
+    Value: !GetAtt BackEndS3Bucket.Arn

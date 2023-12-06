@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Creates and s3 bucket to store assets required rendering and
+  rehydrating the server side rendering app
+  
+Transform:
+- AWS::Serverless-2016-10-31
+
+Parameters:
+  Env:
+    Type: String
+    AllowedValues:
+    - dev
+    - prod
+    Description: 
+      Environment in which the application will be deployed. 
+      Allowed values [dev, prod]
+  
+  Project:
+    Type: String
+    Description: Name of the project for tags
+  
+Resources:
+  FrontEndS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      # Bucket name has to be all lowercase
+      BucketName:
+        !Sub
+        - ${Environment}-${Project}-frontend-s3-bucket-${Id}
+        - Project: !Ref Project
+          Environment: !Ref Env
+          Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+      - Key: description
+        Value: S3 Bucket for assets needed for renderin and rehydrating the website
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+        
+  CFOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties: 
+      CloudFrontOriginAccessIdentityConfig: 
+        Comment: "Origin access identity for S3 bucket assets"
+        
+  S3BucketAssetsPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties: 
+      Bucket: !Ref FrontEndS3Bucket
+      PolicyDocument:
+        Version: '2008-10-17'
+        Id: PolicyForCloudFrontPrivateContent
+        Statement:
+          - Sid: 1
+            Action: 's3:GetObject'
+            Effect: Allow
+            Resource: !Sub '${FrontEndS3Bucket.Arn}/*'
+            Principal: 
+              AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CFOriginAccessIdentity}'
+              
+Outputs:
+  FrontEndS3Bucket:
+    Description: Name of the S3 bucket
+    Value: !Ref FrontEndS3Bucket
+    
+  CFOriginAccessIdentity:
+    Description: Reference of origin access identity
+    Value: !Ref CFOriginAccessIdentity

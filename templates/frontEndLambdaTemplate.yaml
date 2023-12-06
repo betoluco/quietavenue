@@ -1,0 +1,89 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Creates the lambda function for the server side rendering, and it's role
+  
+Transform:
+- AWS::Serverless-2016-10-31
+
+Parameters:
+  Env:
+    Type: String
+    AllowedValues:
+    - dev
+    - prod
+    Description: 
+      Environment in which the application will be deployed. 
+      Allowed values [dev, prod]
+  
+  Project:
+    Type: String
+    Description: Name of the project for tags
+
+Resources:
+  ServerlessSideRenderingFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: 
+                - lambda.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+  
+  FrontEndLambdaServerSideRendering:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ../frontEndBundle/
+      Handler: serverBundle.handler
+      Role: !GetAtt ServerlessSideRenderingFunctionRole.Arn
+      Runtime: nodejs14.x
+      Description: lambda function and Proxy Greedy API for server side rendering
+      Events:
+        APIGatewayRootEndpoint: #Whitout this it will throw missing authentication token
+          Type: Api
+          Properties:
+            RestApiId: !Ref APIGateway
+            Path: /
+            Method: any
+            Auth:
+              ApiKeyRequired: true
+        APIgatewayProxyGreedy:
+          Type: Api
+          Properties:
+            RestApiId: !Ref APIGateway
+            Path: /{proxy+}
+            Method: any
+            Auth:
+              ApiKeyRequired: true
+  
+  APIGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      EndpointConfiguration:
+        Type: REGIONAL
+      Auth:
+        ApiKeyRequired: true
+        UsagePlan:
+          CreateUsagePlan: PER_API
+          Description: API gateway usage plan, key and usage plan key for quietavenue
+          
+Outputs:
+  
+  #When the UsagePlan property of the Auth property of an AWS::Serverless::Api is specified, 
+  #AWS SAM generates the following AWS CloudFormation resources: AWS::ApiGateway::UsagePlan, 
+  #AWS::ApiGateway::UsagePlanKey, and AWS::ApiGateway::ApiKey
+  # Referenceable property: <api‑LogicalId>.ApiKey
+  # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-generated-resources-api.html#sam-specification-generated-resources-api-usage-plan
+  APIGatewayApiKey:
+    Description: Reference to the AWS::ApiGateway::ApiKey
+    Value: !Ref APIGateway.ApiKey
+    
+  APIGateway:
+    Description: ID of the underlying API Gateway API
+    Value: !Ref APIGateway

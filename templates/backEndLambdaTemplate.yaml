@@ -1,0 +1,194 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Creates a lambda function that query the database and gets assets
+  from an s3 bucket. The AIM role for the function and API Gateway
+  to access the function
+  
+Transform:
+- AWS::Serverless-2016-10-31
+
+Parameters:
+  Env:
+    Type: String
+    AllowedValues:
+    - dev
+    - prod
+    Description: 
+      Environment in which the application will be deployed. 
+      Allowed values [dev, prod]
+  
+  Project:
+    Type: String
+    Description: Name of the project for tags
+  
+  VPCPrivateSubnet1a:
+    Type: AWS::EC2::Subnet::Id
+    Description: The subnet in 1a availability zone
+  
+  VPCPrivateSubnet1b:
+    Type: AWS::EC2::Subnet::Id
+    Description: The subnet in 1a availability zone
+    
+  BackEndS3Bucket:
+    Type: String
+    Description: Name of the S3 bucket
+    
+  BackEndS3BucketARN:
+    Type: String
+    Description: ARN of the S3 bucket
+  
+  DBProxyEndpoint:
+    Type: String
+    Description: Enpoint of the database proxy
+    
+  DatabaseName:
+    Type: String
+    Description: Postgres database name
+  
+  Port:
+    Type: Number
+    Description: The port used to access the database
+  
+  DBProxyPasswordSecret:
+    Type: String
+    Description: ARN of the secret used for Proxy to autenticate
+    
+  LambdaSecurityGroup:
+    Type: String
+    Description: Id of the security group that allows lambda eggress to the database proxy
+
+Resources:
+  LambdaServerIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        !Sub
+        - ${Environment}-${Project}-lambda-backend-IAM-role-${Id}
+        - Project: !Ref Project
+          Environment: !Ref Env
+          Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: 
+                - lambda.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Policies:
+      - PolicyName:
+          !Sub
+          - ${Environment}-${Project}-lambda-backend-policy-${Id}
+          - Project: !Ref Project
+            Environment: !Ref Env
+            Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Sid: GetObjectsFromBucket
+            Effect: Allow
+            Action: 
+              - s3:GetObject
+            Resource: 
+              - !Join [ '/', [ !Ref BackEndS3BucketARN, '*' ] ]
+      Tags:
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+  
+  BackEndLambdaAPIServer:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      FunctionName:
+        !Sub
+        - ${Environment}-${Project}-lambda-server-${Id}
+        - Project: !Ref Project
+          Environment: !Ref Env
+          Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      CodeUri: ../backEndBundle/
+      Handler: backEndBundle.backEndHandler
+      Role: !GetAtt LambdaServerIAMRole.Arn
+      Runtime: nodejs18.x
+      Description: lambda function for the backend
+      Environment:
+        Variables:
+          ENDPOINT: !Ref DBProxyEndpoint
+          DATABASE_NAME: !Ref DatabaseName
+          PORT: !Ref Port
+          S3_BUCKET: !Ref BackEndS3Bucket
+          PROXY_USERNAME:
+            !Sub
+            - '{{resolve:secretsmanager:${secretName}:SecretString:username}}'
+            - secretName: !Ref DBProxyPasswordSecret
+          PROXY_PASSWORD:
+            !Sub
+            - '{{resolve:secretsmanager:${secretName}:SecretString:password}}'
+            - secretName: !Ref DBProxyPasswordSecret
+          
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref LambdaSecurityGroup 
+        SubnetIds:
+        - Ref: VPCPrivateSubnet1a
+        - Ref: VPCPrivateSubnet1b
+      Events:
+        APIGatewayRootEndpoint: #Whitout this it will throw missing authentication token
+          Type: Api
+          Properties:
+            RestApiId: !Ref APIGateway
+            Path: /
+            Method: any
+            Auth:
+              ApiKeyRequired: true
+        APIgatewayProxyGreedy:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            RestApiId: !Ref APIGateway
+            Path: /{proxy+}
+            Method: any
+            Auth:
+              ApiKeyRequired: true
+      Tags:
+        Project: !Ref Project
+        Environment: !Ref Env
+  
+  APIGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: 
+        !Sub
+          - ${Environment}-${Project}-APIGateway-${Id}
+          - Project: !Ref Project
+            Environment: !Ref Env
+            Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      StageName: Prod
+      EndpointConfiguration:
+        Type: REGIONAL
+      Auth:
+        ApiKeyRequired: true
+        UsagePlan:
+          CreateUsagePlan: PER_API
+          Description: API gateway usage plan, key and usage plan key for quietavenue
+      Tags:
+        Project: !Ref Project
+        Environment: !Ref Env
+        
+Outputs:
+  
+  #When the UsagePlan property of the Auth property of an AWS::Serverless::Api is specified, 
+  #AWS SAM generates the following AWS CloudFormation resources: AWS::ApiGateway::UsagePlan, 
+  #AWS::ApiGateway::UsagePlanKey, and AWS::ApiGateway::ApiKey
+  # Referenceable property: <api‑LogicalId>.ApiKey
+  # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-generated-resources-api.html#sam-specification-generated-resources-api-usage-plan
+  APIGatewayApiKey:
+    Description: Reference to the AWS::ApiGateway::ApiKey
+    Value: !Ref APIGateway.ApiKey
+    
+  APIGateway:
+    Description: ID of the underlying API Gateway API
+    Value: !Ref APIGateway

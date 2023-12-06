@@ -1,0 +1,247 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Creates a VPC with two public subnets and two private subnets
+  and a internet gateway to give access to internet to public
+  networks
+Transform:
+- AWS::Serverless-2016-10-31
+
+Parameters:
+  Env:
+    Type: String
+    AllowedValues:
+    - dev
+    - prod
+    Description: 
+      Environment in which the application will be deployed. 
+      Allowed values [dev, prod]
+  
+  Project:
+    Type: String
+    Description: Name of the project for tags
+    
+Mappings:
+  EnvMapping:
+    dev:
+      VPCCidirBlock: 10.0.0.0/16
+      PubSub1a: 10.0.10.0/24
+      PubSub1b: 10.0.11.0/24
+      PrivSub1a: 10.0.20.0/24
+      PrivSub1b: 10.0.21.0/24
+      
+    prod:
+      VPCCidirBlock: 10.200.0.0/16
+      PubSub1a: 10.200.10.0/24
+      PubSub1b: 10.200.11.0/24
+      PrivSub1a: 10.200.20.0/24
+      PrivSub1b: 10.200.21.0/24
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !FindInMap [EnvMapping, !Ref Env, VPCCidirBlock]
+      Tags:
+      - Key: Name
+        Value:
+          !Sub
+          - ${Environment}-${Project}-VPC-${Id}
+          - Project: !Ref Project
+            Environment: !Ref Env
+            Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+        
+  PrivateSubnet1a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [0, !GetAZs us-west-1]
+      CidrBlock: !FindInMap [EnvMapping, !Ref Env, PrivSub1a]
+      Tags:
+      - Key: Name
+        Value:
+          !Sub
+          - ${Environment}-${Project}-VPC-private-subnet-1a-${Id}
+          - Project: !Ref Project
+            Environment: !Ref Env
+            Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]]
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+      - Key: availability zone
+        Value: !Select [0, !GetAZs us-west-1]
+  
+  PrivateSubnet1b:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [1, !GetAZs us-west-1]
+      CidrBlock: !FindInMap [EnvMapping, !Ref Env, PrivSub1b]
+      Tags:
+      - Key: Name
+        Value:
+          !Sub
+          - ${Environment}-${Project}-VPC-private-subnet-1b-${Id}
+          - Project: !Ref Project
+            Environment: !Ref Env
+            Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]]
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+      - Key: availability zone
+        Value: !Select [1, !GetAZs us-west-1]
+        
+  PrivateSubnetRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value:
+          !Sub
+          - ${Environment}-${Project}-private-subnet-route-table-${Id}
+          - Project: !Ref Project
+            Environment: !Ref Env
+            Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+  
+  PrivateSubnet1aRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateSubnetRouteTable
+      SubnetId: !Ref PrivateSubnet1a
+  
+  PrivateSubnet1bRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateSubnetRouteTable
+      SubnetId: !Ref PrivateSubnet1b
+        
+  PublicSubnet1a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [0, !GetAZs us-west-1]
+      CidrBlock: !FindInMap [EnvMapping, !Ref Env, PubSub1a]
+      Tags:
+      - Key: Name
+        Value:
+          !Sub
+          - ${Environment}-${Project}-VPC-public-subnet-1a-${Id}
+          - Project: !Ref Project
+            Environment: !Ref Env
+            Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]]
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+      - Key: availability zone
+        Value: !Select [0, !GetAZs us-west-1]
+  
+  PublicSubnet1b:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [1, !GetAZs us-west-1]
+      CidrBlock: !FindInMap [EnvMapping, !Ref Env, PubSub1b]
+      Tags:
+      - Key: Name
+        Value:
+          !Sub
+          - ${Environment}-${Project}-VPC-public-subnet-1b-${Id}
+          - Project: !Ref Project
+            Environment: !Ref Env
+            Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]]
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+      - Key: availability zone
+        Value: !Select [1, !GetAZs us-west-1]
+        
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value:
+          !Sub
+          - ${Environment}-${Project}-VPC-internet-gateway-${Id}
+          - Project: !Ref Project
+            Environment: !Ref Env
+            Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]]
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+    
+  VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+    Metadata:
+      SamResourceId: VPCGatewayAttachment
+  
+  PublicSubnetRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value:
+          !Sub
+          - ${Environment}-${Project}-public-subnet-route-table-${Id}
+          - Project: !Ref Project
+            Environment: !Ref Env
+            Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+  
+  PublicSubnetRoute:
+    Type: AWS::EC2::Route
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicSubnetRouteTable
+      DestinationCidrBlock: '0.0.0.0/0'
+      GatewayId: !Ref InternetGateway
+  
+  PublicSubnet1aRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicSubnetRouteTable
+      SubnetId: !Ref PublicSubnet1a
+  
+  PublicSubnet1bRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicSubnetRouteTable
+      SubnetId: !Ref PublicSubnet1b
+
+Outputs:
+  VPCPrivateSubnet1a:
+    Description: The subnet in 1a availability zone
+    Value: !Ref PrivateSubnet1a
+    
+  VPCPrivateSubnet1b:
+    Description: The subnet in 1b availability zone
+    Value: !Ref PrivateSubnet1b
+    
+  VPC:
+    Description: Id of the Virtual Private Cloud (VPC)
+    Value: !Ref VPC
+  
+  PrivateSubnetRouteTable:
+    Description: Id of the route table for the private subnets
+    Value: !Ref PrivateSubnetRouteTable
+    
