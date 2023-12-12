@@ -2,9 +2,6 @@ import React, {useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import searchButton from "./images/magnifyingGlassOp.svg";
-import { estateSuggest } from "../trie";
-import { citySuggest } from "../trie";
-import { zipCodeSuggest } from "../trie";
 
 const Search = props =>{
   
@@ -15,9 +12,9 @@ const Search = props =>{
   useEffect(() => {
     if (searchInputText.length > 0) {
       let suggestList = [];
-      const estateSuggestions = estateSuggest.find(searchInputText);
-      const citySuggestions = citySuggest.find(searchInputText);
-      const zipCodeSuggestions = zipCodeSuggest.find(searchInputText);
+      const estateSuggestions = [];
+      const citySuggestions = [];
+      const zipCodeSuggestions = [];
       
       if(estateSuggestions.length){
         suggestList.push(

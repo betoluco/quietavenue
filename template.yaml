@@ -19,6 +19,11 @@ Parameters:
     Default: quietavenue
     Description: Name of the project for tags
     
+  DomainName:
+    Type: String
+    Default: https://quietavenue.com
+    Description: Domain name for production site
+    
   Port:
     Type: String
     Default: 5432
@@ -33,6 +38,9 @@ Parameters:
     Type: String
     Default: quietavenue
     Description: Postgres database name
+    
+Conditions:
+  IsProduction: !Equals [!Ref Env, prod]
     
 Resources:
   DBProxyPasswordSecret:
@@ -112,31 +120,6 @@ Resources:
         Env: !Ref Env
         VPC: !GetAtt VPCStack.Outputs.VPC
         PrivateSubnetRouteTable: !GetAtt VPCStack.Outputs.PrivateSubnetRouteTable
-        
-  BackEndLambdaStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: ./templates/backEndLambdaTemplate.yaml
-      Parameters:
-        Project: !Ref Project
-        Env: !Ref Env
-        VPCPrivateSubnet1a: !GetAtt VPCStack.Outputs.VPCPrivateSubnet1a
-        VPCPrivateSubnet1b: !GetAtt VPCStack.Outputs.VPCPrivateSubnet1b
-        BackEndS3Bucket: !GetAtt BackEndS3BucketStack.Outputs.BackEndS3Bucket
-        BackEndS3BucketARN: !GetAtt BackEndS3BucketStack.Outputs.BackEndS3BucketARN
-        DBProxyEndpoint: !GetAtt DatabaseProxyTemplate.Outputs.DBProxyEndpoint
-        DatabaseName: !Ref DatabaseName
-        Port: !Ref Port
-        DBProxyPasswordSecret: !Ref DBProxyPasswordSecret
-        LambdaSecurityGroup: !GetAtt SecurityGroupsStack.Outputs.LambdaSecurityGroup
-        
-  FrontEndLamdaStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: ./templates/frontEndLambdaTemplate.yaml
-      Parameters:
-        Project: !Ref Project
-        Env: !Ref Env
   
   FrontEndS3BucketStack:
     Type: AWS::CloudFormation::Stack
@@ -146,24 +129,197 @@ Resources:
         Project: !Ref Project
         Env: !Ref Env
   
-  GetFrontEndApiKeyTemplate:
+  GetApiKeyTemplate:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: ./templates/getApiKeyTemplate.yaml
       Parameters:
         Project: !Ref Project
         Env: !Ref Env
-        APIGatewayApiKey: !GetAtt FrontEndLamdaStack.Outputs.APIGatewayApiKey
+        APIGatewayApiKey: !Ref APIGateway.ApiKey
         
-  GetBackEndApiKeyTemplate:
-    Type: AWS::CloudFormation::Stack
+  GetApiKeyValue:
+    Type: Custom::ApiKeyValue
     Properties:
-      TemplateURL: ./templates/getApiKeyTemplate.yaml
-      Parameters:
-        Project: !Ref Project
-        Env: !Ref Env
-        APIGatewayApiKey: !GetAtt BackEndLambdaStack.Outputs.APIGatewayApiKey
+      ServiceToken: !GetAtt GetApiKeyTemplate.Outputs.GetApiKeyValueFunction
+      Tags:
+        - Key: Name
+          Value:
+            !Sub
+            - ${Environment}-${Project}-get-front-end-api-key-${Id}
+            - Project: !Ref Project
+              Environment: !Ref Env
+              Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]]
+        - Key: Project
+          Value: !Ref Project
+        - Key: Environment
+          Value: !Ref Env
         
+  # LambdaStack:
+  #   Type: AWS::CloudFormation::Stack
+  #   Properties:
+  #     TemplateURL: ./templates/lambdaTemplate.yaml
+  #     Parameters:
+  #       #Project: !Ref Project
+  #       #Env: !Ref Env
+  #       VPCPrivateSubnet1a: !GetAtt VPCStack.Outputs.VPCPrivateSubnet1a
+  #       VPCPrivateSubnet1b: !GetAtt VPCStack.Outputs.VPCPrivateSubnet1b
+  #       BackEndS3Bucket: !GetAtt BackEndS3BucketStack.Outputs.BackEndS3Bucket
+  #       BackEndS3BucketARN: !GetAtt BackEndS3BucketStack.Outputs.BackEndS3BucketARN
+  #       DBProxyEndpoint: !GetAtt DatabaseProxyTemplate.Outputs.DBProxyEndpoint
+  #       #DatabaseName: !Ref DatabaseName
+  #       #Port: !Ref Port
+  #       #DBProxyPasswordSecret: !Ref DBProxyPasswordSecret
+  #       LambdaSecurityGroup: !GetAtt SecurityGroupsStack.Outputs.LambdaSecurityGroup
+  
+  
+  LambdaIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        !Sub
+        - ${Environment}-${Project}-lambda-backend-IAM-role-${Id}
+        - Project: !Ref Project
+          Environment: !Ref Env
+          Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: 
+                - lambda.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Policies:
+      - PolicyName:
+          !Sub
+          - ${Environment}-${Project}-lambda-policy-${Id}
+          - Project: !Ref Project
+            Environment: !Ref Env
+            Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Sid: GetObjectsFromBucket
+            Effect: Allow
+            Action: 
+              - s3:GetObject
+            Resource: 
+              - !Join [ '/', [ !GetAtt BackEndS3BucketStack.Outputs.BackEndS3BucketARN, '*' ] ]
+      Tags:
+      - Key: Project
+        Value: !Ref Project
+      - Key: Environment
+        Value: !Ref Env
+  
+  BackEndLambdaAPIServer:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      FunctionName:
+        !Sub
+        - ${Environment}-${Project}-lambda-server-${Id}
+        - Project: !Ref Project
+          Environment: !Ref Env
+          Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      CodeUri: ./backEndBundle/
+      Handler: backEndBundle.backEndHandler
+      Role: !GetAtt LambdaIAMRole.Arn
+      Runtime: nodejs18.x
+      Description: lambda function for the backend
+      Environment:
+        Variables:
+          CORS: !If [IsProduction, !Ref DomainName, '*']
+          ENDPOINT: !GetAtt DatabaseProxyTemplate.Outputs.DBProxyEndpoint
+          DATABASE_NAME: !Ref DatabaseName
+          PORT: !Ref Port
+          S3_BUCKET: !GetAtt BackEndS3BucketStack.Outputs.BackEndS3Bucket
+          PROXY_USERNAME:
+            !Sub
+            - '{{resolve:secretsmanager:${secretName}:SecretString:username}}'
+            - secretName: !Ref DBProxyPasswordSecret
+          PROXY_PASSWORD:
+            !Sub
+            - '{{resolve:secretsmanager:${secretName}:SecretString:password}}'
+            - secretName: !Ref DBProxyPasswordSecret
+          
+      VpcConfig:
+        SecurityGroupIds:
+          - !GetAtt SecurityGroupsStack.Outputs.LambdaSecurityGroup
+        SubnetIds:
+        - !GetAtt VPCStack.Outputs.VPCPrivateSubnet1a
+        - !GetAtt VPCStack.Outputs.VPCPrivateSubnet1b
+      Events:
+        APIGatewayRootEndpoint: #Whitout this it will throw missing authentication token
+          Type: Api
+          Properties:
+            RestApiId: !Ref APIGateway
+            Path: api/
+            Method: any
+            Auth:
+              ApiKeyRequired: true
+        APIgatewayProxyGreedy:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            RestApiId: !Ref APIGateway
+            Path: api/{proxy+}
+            Method: any
+            Auth:
+              ApiKeyRequired: true
+      Tags:
+        Project: !Ref Project
+        Environment: !Ref Env
+        
+  FrontEndLambdaServerSideRendering:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./frontEndBundle/
+      Handler: serverBundle.handler
+      Role: !GetAtt LambdaIAMRole.Arn
+      Runtime: nodejs18.x
+      Description: lambda function and Proxy Greedy API for server side rendering
+      Events:
+        APIGatewayRootEndpoint: #Whitout this it will throw missing authentication token
+          Type: Api
+          Properties:
+            RestApiId: !Ref APIGateway
+            Path: /
+            Method: any
+            Auth:
+              ApiKeyRequired: true
+        APIgatewayProxyGreedy:
+          Type: Api
+          Properties:
+            RestApiId: !Ref APIGateway
+            Path: /{proxy+}
+            Method: any
+            Auth:
+              ApiKeyRequired: true
+  
+  APIGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: 
+        !Sub
+          - ${Environment}-${Project}-APIGateway-${Id}
+          - Project: !Ref Project
+            Environment: !Ref Env
+            Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      StageName: Prod
+      EndpointConfiguration:
+        Type: REGIONAL
+      Auth:
+        ApiKeyRequired: true
+        UsagePlan:
+          CreateUsagePlan: PER_API
+          Description: API gateway usage plan, key and usage plan key for quietavenue
+      Tags:
+        Project: !Ref Project
+        Environment: !Ref Env
+   
   CFDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
@@ -176,23 +332,14 @@ Resources:
               Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
         Origins:
           - 
-            Id: !Sub ${FrontEndLamdaStack.Outputs.APIGateway}-origin
-            DomainName: !Sub ${FrontEndLamdaStack.Outputs.APIGateway}.execute-api.us-west-1.amazonaws.com
+            Id: !Sub ${APIGateway}-origin
+            DomainName: !Sub ${APIGateway}.execute-api.us-west-1.amazonaws.com
             OriginPath: /Prod #name of the deployed stage
             CustomOriginConfig:
               OriginProtocolPolicy: https-only #again API-Gateway only supports https
             OriginCustomHeaders:
               - HeaderName: x-api-key
-                HeaderValue: !GetAtt GetFrontEndApiKeyValue.Value
-          - 
-            Id: !Sub ${BackEndLambdaStack.Outputs.APIGateway}-origin
-            DomainName: !Sub ${BackEndLambdaStack.Outputs.APIGateway}.execute-api.us-west-1.amazonaws.com
-            OriginPath: /Prod #name of the deployed stage
-            CustomOriginConfig:
-              OriginProtocolPolicy: https-only #again API-Gateway only supports https
-            OriginCustomHeaders:
-              - HeaderName: x-api-key
-                HeaderValue: !GetAtt GetBackEndApiKeyValue.Value
+                HeaderValue: !GetAtt GetApiKeyValue.Value
           - 
             Id: !GetAtt FrontEndS3BucketStack.Outputs.FrontEndS3Bucket
             DomainName: !Sub ${FrontEndS3BucketStack.Outputs.FrontEndS3Bucket}.s3.amazonaws.com
@@ -200,15 +347,10 @@ Resources:
               OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${FrontEndS3BucketStack.Outputs.CFOriginAccessIdentity}
             
         DefaultCacheBehavior: #this section defines attached behaviors,
-          TargetOriginId: !Sub ${FrontEndLamdaStack.Outputs.APIGateway}-origin #name of the origin
+          TargetOriginId: !Sub ${APIGateway}-origin #name of the origin
           ViewerProtocolPolicy: redirect-to-https
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
         CacheBehaviors:
-          - 
-            TargetOriginId: !Sub ${BackEndLambdaStack.Outputs.APIGateway}-origin
-            ViewerProtocolPolicy: redirect-to-https
-            PathPattern: api/*
-            CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
           - 
             TargetOriginId: !GetAtt FrontEndS3BucketStack.Outputs.FrontEndS3Bucket
             ViewerProtocolPolicy: redirect-to-https
@@ -232,275 +374,3 @@ Resources:
           Value: !Ref Project
         - Key: Environment
           Value: !Ref Env
-  
-  GetFrontEndApiKeyValue:
-    Type: Custom::ApiKeyValue
-    Properties:
-      ServiceToken: !GetAtt GetFrontEndApiKeyTemplate.Outputs.GetApiKeyValueFunction
-      Tags:
-        - Key: Name
-          Value:
-            !Sub
-            - ${Environment}-${Project}-get-front-end-api-key-${Id}
-            - Project: !Ref Project
-              Environment: !Ref Env
-              Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]]
-        - Key: Project
-          Value: !Ref Project
-        - Key: Environment
-          Value: !Ref Env
-          
-  GetBackEndApiKeyValue:
-    Type: Custom::ApiKeyValue
-    Properties:
-      ServiceToken: !GetAtt GetBackEndApiKeyTemplate.Outputs.GetApiKeyValueFunction
-      Tags:
-        - Key: Name
-          Value:
-            !Sub
-            - ${Environment}-${Project}-get-back-end-api-key-${Id}
-            - Project: !Ref Project
-              Environment: !Ref Env
-              Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]]
-        - Key: Project
-          Value: !Ref Project
-        - Key: Environment
-          Value: !Ref Env
-        
-# AWSTemplateFormatVersion: 2010-09-09
-# Transform: AWS::Serverless-2016-10-31
-# Description: >
-#   see "understanding the deployment process of the project" in the docs
-
-# # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
-# Globals:
-#   Function:
-#     Timeout: 10
-
-# Resources:
-#   ServerlessSideRenderingFunctionRole:
-#     Type: AWS::IAM::Role
-#     Properties:
-#       ManagedPolicyArns:
-#         - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-#       AssumeRolePolicyDocument:
-#         Version: 2012-10-17
-#         Statement:
-#           -
-#             Sid: AllowLambdaServiceToAssumeRole
-#             Effect: Allow
-#             Action: 
-#               - sts:AssumeRole
-#             Principal:
-#               Service: 
-#                 - lambda.amazonaws.com
-#       Policies:
-#         -
-#           PolicyName: ServerlessSideRenderingFunctionPolicy
-#           PolicyDocument:
-#             Version: 2012-10-17
-#             Statement:
-#               Effect: Allow
-#               Action: 
-#                 - s3:GetObject
-#                 - dynamodb:Scan
-#               Resource: 
-#                 - !Sub ${S3BucketAssets.Arn}/*
-#                 - !GetAtt SourceDynamoDBTable.Arn
-  
-#   ServerlessSideRenderingFunction:
-#     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-#     Properties:
-#       CodeUri: code/serverBundle/
-#       Handler: serverBundle.handler
-#       Role: !GetAtt ServerlessSideRenderingFunctionRole.Arn
-#       Runtime: nodejs14.x
-#       Description: lambda function and Proxy Greedy API for quietavenue
-#       Environment:
-#         Variables:
-#           DINAMODB_TABLE: !Ref SourceDynamoDBTable
-#           S3_BUCKET: !Ref S3BucketAssets
-#       Events:
-#         APIGatewayRootEndpoint: #Whitout this it will throw missing authentication token
-#           Type: Api
-#           Properties:
-#             RestApiId: !Ref APIGateway
-#             Path: /
-#             Method: any
-#             Auth:
-#               ApiKeyRequired: true
-#         APIgatewayProxyGreedy:
-#           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-#           Properties:
-#             RestApiId: !Ref APIGateway
-#             Path: /{proxy+}
-#             Method: any
-#             Auth:
-#               ApiKeyRequired: true
-  
-#   APIGateway:
-#     Type: AWS::Serverless::Api
-#     Properties:
-#       StageName: Prod
-#       EndpointConfiguration:
-#         Type: REGIONAL
-#       Auth:
-#         ApiKeyRequired: true
-#         UsagePlan:
-#           CreateUsagePlan: PER_API
-#           Description: API gateway usage plan, key and usage plan key for quietavenue
-          
-#   CFDistribution:
-#     Type: AWS::CloudFront::Distribution
-#     Properties:
-#       DistributionConfig:
-#         Origins:
-#           - 
-#             Id: !Sub ${APIGateway}-origin
-#             DomainName: !Sub ${APIGateway}.execute-api.us-west-1.amazonaws.com
-#             OriginPath: /Prod #name of the deployed stage
-#             CustomOriginConfig:
-#               OriginProtocolPolicy: https-only #again API-Gateway only supports https
-#             OriginCustomHeaders:
-#               - 
-#                 HeaderName: x-api-key
-#                 HeaderValue: !GetAtt GetApiKeyValue.Value
-#           -
-#             Id: !Ref S3BucketAssets
-#             DomainName: !Sub ${S3BucketAssets}.s3.amazonaws.com
-#             S3OriginConfig: 
-#               OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CFOriginAccessIdentity}
-            
-#         DefaultCacheBehavior: #this section defines attached behaviors,
-#           TargetOriginId: !Sub ${APIGateway}-origin #name of the origin
-#           ViewerProtocolPolicy: redirect-to-https
-#           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
-#         CacheBehaviors:
-#           -
-#             TargetOriginId: !Ref S3BucketAssets
-#             ViewerProtocolPolicy: redirect-to-https
-#             PathPattern: assets/*
-#             CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
-#           -
-#             TargetOriginId: !Ref S3BucketAssets
-#             ViewerProtocolPolicy: redirect-to-https
-#             PathPattern: favicon.ico
-#             CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
-#         Enabled: true
-#       Tags:
-#         - Key: description
-#           Value: CloudFront for quietavenue
-  
-#   CFOriginAccessIdentity:
-#     Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
-#     Properties: 
-#       CloudFrontOriginAccessIdentityConfig: 
-#         Comment: "Origin access identity for S3 bucket assets"
-  
-#   APIGateway:
-#     Type: AWS::Serverless::Api
-#     Properties:
-#       StageName: Prod
-#       EndpointConfiguration:
-#         Type: REGIONAL
-#       Auth:
-#         ApiKeyRequired: true
-#         UsagePlan:
-#           CreateUsagePlan: PER_API
-#           Description: API gateway usage plan, key and usage plan key for quietavenue
-  
-# # Custom Resource to retrieve API Key value instead of ID
-
-#   GetApiKeyValue:
-#     DependsOn: APIGateway
-#     Type: Custom::ApiKeyValue
-#     Properties:
-#       ServiceToken: !GetAtt GetApiKeyValueFunction.Arn
-
-#   GetApiKeyValueFunctionRole:
-#     Type: AWS::IAM::Role
-#     Properties:
-#       ManagedPolicyArns:
-#         - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-#       AssumeRolePolicyDocument:
-#         Version: 2012-10-17
-#         Statement:
-#           -
-#             Sid: AllowLambdaServiceToAssumeRole
-#             Effect: Allow
-#             Action: 
-#               - sts:AssumeRole
-#             Principal:
-#               Service: 
-#                 - lambda.amazonaws.com
-#       Policies:
-#         - 
-#           PolicyName: RotateKeysPolicy
-#           PolicyDocument:
-#             Version: 2012-10-17
-#             Statement:
-#               - 
-#                 Effect: Allow
-#                 Action: apigateway:GET
-#                 Resource: "*"
-
-#   GetApiKeyValueFunction:
-#     Type: AWS::Serverless::Function
-#     Properties:
-#       CodeUri: CFScripts/
-#       Handler: getApiKey.lambda_handler
-#       Role: !GetAtt GetApiKeyValueFunctionRole.Arn
-#       Runtime: python3.7
-#       Timeout: 120
-#       Description: lambda obtains api key and pass it to cloudfront
-#       Environment:
-#         Variables:
-#           API_KEY: !Ref APIGateway.ApiKey
-      
-#   SourceDynamoDBTable:
-#     Type: AWS::DynamoDB::Table
-#     DeletionPolicy: Retain
-#     Properties: 
-#       AttributeDefinitions:
-#         -
-#           AttributeName: PK
-#           AttributeType: S
-#       KeySchema: 
-#         - 
-#           AttributeName: PK
-#           KeyType: HASH
-#       ProvisionedThroughput: 
-#         ReadCapacityUnits: 50
-#         WriteCapacityUnits: 5
-#       Tags:
-#         - Key: description
-#           Value:  DynamoDB table source data for quietavenue
-        
-#   S3BucketAssets:
-#     Type: AWS::S3::Bucket
-#     DeletionPolicy: Retain
-#     Properties:
-#       AccessControl: Private
-#       PublicAccessBlockConfiguration:
-#         BlockPublicAcls: true
-#         BlockPublicPolicy: true
-#         IgnorePublicAcls: true
-#         RestrictPublicBuckets: true
-#       Tags:
-#         - Key: description
-#           Value: S3 Bucket for assets
-  
-#   S3BucketAssetsPolicy:
-#     Type: AWS::S3::BucketPolicy
-#     Properties: 
-#       Bucket: !Ref S3BucketAssets
-#       PolicyDocument:
-#         Version: '2008-10-17'
-#         Id: PolicyForCloudFrontPrivateContent
-#         Statement:
-#           - Sid: 1
-#             Action: 's3:GetObject'
-#             Effect: Allow
-#             Resource: !Sub '${S3BucketAssets.Arn}/*'
-#             Principal: 
-#               AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CFOriginAccessIdentity}'

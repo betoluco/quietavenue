@@ -37,12 +37,6 @@ module.exports = function(env, argv) {
             ]
         },
         
-        plugins: [
-            new webpack.DefinePlugin({
-                'process.env.CORS': JSON.stringify(process.env.CORS),
-            }),
-        ],
-        
         optimization: {
             minimizer: [new TerserPlugin({
                 extractComments: false,

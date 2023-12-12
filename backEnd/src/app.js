@@ -8,11 +8,7 @@ const app = express();
 
 app.use(awsServerlessExpressMiddleware.eventContext());
 
-// API
-
-const corsDev = `${process.env.CORS}`; //Allow request from Cloud 9 development machine
-
-app.get("/api/estates", cors({origin: corsDev}), async (req, res) =>{
+app.get("/api/estates", cors({origin: `${process.env.CORS}`}), async (req, res) =>{
     const response = await estates(req, res);
     res.contentType('application/json');
     res.send(JSON.stringify(response));

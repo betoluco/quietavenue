@@ -14,8 +14,8 @@
   },
   "scripts": {
     "//": "VERIFY THAT THE CORRECT BUCKER IS USED",
-    "mirror": "NODE_ENV=production CORS=* npm run backend-build",
-    "prod": "NODE_ENV=production CORS=https://quietavenue.com npm run backend-build",
+    "mirror": "NODE_ENV=production npm run backend-build",
+    "prod": "NODE_ENV=production npm run backend-build",
     "backend-build": "webpack --config webpack.backEnd.js",
     "upload-test-data": "aws s3 cp cypress/fixtures/bucket s3://quietavenue-dev-bucket-02b97866a1fd --recursive"
   },

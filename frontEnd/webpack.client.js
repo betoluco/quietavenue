@@ -13,8 +13,8 @@ module.exports = function(env, argv) {
         
         output: {
             filename: "clientBundle.js",
-            path: path.resolve(__dirname, "clientBuild"),
-            publicPath: `${process.env.REACT_APP_DOMAIN}/assets/dist/`
+            path: path.resolve(__dirname, "./clientBuild"),
+            publicPath: "/staticAssets/"
         },
         
         module: {
@@ -27,8 +27,6 @@ module.exports = function(env, argv) {
                         options: {
                             presets: [
                                 ["@babel/preset-env", {
-                                    "corejs" :3.8,
-                                    "useBuiltIns": "usage",
                                     "targets": ">0.25%, not dead, not ie 11"
                                 }],
                                 "@babel/preset-react",
@@ -58,7 +56,7 @@ module.exports = function(env, argv) {
             new MiniCssExtractPlugin(),
             new CssMinimizerPlugin(),
             new webpack.DefinePlugin({
-                'process.env.REACT_APP_DOMAIN': JSON.stringify(process.env.REACT_APP_DOMAIN)
+                'process.env.DOMAIN_NAME': JSON.stringify(process.env.DOMAIN_NAME)
             }),
         ],
     };

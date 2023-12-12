@@ -1,20 +1,22 @@
 version = 0.1
+
 [default]
-[default.deploy]
-[default.deploy.parameters]
-stack_name = "quietavenue-dev"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1x27nddmanbga"
-s3_prefix = "quietavenue-dev" #Same name that "BucketName" in resources.yaml
+[default.global.parameters]
+stack_name = "dev-quietavenue-2"
 region = "us-west-1"
+
+[default.deploy.parameters]
+capabilities = "CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND"
+s3_bucket = "development-sam-source-buket"
 confirm_changeset = false
-capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Env=\"dev\""
 
 [production]
-[production.deploy]
-[production.deploy.parameters]
-stack_name = "quietavenue-prod"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1x27nddmanbga"
-s3_prefix = "quietavenue-prod"
+[production.global.parameters]
+stack_name = "prod-quietavenue"
 region = "us-west-1"
+
+[production.deploy.parameters]
+capabilities = "CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND"
+s3_bucket = "production-sam-source-bucket"
 confirm_changeset = true
-capabilities = "CAPABILITY_IAM"

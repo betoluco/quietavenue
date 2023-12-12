@@ -56,9 +56,12 @@ Parameters:
   LambdaSecurityGroup:
     Type: String
     Description: Id of the security group that allows lambda eggress to the database proxy
+  
+Conditions:
+  IsProduction: !Equals [!Ref Env, prod]
 
 Resources:
-  LambdaServerIAMRole:
+  LambdaIAMRole:
     Type: AWS::IAM::Role
     Properties:
       RoleName:
@@ -112,11 +115,12 @@ Resources:
           Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
       CodeUri: ../backEndBundle/
       Handler: backEndBundle.backEndHandler
-      Role: !GetAtt LambdaServerIAMRole.Arn
+      Role: !GetAtt LambdaIAMRole.Arn
       Runtime: nodejs18.x
       Description: lambda function for the backend
       Environment:
         Variables:
+          CORS: !If [IsProduction, 'https://quietavenue.com', '*']
           ENDPOINT: !Ref DBProxyEndpoint
           DATABASE_NAME: !Ref DatabaseName
           PORT: !Ref Port
@@ -141,7 +145,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref APIGateway
-            Path: /
+            Path: api/
             Method: any
             Auth:
               ApiKeyRequired: true
@@ -149,13 +153,42 @@ Resources:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             RestApiId: !Ref APIGateway
-            Path: /{proxy+}
+            Path: api/{proxy+}
             Method: any
             Auth:
               ApiKeyRequired: true
       Tags:
         Project: !Ref Project
         Environment: !Ref Env
+        
+  FrontEndLambdaServerSideRendering:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ../frontEndBundle/
+      Handler: serverBundle.handler
+      Role: !GetAtt LambdaIAMRole.Arn
+      Runtime: nodejs14.x
+      Description: lambda function and Proxy Greedy API for server side rendering
+      Environment:
+        Variables:
+          DOMAINNAME: !If [IsProduction, 'https://quietavenue.com', 'd2fle8ahks831p.cloudfront.net']
+      Events:
+        APIGatewayRootEndpoint: #Whitout this it will throw missing authentication token
+          Type: Api
+          Properties:
+            RestApiId: !Ref APIGateway
+            Path: /
+            Method: any
+            Auth:
+              ApiKeyRequired: true
+        APIgatewayProxyGreedy:
+          Type: Api
+          Properties:
+            RestApiId: !Ref APIGateway
+            Path: /{proxy+}
+            Method: any
+            Auth:
+              ApiKeyRequired: true
   
   APIGateway:
     Type: AWS::Serverless::Api
@@ -179,12 +212,11 @@ Resources:
         Environment: !Ref Env
         
 Outputs:
-  
-  #When the UsagePlan property of the Auth property of an AWS::Serverless::Api is specified, 
-  #AWS SAM generates the following AWS CloudFormation resources: AWS::ApiGateway::UsagePlan, 
-  #AWS::ApiGateway::UsagePlanKey, and AWS::ApiGateway::ApiKey
-  # Referenceable property: <api‑LogicalId>.ApiKey
-  # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-generated-resources-api.html#sam-specification-generated-resources-api-usage-plan
+#   #When the UsagePlan property of the Auth property of an AWS::Serverless::Api is specified, 
+#   #AWS SAM generates the following AWS CloudFormation resources: AWS::ApiGateway::UsagePlan, 
+#   #AWS::ApiGateway::UsagePlanKey, and AWS::ApiGateway::ApiKey
+#   # Referenceable property: <api‑LogicalId>.ApiKey
+#   # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-generated-resources-api.html#sam-specification-generated-resources-api-usage-plan
   APIGatewayApiKey:
     Description: Reference to the AWS::ApiGateway::ApiKey
     Value: !Ref APIGateway.ApiKey

@@ -11,11 +11,11 @@ module.exports = function(env, argv) {
         entry: "./src/lambda.js",
         
         output: {
-            filename: "serverBundle/serverBundle.js",
-            path: path.resolve(__dirname, "./"),
+            filename: "serverBundle.js",
+            path: path.resolve(__dirname, "../frontEndBundle"),
             libraryTarget: "commonjs2",
-            assetModuleFilename: 'dist/[hash][ext][query]',
-            publicPath: `${process.env.REACT_APP_DOMAIN}/assets/`
+            assetModuleFilename: "staticAssets/[hash][ext][query]",
+            publicPath: "/" //Make path relative to root
         },
         
         module: {
@@ -28,10 +28,8 @@ module.exports = function(env, argv) {
                         options: {
                             presets: [
                                 ["@babel/preset-env", {
-                                    "corejs" :3.8,
-                                    "useBuiltIns": "usage",
                                     "targets":{
-                                        "node":"14"
+                                        "node":"18"
                                     }
                                 }],
                                 "@babel/preset-react",
@@ -50,12 +48,12 @@ module.exports = function(env, argv) {
             extensions: [".js", ".jsx", ".json"],
         },
         
-        plugins: [
+         plugins: [
             new webpack.DefinePlugin({
-                'process.env.REACT_APP_DOMAIN': JSON.stringify(process.env.REACT_APP_DOMAIN),
-                'process.env.CORS': JSON.stringify(process.env.CORS),
+                'process.env.DOMAIN_NAME': JSON.stringify(process.env.DOMAIN_NAME),
             }),
         ],
+        
         optimization: {
             minimizer: [new TerserPlugin({
                 extractComments: false,
