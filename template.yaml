@@ -154,24 +154,6 @@ Resources:
           Value: !Ref Project
         - Key: Environment
           Value: !Ref Env
-        
-  # LambdaStack:
-  #   Type: AWS::CloudFormation::Stack
-  #   Properties:
-  #     TemplateURL: ./templates/lambdaTemplate.yaml
-  #     Parameters:
-  #       #Project: !Ref Project
-  #       #Env: !Ref Env
-  #       VPCPrivateSubnet1a: !GetAtt VPCStack.Outputs.VPCPrivateSubnet1a
-  #       VPCPrivateSubnet1b: !GetAtt VPCStack.Outputs.VPCPrivateSubnet1b
-  #       BackEndS3Bucket: !GetAtt BackEndS3BucketStack.Outputs.BackEndS3Bucket
-  #       BackEndS3BucketARN: !GetAtt BackEndS3BucketStack.Outputs.BackEndS3BucketARN
-  #       DBProxyEndpoint: !GetAtt DatabaseProxyTemplate.Outputs.DBProxyEndpoint
-  #       #DatabaseName: !Ref DatabaseName
-  #       #Port: !Ref Port
-  #       #DBProxyPasswordSecret: !Ref DBProxyPasswordSecret
-  #       LambdaSecurityGroup: !GetAtt SecurityGroupsStack.Outputs.LambdaSecurityGroup
-  
   
   LambdaIAMRole:
     Type: AWS::IAM::Role
