@@ -50,7 +50,7 @@ module.exports = function(env, argv) {
         
          plugins: [
             new webpack.DefinePlugin({
-                'process.env.DOMAIN_NAME': JSON.stringify(process.env.DOMAIN_NAME),
+                'process.env.REACT_APP_DOMAIN_NAME': JSON.stringify(process.env.REACT_APP_DOMAIN_NAME),
             }),
         ],
         

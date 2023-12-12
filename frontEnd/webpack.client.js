@@ -56,7 +56,7 @@ module.exports = function(env, argv) {
             new MiniCssExtractPlugin(),
             new CssMinimizerPlugin(),
             new webpack.DefinePlugin({
-                'process.env.DOMAIN_NAME': JSON.stringify(process.env.DOMAIN_NAME)
+                'process.env.REACT_APP_DOMAIN_NAME': JSON.stringify(process.env.REACT_APP_DOMAIN_NAME)
             }),
         ],
     };
