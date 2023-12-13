@@ -32,6 +32,7 @@ CREATE TABLE public.zip_codes (
 
 CREATE TABLE public.estates (
 	estate_id serial4 NOT NULL,
+	estate_url text UNIQUE NOT NULL
 	address_1 text NOT NULL,
 	address_2 text NULL,
 	audio_data_link text NULL,
