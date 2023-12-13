@@ -23,9 +23,8 @@
     "serialize-javascript": "^5.0.1"
   },
   "scripts": {
-    "start": " react-scripts start",
+    "start": "REACT_APP_DOMAIN_NAME=https://d2fle8ahks831p.cloudfront.net react-scripts start",
     "unit-test": "jest",
-    "dev": "NODE_ENV=development npm run build",
     "mirror": "NODE_ENV=production REACT_APP_DOMAIN_NAME=https://d2fle8ahks831p.cloudfront.net npm run build && npm run upload-assets",
     "prod": "NODE_ENV=production REACT_APP_DOMAIN_NAME=https://quietavenue.com npm run build",
     "build": "rm -rf ./clientBuild && npm run client-build && npm run server-build",
