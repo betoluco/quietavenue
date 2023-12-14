@@ -13,7 +13,7 @@ var pool = new pg.Pool({
 const estates = async (req, res) =>{
     try {
         const databaseResponse = await pool.query(`
-            SELECT estate_id, address_1, address_2, audio_data_link, audio_description, 
+            SELECT estate_url, address_1, address_2, audio_data_link, audio_description, 
             bathroom, bedroom, lot_area, price, profile_picture, sunrise, sunset,
             video_link FROM estates;
         `);

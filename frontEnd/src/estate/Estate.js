@@ -9,10 +9,10 @@ import AudioPlayer from "./graph/AudioPlayer";
 
 
 const Estate = (props) =>{
-    const estateId = props.match.params.estateId;
-    
+    const estateURL = props.match.params.estateId;
+    console.log(estateURL)
     const estate = useSelector( (state) =>
-        state.estates.estates.find( estate => estate.id === estateId)
+        state.estates.estates.find( estate => estate.url === estateURL)
     );
     
     if( !estate ){

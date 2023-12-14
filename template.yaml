@@ -326,7 +326,13 @@ Resources:
             Id: !GetAtt FrontEndS3BucketStack.Outputs.FrontEndS3Bucket
             DomainName: !Sub ${FrontEndS3BucketStack.Outputs.FrontEndS3Bucket}.s3.amazonaws.com
             S3OriginConfig: 
-              OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${FrontEndS3BucketStack.Outputs.CFOriginAccessIdentity}
+              OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${FrontEndS3BucketStack.Outputs.CFOriginAccessIdentityFrontEnd}
+              
+          - 
+            Id: !GetAtt BackEndS3BucketStack.Outputs.BackEndS3Bucket
+            DomainName: !Sub ${BackEndS3BucketStack.Outputs.BackEndS3Bucket}.s3.amazonaws.com
+            S3OriginConfig: 
+              OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${BackEndS3BucketStack.Outputs.CFOriginAccessIdentityBackEnd}
             
         DefaultCacheBehavior: #this section defines attached behaviors,
           TargetOriginId: !Sub ${APIGateway}-origin #name of the origin
@@ -337,6 +343,11 @@ Resources:
             TargetOriginId: !GetAtt FrontEndS3BucketStack.Outputs.FrontEndS3Bucket
             ViewerProtocolPolicy: redirect-to-https
             PathPattern: staticAssets/*
+            CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          - 
+            TargetOriginId: !GetAtt BackEndS3BucketStack.Outputs.BackEndS3Bucket
+            ViewerProtocolPolicy: redirect-to-https
+            PathPattern: assets/*
             CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
           - 
             TargetOriginId: !GetAtt FrontEndS3BucketStack.Outputs.FrontEndS3Bucket

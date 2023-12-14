@@ -14,10 +14,8 @@
   },
   "scripts": {
     "//": "VERIFY THAT THE CORRECT BUCKER IS USED",
-    "mirror": "NODE_ENV=production npm run backend-build",
-    "prod": "NODE_ENV=production npm run backend-build",
-    "backend-build": "webpack --config webpack.backEnd.js",
-    "upload-test-data": "aws s3 cp cypress/fixtures/bucket s3://quietavenue-dev-bucket-02b97866a1fd --recursive"
+    "backend-build": "NODE_ENV=production webpack --config webpack.backEnd.js",
+    "upload-test-data": "aws s3 cp ../tests/bucket s3://dev-quietavenue-backend-s3-bucket-02a0e3d8cafb --recursive"
   },
   "scriptsComments": {
     "start": "react-script start which sets up a development environment and starts a server, as well as hot module reloading, used to make fast chages on the front end. Entry point index.js",

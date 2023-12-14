@@ -9,6 +9,7 @@ apigw = session.client('apigateway')
 
 
 def lambda_handler(event, context):
+    print("running getApiKey")
     request_type = event['RequestType']
     request_type_allowed = ["Update", "Create"]
     from pprint import pprint

@@ -45,13 +45,13 @@ Resources:
       - Key: Environment
         Value: !Ref Env
         
-  CFOriginAccessIdentity:
+  CFOriginAccessIdentityFrontEnd:
     Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
     Properties: 
       CloudFrontOriginAccessIdentityConfig: 
-        Comment: "Origin access identity for S3 bucket assets"
+        Comment: "Origin access identity for S3 frontend bucket"
         
-  S3BucketAssetsPolicy:
+  FrontEndS3BucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties: 
       Bucket: !Ref FrontEndS3Bucket
@@ -64,13 +64,13 @@ Resources:
             Effect: Allow
             Resource: !Sub '${FrontEndS3Bucket.Arn}/*'
             Principal: 
-              AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CFOriginAccessIdentity}'
+              AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CFOriginAccessIdentityFrontEnd}'
               
 Outputs:
   FrontEndS3Bucket:
     Description: Name of the S3 bucket
     Value: !Ref FrontEndS3Bucket
     
-  CFOriginAccessIdentity:
+  CFOriginAccessIdentityFrontEnd:
     Description: Reference of origin access identity
-    Value: !Ref CFOriginAccessIdentity
+    Value: !Ref CFOriginAccessIdentityFrontEnd

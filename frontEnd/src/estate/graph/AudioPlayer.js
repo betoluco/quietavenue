@@ -64,7 +64,7 @@ const AudioPlayer = props =>{
     };
     
     useEffect(() =>{
-        audio.current.setAttribute('src', rops.mp3Link);
+        audio.current.setAttribute('src', props.mp3Link);
     }, []);
     
     

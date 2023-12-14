@@ -55,6 +55,27 @@ Resources:
         Value: !Ref Project
       - Key: Environment
         Value: !Ref Env
+        
+  CFOriginAccessIdentityBackEnd:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties: 
+      CloudFrontOriginAccessIdentityConfig: 
+        Comment: "Origin access identity for S3 backend bucket"
+        
+  BackEndS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties: 
+      Bucket: !Ref BackEndS3Bucket
+      PolicyDocument:
+        Version: '2008-10-17'
+        Id: PolicyForCloudFrontPrivateContent
+        Statement:
+          - Sid: 1
+            Action: 's3:GetObject'
+            Effect: Allow
+            Resource: !Sub '${BackEndS3Bucket.Arn}/*'
+            Principal: 
+              AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CFOriginAccessIdentityBackEnd}'
   
   BackEndS3BucketGatewayEndpoint:
     Type: AWS::EC2::VPCEndpoint
@@ -82,3 +103,7 @@ Outputs:
   BackEndS3BucketARN:
     Description: ARN of the S3 bucket
     Value: !GetAtt BackEndS3Bucket.Arn
+    
+  CFOriginAccessIdentityBackEnd:
+    Description: Reference of origin access identity
+    Value: !Ref CFOriginAccessIdentityBackEnd

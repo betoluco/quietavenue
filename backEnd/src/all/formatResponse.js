@@ -1,7 +1,7 @@
 import getAudioData from "./getAudioData";
 
 const formatResults = async (estate) =>{
-    const item = {id: estate.estate_id};
+    const item = {url: estate.estate_url};
    
     item.address1 = estate.address_1;
     item.city = estate.cites_fk;

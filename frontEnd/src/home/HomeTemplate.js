@@ -14,7 +14,7 @@ const HomeTemaplate = (props) =>{
   if (props.filter === "zipCode") filter = "Filter: " + props.estates[0].zipCode;
   
   const cardsList = props.estates.map( estate =>{
-    return <Card estate={estate} key={estate.id}/>;
+    return <Card estate={estate} key={estate.url}/>;
   });
   
   return (

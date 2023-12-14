@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 
 const Card = props =>{
-  const link = "/estate/" + props.estate.id;
+  const link = "/estate/" + props.estate.url;
   return (
     <div className="shadow-lg border-b-2 border-green-600 rounded-md">
       <Link to={link}>
