@@ -4,13 +4,10 @@ const formatResults = async (estate) =>{
     const item = {url: estate.estate_url};
    
     item.address1 = estate.address_1;
-    item.city = estate.cites_fk;
-    item.zipCode = estate.zip_code_fk;
     item.profilePicture  = estate.profile_picture;
-    
-    if (estate.address_2 !== null) {
-        item.address2 = estate.address_2;
-    }
+    item.city = estate.city;
+    item.state = estate.state_abbreviation;
+    item.zip_code = estate.zip_code;
     
     if (estate.audio_description !== null) {
         item.audioDescription = estate.audio_description;
