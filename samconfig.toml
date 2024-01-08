@@ -2,7 +2,7 @@ version = 0.1
 
 [default]
 [default.global.parameters]
-stack_name = "dev-quietavenue-2"
+stack_name = "dev-quietavenue-1"
 region = "us-west-1"
 
 [default.deploy.parameters]
