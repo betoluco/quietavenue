@@ -15,16 +15,11 @@
   "scripts": {
     "//": "VERIFY THAT THE CORRECT BUCKER IS USED",
     "backend-build": "NODE_ENV=production webpack --config webpack.backEnd.js",
-    "upload-test-data": "aws s3 cp ../tests/bucket s3://dev-quietavenue-backend-s3-bucket-02a0e3d8cafb --recursive"
+    "upload-test-data": "aws s3 cp ../tests/bucket s3://dev-quietavenue-backend-s3-bucket-067eddd7d7c3 --recursive"
   },
   "scriptsComments": {
-    "start": "react-script start which sets up a development environment and starts a server, as well as hot module reloading, used to make fast chages on the front end. Entry point index.js",
-    "unit-test": "runs all the jest test",
-    "dev": "",
-    "build": "Runs client build first and server build second so the server side rendering app can point to the hydration bundle",
-    "client-build": "Creates the js bundel for hydration of the react app. Bundles the css, points the paths to the assets folder and gives unique names to the assets. Everything is stored in clientBuild folder",
-    "server-build": "Creates the server side rendering bundle",
-    "upload-test-data": "Uploads all the files and folders in the cypress/fixture/bucket to the bucket VERIFY URL FOR BUCKET"
+    "backend-build": "Creates the backEndBundle file that contains the code for the backEnd, and stores it on backEndBundle folder",
+    "upload-test-data": "Uploads all the files and folders in the tests/bucket folder that are used for testing purposes"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.4",
