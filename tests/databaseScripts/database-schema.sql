@@ -16,14 +16,6 @@ CREATE TABLE public.cities (
 	CONSTRAINT cities_estate_fk_fkey FOREIGN KEY (state_fk) REFERENCES public.states(state_id)
 );
 
-CREATE TABLE public.cities_suggest (
-	city_suggest_id serial4 NOT NULL,
-	city_suggest text NOT NULL,
-	cities_fk int4 NOT NULL,
-	CONSTRAINT cities_suggest_pkey PRIMARY KEY (city_suggest_id),
-	CONSTRAINT cities_suggest_cities_fk_fkey FOREIGN KEY (cities_fk) REFERENCES public.cities(city_id)
-);
-
 CREATE TABLE public.zip_codes (
 	zip_code_id serial4 NOT NULL,
 	zip_code text NOT NULL,
@@ -34,7 +26,6 @@ CREATE TABLE public.estates (
 	estate_id serial4 NOT NULL,
 	estate_url text UNIQUE NOT NULL,
 	address_1 text NOT NULL,
-	address_2 text NULL,
 	audio_data_link text NULL,
 	audio_description text NULL,
 	bathroom float8 NULL,
@@ -46,17 +37,22 @@ CREATE TABLE public.estates (
 	sunrise timestamp NULL,
 	sunset timestamp NULL,
 	video_link text NULL,
-	cities_fk int4 NOT NULL,
-	zip_codes_fk int4 NOT NULL,
+	city_fk int4 NOT NULL,
+	zip_code_fk int4 NOT NULL,
 	CONSTRAINT estates_pkey PRIMARY KEY (estate_id),
-	CONSTRAINT estates_cities_fk_fkey FOREIGN KEY (cities_fk) REFERENCES public.cities(city_id),
-	CONSTRAINT estates_zip_codes_fk_fkey FOREIGN KEY (zip_codes_fk) REFERENCES public.zip_codes(zip_code_id)
+	CONSTRAINT estates_city_fk_fkey FOREIGN KEY (city_fk) REFERENCES public.cities(city_id),
+	CONSTRAINT estates_zip_code_fk_fkey FOREIGN KEY (zip_code_fk) REFERENCES public.zip_codes(zip_code_id)
 );
 
-CREATE TABLE public.estates_suggest (
-	estate_suggest_id serial4 NOT NULL,
-	estate_suggest text NOT NULL,
-	estates_fk int4 NOT NULL,
-	CONSTRAINT estates_suggest_pkey PRIMARY KEY (estate_suggest_id),
-	CONSTRAINT estates_suggest_estates_fk_fkey FOREIGN KEY (estates_fk) REFERENCES public.estates(estate_id)
-);
+CREATE EXTENSION pg_trgm;
+CREATE INDEX CONCURRENTLY trgm_index_address_on_estates
+ON estates
+USING gin (address_1 gin_trgm_ops);
+
+CREATE INDEX CONCURRENTLY trgm_index_city_on_cities
+ON cities
+USING gin (city gin_trgm_ops);
+
+CREATE INDEX CONCURRENTLY trgm_index_zip_code_on_zip_codes
+ON zip_codes
+USING gin (zip_code gin_trgm_ops);
