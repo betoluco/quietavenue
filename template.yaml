@@ -334,10 +334,12 @@ Resources:
             S3OriginConfig: 
               OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${BackEndS3BucketStack.Outputs.CFOriginAccessIdentityBackEnd}
             
-        DefaultCacheBehavior: #this section defines attached behaviors,
+        DefaultCacheBehavior: 
           TargetOriginId: !Sub ${APIGateway}-origin #name of the origin
           ViewerProtocolPolicy: redirect-to-https
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          # Without this policy the query string parameters are not included in the request
+          OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
         CacheBehaviors:
           - 
             TargetOriginId: !GetAtt FrontEndS3BucketStack.Outputs.FrontEndS3Bucket
