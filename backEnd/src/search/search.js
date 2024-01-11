@@ -9,17 +9,17 @@ var pool = new pg.Pool({
 });
 
 const search = async (req, res) =>{
-    const searchQueryParam = req.query.filter;
-    if (searchQueryParam.length > 2) {
+    const filterQueryParam = req.query.filter;
+    if (filterQueryParam.length > 2) {
         try {
             const addressSearch = await pool.query(`
-                SELECT estate_url FROM estates WHERE address_1 ILIKE '%${searchQueryParam}%';
+                SELECT estate_url FROM estates WHERE address_1 ILIKE '%${filterQueryParam}%';
             `);
             const citiesSearch = await pool.query(`
-                SELECT city_id FROM cities WHERE city ILIKE '%${searchQueryParam}%';
+                SELECT city_id FROM cities WHERE city ILIKE '%${filterQueryParam}%';
             `);
             const zipCodesSearch = await pool.query(`
-                SELECT zip_code_id FROM zip_codes WHERE zip_code ILIKE '%${searchQueryParam}%';
+                SELECT zip_code_id FROM zip_codes WHERE zip_code ILIKE '%${filterQueryParam}%';
             `);
             
             const response = {}
