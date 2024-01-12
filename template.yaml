@@ -203,10 +203,11 @@ Resources:
     Properties:
       FunctionName:
         !Sub
-        - ${Environment}-${Project}-lambda-server-${Id}
+        - ${Environment}-${Project}-frontEnd-API-server-${Id}
         - Project: !Ref Project
           Environment: !Ref Env
           Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      Timeout: 10
       CodeUri: ./backEndBundle/
       Handler: backEndBundle.backEndHandler
       Role: !GetAtt LambdaIAMRole.Arn
@@ -258,6 +259,13 @@ Resources:
   FrontEndLambdaServerSideRendering:
     Type: AWS::Serverless::Function 
     Properties:
+      FunctionName:
+        !Sub
+        - ${Environment}-${Project}-fronEnd-server-side-rendering-${Id}
+        - Project: !Ref Project
+          Environment: !Ref Env
+          Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
+      Timeout: 10
       CodeUri: ./frontEndBundle/
       Handler: serverBundle.handler
       Role: !GetAtt LambdaIAMRole.Arn
