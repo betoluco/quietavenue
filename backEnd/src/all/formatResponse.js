@@ -4,6 +4,9 @@ const formatResults = async (estate) =>{
     const item = {url: estate.estate_url};
    
     item.address1 = estate.address_1;
+    if (Array.from(estate.profile_picture)[0] != '/' ){
+        estate.profile_picture = '/' + estate.profile_picture
+    }
     item.profilePicture  = estate.profile_picture;
     item.city = estate.city;
     item.state = estate.state_abbreviation;
