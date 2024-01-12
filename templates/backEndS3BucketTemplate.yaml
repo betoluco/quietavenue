@@ -70,12 +70,12 @@ Resources:
         Version: '2008-10-17'
         Id: PolicyForCloudFrontPrivateContent
         Statement:
-          - Sid: 1
-            Action: 's3:GetObject'
-            Effect: Allow
-            Resource: !Sub '${BackEndS3Bucket.Arn}/*'
+          - Effect: Allow
             Principal: 
               AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CFOriginAccessIdentityBackEnd}'
+            Action: 
+              - s3:GetObject
+            Resource: !Sub '${BackEndS3Bucket.Arn}/*'
   
   BackEndS3BucketGatewayEndpoint:
     Type: AWS::EC2::VPCEndpoint
