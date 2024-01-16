@@ -11,6 +11,7 @@ import estatesReducer from './estatesReducer';
 const app = express();
 
 app.use(awsServerlessExpressMiddleware.eventContext());
+
 app.get("*", async (req, res) =>{
     const store = configureStore({
         reducer:{
