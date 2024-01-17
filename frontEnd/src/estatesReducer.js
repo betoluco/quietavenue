@@ -20,7 +20,6 @@ export const fetchEstates = createAsyncThunk('estates/fetchEstates', async () =>
 export const estatesSlice = createSlice({
     name: 'estates',
     initialState,
-    reducers:{},
     extraReducers(builder) {
       builder
         .addCase(fetchEstates.pending, (state, action) => {
