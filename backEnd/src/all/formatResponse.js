@@ -40,11 +40,9 @@ const formatResults = async (estate) =>{
         item.videoLink = estate.video_link;
     }
     
-    
-    if (estate.audio_data_link !== null && estate.sunrise !== null && estate.sunset !== null) {
+    if (estate.audio_data_link !== null) {
         await getAudioData(estate.audio_data_link, item, estate);
     }
-    
     
     return item;
 };

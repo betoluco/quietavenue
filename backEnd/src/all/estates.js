@@ -14,7 +14,7 @@ const estates = async (req, res) =>{
     try {
         const databaseResponse = await pool.query(`
             SELECT estate_url, address_1, audio_data_link, audio_description, bathroom, 
-            bedroom, lot_area, price, profile_picture, sunrise, sunset, video_link,
+            bedroom, lot_area, price, profile_picture, video_link,
             cities.city, states.state_abbreviation, zip_codes.zip_code
             FROM estates
             INNER JOIN cities

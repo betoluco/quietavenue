@@ -102,48 +102,12 @@ const Graph = props =>{
     dateToTransform.setFullYear(today.getFullYear());
     return dateToTransform;
   };
- 
-  // background
-  const sunrise = transformDateToToday(today, props.sunrise);
-  const nightEnd = new Date(sunrise.getTime() - transitionTime ); 
-  const dayStart =  new Date(sunrise.getTime() + transitionTime );
-  
-  const sunset = transformDateToToday(today, props.sunset);
-  const dayEnd =  new Date(sunset.getTime() - transitionTime );
-  const nightStart = new Date(sunset.getTime() + transitionTime );
-  
     
   return (
     <svg 
     ref={ref}
     viewBox={`0 0 ${width} ${height}`} 
     className="w-full, mb-2">
-      <defs>
-        <linearGradient id="background" x2={width} y2="0" gradientUnits="userSpaceOnUse">
-          <stop 
-          offset={timeScale(nightEnd)/width * 100 + "%"} 
-          stopColor="#66b3ff" />
-          <stop 
-          offset={timeScale(sunrise)/width * 100 + "%"} 
-          stopColor="#ffffff" />
-          <stop 
-          offset={timeScale(dayStart)/width * 100 + "%"} 
-          stopColor="#ffff99" />
-          <stop 
-          offset={timeScale(dayEnd)/width * 100 + "%"} 
-          stopColor="#ffff99" />
-          <stop 
-          offset={timeScale(sunset)/width * 100 + "%"} 
-          stopColor="#ffffff" />
-          <stop 
-          offset={timeScale(nightStart)/width * 100 + "%"} 
-          stopColor="#66b3ff" />
-        </linearGradient>
-        <linearGradient id="fade" x2="0" y2={height - margin.bottom} gradientUnits="userSpaceOnUse">
-          <stop offset="10%" stopColor="white" />
-          <stop offset="100%" stopColor="white" stopOpacity="0%"/>
-        </linearGradient>
-      </defs>
       <rect
         x="0"
         y="0"

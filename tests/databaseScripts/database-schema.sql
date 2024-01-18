@@ -34,8 +34,6 @@ CREATE TABLE public.estates (
 	lot_area float8 NULL,
 	price float8 NULL,
 	profile_picture text NOT NULL,
-	sunrise timestamp NULL,
-	sunset timestamp NULL,
 	video_link text NULL,
 	city_fk int4 NOT NULL,
 	zip_code_fk int4 NOT NULL,
