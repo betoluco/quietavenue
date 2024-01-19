@@ -32,7 +32,7 @@ module.exports = function(env, argv) {
                                         "node":"18"
                                     }
                                 }],
-                                "@babel/preset-react",
+                                ["@babel/preset-react", {"runtime": "automatic"}]
                             ]
                         }
                     }
