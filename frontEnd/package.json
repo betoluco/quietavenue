@@ -24,7 +24,7 @@
   "scripts": {
     "start": "REACT_APP_DOMAIN_NAME=https://d3cggm3jrv835x.cloudfront.net react-scripts start",
     "unit-test": "jest",
-    "mirror": "NODE_ENV=development REACT_APP_DOMAIN_NAME=https://d3cggm3jrv835x.cloudfront.net npm run build",
+    "mirror": "NODE_ENV=development REACT_APP_DOMAIN_NAME=https://d3cggm3jrv835x.cloudfront.net npm run build && npm run upload-assets",
     "prod": "NODE_ENV=production REACT_APP_DOMAIN_NAME=https://quietavenue.com npm run build",
     "build": "rm -rf ./clientBuild && npm run client-build && npm run server-build",
     "client-build": "webpack --config webpack.client.js",
