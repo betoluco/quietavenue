@@ -5,12 +5,14 @@ const formatResults = async (estate) =>{
    
     item.address1 = estate.address_1;
     if (Array.from(estate.profile_picture)[0] != '/' ){
-        estate.profile_picture = '/' + estate.profile_picture
+        estate.profile_picture = '/' + estate.profile_picture;
     }
     item.profilePicture  = estate.profile_picture;
     item.city = estate.city;
     item.state = estate.state_abbreviation;
     item.zip_code = estate.zip_code;
+    
+    item.address2 = item.city + ' ' + item.state + ' ' + item.zip_code;
     
     if (estate.audio_description !== null) {
         item.audioDescription = estate.audio_description;
