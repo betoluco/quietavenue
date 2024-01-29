@@ -37,7 +37,7 @@ const search = async (req, res) =>{
             return response;
             
         }catch (error) {
-            console.log("Error", error.message);
+            console.error(error.message);
             res.status(500);
             return;
         }

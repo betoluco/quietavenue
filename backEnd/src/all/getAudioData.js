@@ -23,7 +23,7 @@ const getAudioData = async (audioDataLink, item, estate) =>{
         item.audioData = JSON.parse(await streamToString(Body));
         
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
     return;
 };
