@@ -5,48 +5,42 @@ import WorkFlow from "./workFlow/WorkFlow";
 import NotFound from "./notFound/NotFound";
 import Contact from "./contact/Contact";
 import Mission from "./mission/Mission";
-import FAQ from "./FAQ/FAQ"
+import FAQ from "./FAQ/FAQ";
 
-
-const Routes = [
+const routes = [
     {
-        component: Root,
-        routes:[
+        element: <Root />,
+        children: [
             {
-                ...Estate,
-                path: "/estate/:estateId",
-                exact: true
+                path: "/estate/:estateURL",
+                ...Estate
             },
             {
-                component: WorkFlow,
                 path: "/workFlow",
-                exact: true
+                element: <WorkFlow />,
             },
             {
-                component: Contact,
                 path: "/contact",
-                exact: true
+                element: <Contact />,
             },
             {
-                component: Mission,
                 path: "/mission",
-                exact: true
+                element: <Mission />,
             },
             {
-                component: FAQ,
                 path: "/FAQ",
-                exact: true
+                element: <FAQ />,
             },
             {
-                ...Home,
                 path: "/",
-                exact: true
+                ...Home
             },
             {
-                component: NotFound
+                path: "*",
+                element: <NotFound />,
             }
         ]
     }
 ];
 
-export default Routes;
+export default routes;

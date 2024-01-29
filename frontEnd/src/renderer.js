@@ -1,20 +1,42 @@
-import React, { Fragment } from "react";
+import React, { createElement }  from "react";
 import ReactDOMServer from "react-dom/server";
-import { StaticRouter } from "react-router-dom";
-import { renderRoutes } from "react-router-config";
+import { StaticRouter } from "react-router-dom/server";
+import { Routes, Route } from "react-router-dom";
 import serializer from "serialize-javascript";
 import { Provider } from "react-redux";
 
-import Routes from "./Routes";
+import routes from "./routes";
 import rehydrationBundle from "../clientBuild/clientBundle.js";
 import css from "../clientBuild/main.css";
+
+const createElementsFromRoutes = (routes) =>{
+    return routes.map( (route, i) =>{
+        const attributes = {
+            element: route.element,
+            key: route.element.type.name
+        };
+        if (route.path) attributes.path = route.path;
+        
+        if (route.children) {
+            const routeChildren = createElementsFromRoutes(route.children);
+            return createElement(Route, attributes, ...routeChildren);
+        }
+        
+        return createElement(Route, attributes);
+    });
+};
+
 
 const renderer = (req, store, context) => {
     const content = ReactDOMServer.renderToString(
         <Provider store={store}>
-            <StaticRouter location={req.path} context={ context }>
-                <Fragment>{renderRoutes(Routes)}</Fragment>
-            </StaticRouter>
+            <React.StrictMode>
+                <StaticRouter location={req.path}>
+                    <Routes>
+                        {createElementsFromRoutes(routes)}
+                    </Routes>
+                </StaticRouter>
+            </React.StrictMode>
         </Provider>
     );
     

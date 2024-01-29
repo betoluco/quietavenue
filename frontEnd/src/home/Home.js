@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect } from "react";
+import { useSearchParams, useLoaderData, } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 
 import Search from "../common/Search";
@@ -12,12 +13,11 @@ import neighborhoodMD from "./neighborhoodMD.jpg";
 const Home = (props) =>{
     const dispatch = useDispatch();
     const estateStatus = useSelector( state => state.estates.status );
+    const [searchParams, setSearchParams] = useSearchParams();
     
     useEffect( () => {
         if ( estateStatus === "idle" ) dispatch( fetchEstates() );
     }, [estateStatus, dispatch]);
-    
-    const searchParams = new URLSearchParams(props.location.search);
     
     const estates = useSelector( state => {
         if (searchParams.has('filter') && searchParams.has('filterId')){
@@ -70,9 +70,9 @@ const loadData = (store, req) => {
     return store.dispatch( fetchEstates());
 };
 
-const HomeExport = {
+const homeExport = {
     loadData,
-    component: Home
+    element: <Home />,
 };
 
-export default HomeExport;
+export default homeExport;

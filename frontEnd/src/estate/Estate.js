@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector} from "react-redux";
-import { Redirect } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 
 import EstateTemplate from "./EstateTemplate";
 import { fetchEstates } from "../estatesReducer";
@@ -9,13 +9,13 @@ import AudioPlayer from "./graph/AudioPlayer";
 
 
 const Estate = (props) =>{
-    const estateURL = props.match.params.estateId;
+    const { estateURL } = useParams();
     const estate = useSelector( (state) =>
         state.estates.estates.find( estate => estate.url === estateURL)
     );
     
     if( !estate ){
-        return <Redirect to="/notFound" />;
+        return <Navigate to="/notFound" />;
     }
     
     const moneyOptions = {
@@ -54,7 +54,7 @@ const loadData = (store, req) => {
 
 const estateExport = {
     loadData,
-    component: Estate
+    element: <Estate />,
 };
 
 export default estateExport;

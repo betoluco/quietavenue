@@ -1,11 +1,10 @@
 import awsServerlessExpressMiddleware from "aws-serverless-express/middleware";
 import express from "express";
-import { matchRoutes } from "react-router-config";
-import cors from "cors";
 import { configureStore } from '@reduxjs/toolkit';
+import { matchPath } from "react-router";
 
 import renderer from "./renderer";
-import Routes from "./Routes";
+import routes from "./routes";
 import estatesReducer from './estatesReducer';
 
 const app = express();
@@ -19,15 +18,25 @@ app.get("*", async (req, res) =>{
         }
     });
     
-    const path = req.apiGateway.event.path;
+    //const path = req.apiGateway.event.path;
+    const path = "/"
     
-    const promises = matchRoutes(Routes, path).map(({ route }) => {
-        if (route.loadData){
-            return route.loadData(store, req);
-        }else{
-            return Promise.resolve(null);
-        }
-    });
+    const getMatchRoute = (path, routes) => {
+        for (let i = 0; i < routes.length; i++){
+            let matchRoute = undefined;
+            if (routes[i].children) {
+                matchRoute = getMatchRoute(path, routes[i].children);
+            }
+            if (matchRoute)  return matchRoute;
+        };
+        
+        return routes.find( (route) =>{
+            // matchPath trows error if the route has no path
+            if (route.path) return matchPath(route, path);
+            return false;
+        });
+        
+    };
     
     const render = () => {
         const context = {};
@@ -41,9 +50,13 @@ app.get("*", async (req, res) =>{
     };
     
     try {
-        await Promise.all(promises);
+        const route = getMatchRoute(path, routes);
+        if (route.loadData){
+            await route.loadData(store, req);
+        }
         render();
     }catch(err){
+        console.error("app error", err);
         render();
     }
 });
