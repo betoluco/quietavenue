@@ -1,11 +1,12 @@
 const path = require("path");
 const webpack = require("webpack");
 const TerserPlugin = require('terser-webpack-plugin');
+//const nodeExternals = require('webpack-node-externals');
 
 // Client side bundle for hydration
 module.exports = function(env, argv) {
     
-    return {
+    const config = {
         mode: process.env.NODE_ENV,
         
         entry: "./src/lambda.js",
@@ -54,7 +55,17 @@ module.exports = function(env, argv) {
             }),
         ],
         
-        optimization: {
+        target: "node",
+        
+        //externals: [nodeExternals()],
+    };
+    
+    if (process.env.NODE_ENV === 'development') {
+        config.optimization = {minimize: false};
+    }else{
+        // Excluedes comments from bundle and Eliminates Licence.txt 
+        config.optimization = {
+            minimize: true,
             minimizer: [new TerserPlugin({
                 extractComments: false,
                 terserOptions: {
@@ -63,9 +74,12 @@ module.exports = function(env, argv) {
                     },
                 }
             })],
-        },
+        };
         
-        target: "node",
-    };
+    }
+        
+            
+    
+    return config;
 };
 
