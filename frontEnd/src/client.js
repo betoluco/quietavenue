@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import ReactDOM from "react-dom";
+import { hydrateRoot } from 'react-dom/client';
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from '@reduxjs/toolkit';
@@ -21,11 +21,12 @@ const store = configureStore({
 
 const browserRouter = createBrowserRouter(routes);
 
-ReactDOM.hydrate(
+hydrateRoot(
+  document.querySelector('#root'),
   <Provider store={store} >
     <React.StrictMode>
       <RouterProvider router={browserRouter} />
     </React.StrictMode>
-  </Provider>,
-  document.querySelector('#root')
+  </Provider>
+  
 );
