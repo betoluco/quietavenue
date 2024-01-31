@@ -8,11 +8,12 @@ import Footer from "./common/Footer";
 const Root = ( props ) => {
     let location = useLocation()
     useEffect( () => {
+        window.scrollTo(0,0)
+        
         window.gtag('config', 'G-439GZCCJLJ', {
             page_title: location,
             page_path: location,
         });
-        
     }, [location]);
     
     return (
