@@ -203,7 +203,7 @@ Resources:
     Properties:
       FunctionName:
         !Sub
-        - ${Environment}-${Project}-frontEnd-API-server-${Id}
+        - ${Environment}-${Project}-backend-API-server-${Id}
         - Project: !Ref Project
           Environment: !Ref Env
           Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
