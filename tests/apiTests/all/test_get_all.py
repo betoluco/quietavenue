@@ -1,7 +1,8 @@
 import requests
 import json
 
-ENPOINT = "https://d1hyv7xw6uagpv.cloudfront.net/api/estates"
+BASE_URL = "https://d3cggm3jrv835x.cloudfront.net"
+ENPOINT = BASE_URL + "/api/estates"
 CORRECT_RESPONSE = "all/correct_response.json"
 
 
