@@ -11,6 +11,6 @@ backEndBundle/
 frontEnd/clientBuild/
 frontEndBundle/
 
-#Cypress
-code/cypress/screenshots
-code/cypress/videos
+#pytest
+*.pyc
+*__pycache__/
