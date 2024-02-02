@@ -50,8 +50,9 @@ const search = async (req, res) =>{
             });
             response.cities =  citiesSearch.rows.map( city => {
                 const url = `/city/${city.state_abbreviation}/${city.city}/${city.city_id}`.replace(/\s+/g, '-');
+                const name = `${city.city}, ${city.state_abbreviation}`
                 return {
-                    'name': city.city,
+                    'name': name,
                     'url': url,
                     'key': city.city_id
                 };
