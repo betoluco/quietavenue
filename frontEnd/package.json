@@ -29,8 +29,8 @@
     "build": "rm -rf ./clientBuild && npm run client-build && npm run server-build",
     "client-build": "webpack --config webpack.client.js",
     "server-build": "webpack --config webpack.server.js",
-    "clear-assets": "aws s3 rm s3://dev-quietavenue-frontend-s3-bucket-0664e2e9d935/staticAssets --recursive",
-    "upload-assets": "aws s3 cp ../frontEndBundle/staticAssets s3://dev-quietavenue-frontend-s3-bucket-0664e2e9d935/staticAssets --recursive"
+    "clear-assets": "aws s3 rm s3://dev-quietavenue-frontend-s3-bucket-02b4fc0c21d3/staticAssets --recursive",
+    "upload-assets": "aws s3 cp ../frontEndBundle/staticAssets s3://dev-quietavenue-frontend-s3-bucket-02b4fc0c21d3/staticAssets --recursive"
   },
   "scriptsComments": {
     "start": "Sets up the api domain name and a development environment and starts a server, as well as hot module reloading",

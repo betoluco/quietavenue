@@ -15,7 +15,7 @@
   "scripts": {
     "//": "VERIFY THAT THE CORRECT BUCKER IS USED",
     "build-backend": "NODE_ENV=production webpack --config webpack.backEnd.js",
-    "upload-test-data": "aws s3 cp ../tests/bucket s3://dev-quietavenue-backend-s3-bucket-067eddd7d7c3 --recursive"
+    "upload-test-data": "aws s3 cp ../tests/bucket s3://dev-quietavenue-backend-s3-bucket-02f3756f203d --recursive"
   },
   "scriptsComments": {
     "build-backend": "Creates the backEndBundle file that contains the code for the backEnd, and stores it on backEndBundle folder",
