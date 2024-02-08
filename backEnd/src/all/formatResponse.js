@@ -22,10 +22,10 @@ const formatResults = async (estate) =>{
     }
     
     item.city = estate.city;
-    item.city_id = estate.city_id;
+    item.cityId = estate.city_id;
     item.state = estate.state_abbreviation;
-    item.zip_code = estate.zip_code;
-    item.zip_code_id = estate.zip_code_id;
+    item.zipCode = estate.zip_code;
+    item.zipCodeId = estate.zip_code_id;
     
     item.address2 = item.city + ' ' + item.state + ' ' + item.zip_code;
     
