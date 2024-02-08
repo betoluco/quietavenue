@@ -1,13 +1,26 @@
 import getAudioData from "./getAudioData";
+import { S3Client, HeadObjectCommand } from "@aws-sdk/client-s3";
 
 const formatResults = async (estate) =>{
-    const item = {url: estate.estate_url};
-   
+    const item = {};
     item.address1 = estate.address_1;
-    if (Array.from(estate.profile_picture)[0] != '/' ){
-        estate.profile_picture = '/' + estate.profile_picture;
+    
+    try {
+        const client = new S3Client({ region: 'us-west-1' });
+        const s3params = {
+            Bucket: `${process.env.S3_BUCKET}`, 
+            Key: estate.profile_picture
+        };
+        const command = new HeadObjectCommand(s3params);
+        const response = await client.send(command);
+        //if (response['$metadata'].httpStatusCode === 200) {
+        if (Array.from(estate.profile_picture)[0] != '/' ){
+            item.profilePicture = '/' + estate.profile_picture;
+        }
+    } catch (error){
+        item.profilePicture = '/assets/house-svg-icon.svg';
     }
-    item.profilePicture  = estate.profile_picture;
+    
     item.city = estate.city;
     item.city_id = estate.city_id;
     item.state = estate.state_abbreviation;
@@ -28,7 +41,7 @@ const formatResults = async (estate) =>{
         item.bedroom = estate.bedroom;
     }
     
-    if (estate.lotArea !== null) {
+    if (estate.lot_area !== null) {
         item.lotArea = estate.lot_area;
     }
     
