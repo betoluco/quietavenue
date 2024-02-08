@@ -3,16 +3,15 @@ import { Link } from "react-router-dom";
 
 
 const Card = props =>{
-  const link = "/estate/" + props.estate.url;
   return (
     <div className="shadow-lg border-b-2 border-green-600 rounded-md">
-      <Link to={link}>
+      <Link to={props.estate.url}>
         <img 
         data-cy="profilePicture"
         className="w-full border-b border-stone-300 h-64 object-cover rounded-t-md" 
         src={props.estate.profilePicture} 
         alt="Estate" />
-        <div key={props.estate.id} className="m-2 ml-6">
+        <div key={props.estate.estateId} className="m-2 ml-6">
           <h2 
           data-cy="street"
           className="text-xl text-stone-800 font-semibold">
