@@ -2,7 +2,11 @@ import getAudioData from "./getAudioData";
 import { S3Client, HeadObjectCommand } from "@aws-sdk/client-s3";
 
 const formatResults = async (estate) =>{
-    const item = {};
+    const url = `/estate/${estate.state_abbreviation}/${estate.city}/
+                ${estate.address_1}/${estate.estate_id}`.replace(/\s+/g, '-');
+    
+    const item = {estateId: estate.estate_id};
+    item.url = url
     item.address1 = estate.address_1;
     
     try {
