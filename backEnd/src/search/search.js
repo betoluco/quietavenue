@@ -39,8 +39,8 @@ const search = async (req, res) =>{
             
             const response = {};
             response.addresses =  addressSearch.rows.map( estate => {
-                const url = `/estate/${estate.state_abbreviation}/${estate.city}/
-                ${estate.address_1}/${estate.estate_id}`.replace(/\s+/g, '-');
+                const url = `/estate/${estate.estate_id}/${estate.state_abbreviation}/
+                ${estate.city}/${estate.address_1}`.replace(/\s+/g, '-');
                 const name = `${estate.address_1} ${estate.city} ${estate.state_abbreviation} ${estate.zip_code}`
                 return {
                     'name': name,
