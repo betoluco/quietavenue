@@ -49,7 +49,7 @@ const search = async (req, res) =>{
                 };
             });
             response.cities =  citiesSearch.rows.map( city => {
-                const url = `/city/${city.state_abbreviation}/${city.city}/${city.city_id}`.replace(/\s+/g, '-');
+                const url = `/city/${city.city_id}/${city.state_abbreviation}/${city.city}`.replace(/\s+/g, '-');
                 const name = `${city.city}, ${city.state_abbreviation}`
                 return {
                     'name': name,
@@ -61,7 +61,7 @@ const search = async (req, res) =>{
                 const url = `/zipCode/${zipCode.zip_code}/${zipCode.zip_code_id}`.replace(/\s+/g, '-');
                  return {
                     'name': zipCode.zip_code,
-                    'url': `/zipCode/${zipCode.zip_code}/${zipCode.zip_code_id}`,
+                    'url': `/zipCode/${zipCode.zip_code_id}/${zipCode.zip_code}`,
                     'key': zipCode.zip_code_id
                 };
             });
