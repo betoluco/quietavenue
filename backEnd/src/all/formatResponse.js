@@ -31,7 +31,7 @@ const formatResults = async (estate) =>{
     item.zipCode = estate.zip_code;
     item.zipCodeId = estate.zip_code_id;
     
-    item.address2 = item.city + ' ' + item.state + ' ' + item.zip_code;
+    item.address2 = item.city + ' ' + item.state + ' ' + item.zipCode;
     
     if (estate.audio_description !== null) {
         item.audioDescription = estate.audio_description;
