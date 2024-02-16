@@ -1,4 +1,5 @@
 import React, {useState, useEffect } from "react";
+import axios from 'axios';
 import { Link } from "react-router-dom";
 
 import searchButton from "./images/magnifyingGlassOp.svg";
@@ -9,89 +10,102 @@ const Search = props =>{
   const [suggest, setSuggest] = useState([]);
   const [showSuggest, setShowSuggest] = useState(false);
   
-  useEffect(() => {
-    if (searchInputText.length > 0) {
-      let suggestList = [];
-      const estateSuggestions = [];
-      const citySuggestions = [];
-      const zipCodeSuggestions = [];
+  useEffect( () => {
+    //The search in the database is done using trigrams that's why it need 3 chars
+    if (searchInputText.length > 2) { 
+      let didCancel = false;
       
-      if(estateSuggestions.length){
-        suggestList.push(
-          <li 
-          className="p-1 bg-white text-base text-stone-500 w-full"
-          key={'estates'} data-cy="estateTitle">
-            Estates
-          </li>
-        );
-        estateSuggestions.forEach( element =>{
-          suggestList.push(
-            <Link 
-            to={element.link}
-            key={element.link}
-            onClick={onSuggestClick}
-            className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
-              {element.name}
-            </Link>
-          );
-        });
-      }
-      
-      if(citySuggestions.length){
-        suggestList.push(
-          <li 
-          className="p-1 bg-white text-base text-stone-500 w-full"
-          key={'city'} data-cy="cityTitle">
-            City
-          </li>
-        );
-        citySuggestions.forEach( element =>{
-          suggestList.push(
-            <Link
-            to={element.link}
-            key={element.link}
-            onClick={onSuggestClick}
-            className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
-              {element.name}
-            </Link>
-          );
-        });
-      }
-      
-      if(zipCodeSuggestions.length){
-        suggestList.push(
-          <li 
-          className="p-1 bg-white text-base text-stone-500 w-full"
-          key={'zipCode'} data-cy="zipCodeTitle">
-            Zip code
-          </li>
-        );
-        zipCodeSuggestions.forEach( element =>{
-          suggestList.push(
-            <Link
-            to={element.link}
-            key={element.link}
-            onClick={onSuggestClick}
-            className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
-              {element.name}
-            </Link>
-          );
-        });
-      }
+      const filterSearch = async () => {
+        const url = `${process.env.REACT_APP_DOMAIN_NAME}/api/search?filter=${searchInputText}`;
+        const response = await axios.get(url);
         
-      if(suggestList.length === 0){
-        suggestList.push(
-          <li 
-          className="flex p-1 bg-white text-sm border-b-2 border-green-600 border-opacity-50"
-          key="No results" data-cy="noResults">
-            No results
-          </li>
-        );
+        if (!didCancel) { // Ignore if we started fetching something else
+          let suggestList = [];
+          const estateSuggestions = response.data.addresses;
+          const citySuggestions = response.data.cities;
+          const zipCodeSuggestions = response.data.zip_codes;
+          
+          if(estateSuggestions.length){
+            suggestList.push(
+              <li 
+              className="p-1 bg-white text-base text-stone-500 w-full"
+              key={'estates'} data-cy="estateTitle">
+                Estates
+              </li>
+            );
+            estateSuggestions.forEach( element =>{
+              suggestList.push(
+                <Link 
+                to={element.url}
+                key={element.key}
+                onClick={onSuggestClick}
+                className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
+                  {element.name}
+                </Link>
+              );
+            });
+          }
+          
+          if(citySuggestions.length){
+            suggestList.push(
+              <li 
+              className="p-1 bg-white text-base text-stone-500 w-full"
+              key={'city'} data-cy="cityTitle">
+                City
+              </li>
+            );
+            citySuggestions.forEach( element =>{
+              suggestList.push(
+                <Link
+                to={element.url}
+                key={element.key}
+                onClick={onSuggestClick}
+                className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
+                  {element.name}
+                </Link>
+              );
+            });
+          }
+          
+          if(zipCodeSuggestions.length){
+            suggestList.push(
+              <li 
+              className="p-1 bg-white text-base text-stone-500 w-full"
+              key={'zipCode'} data-cy="zipCodeTitle">
+                Zip code
+              </li>
+            );
+            zipCodeSuggestions.forEach( element =>{
+              suggestList.push(
+                <Link
+                to={element.url}
+                key={element.key}
+                onClick={onSuggestClick}
+                className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
+                  {element.name}
+                </Link>
+              );
+            });
+          }
+            
+          if(suggestList.length === 0){
+            suggestList.push(
+              <li 
+              className="flex p-1 bg-white text-sm border-b-2 border-green-600 border-opacity-50"
+              key="No results" data-cy="noResults">
+                No results
+              </li>
+            );
+          }
+          
+          setSuggest(suggestList);
+          setShowSuggest(true);
+        }
       }
       
-      setSuggest(suggestList);
-      setShowSuggest(true);
-    
+      filterSearch();
+      return () => { didCancel = true; }; // Remember if we start fetching something else
+      
     }else{
       setSuggest([]);
       setShowSuggest(false);

@@ -7,13 +7,15 @@ import NotFound from "./notFound/NotFound";
 import Contact from "./contact/Contact";
 import Mission from "./mission/Mission";
 import FAQ from "./FAQ/FAQ";
+import CityFilter from "./filter/CityFilter"
+import ZipCodeFilter from "./filter/ZipCodeFilter"
 
 const routes = [
     {
         element: <Root />,
         children: [
             {
-                path: "/estate/:estateURL",
+                path: "/estate/:estateId/*",
                 ...Estate
             },
             {
@@ -35,6 +37,14 @@ const routes = [
             {
                 path: "/",
                 ...Home
+            },
+            {
+                path: "/city/:filterId/:state/:city",
+                ...CityFilter
+            },
+            {
+                path: "/zipCode/:filterId/:zipCode",
+                ...ZipCodeFilter
             },
             {
                 path: "*",
