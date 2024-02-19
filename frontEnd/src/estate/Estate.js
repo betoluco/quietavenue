@@ -4,7 +4,7 @@ import { Navigate, useParams } from "react-router-dom";
 
 import EstateTemplate from "./EstateTemplate";
 import { fetchEstates } from "../estatesReducer";
-import AudioPlayer from "./graph/AudioPlayer";
+import Graph from "./graph/Graph";
 
 
 
@@ -30,22 +30,14 @@ const Estate = (props) =>{
         price = money.format(parseFloat(estate.price));
     }
     
-    let graphs = [];
+    let graph = undefined
     if (estate.audioData){
-        Object.keys(estate.audioData).forEach((day) => {
-            graphs.push(
-                <AudioPlayer
-                graphData={estate.audioData[day].graphData}
-                mp3Link = {estate.audioData[day].mp3Link}
-                key={day}
-                day={day}
-                sunset={estate.sunset}
-                sunrise={estate.sunrise}/>
-            );
-        });
+        graph = <Graph audioData={estate.audioData} />
     }
     
-    return <EstateTemplate estate={estate} price={price} graphs={graphs}/>;
+     
+    
+    return <EstateTemplate estate={estate} price={price} graph={graph}/>;
 };
 
 const loadData = (store, req) => {

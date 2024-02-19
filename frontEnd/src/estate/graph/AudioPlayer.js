@@ -1,7 +1,6 @@
 import React, {useRef, useEffect, useState} from "react";
 import playIcon from "./playOp.svg";
 import pauseIcon from "./pauseOp.svg";
-import Graph from "./Graph";
 
 const AudioPlayer = props =>{
     const [isPlaying, setIsPlaying] = useState(false);
@@ -70,13 +69,6 @@ const AudioPlayer = props =>{
     
     return(
         <div className="flex flex-col items-center w-full mb-4">
-            <Graph
-            index={index}
-            graphData={props.graphData}
-            sunrise={props.sunrise}
-            sunset={props.sunset}
-            day={props.day}/>
-            
             <div className="w-full flex items-center">
                 <button 
                 className="w-12 mr-3" 

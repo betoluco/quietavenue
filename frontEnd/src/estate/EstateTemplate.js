@@ -78,14 +78,14 @@ const EstateTemplate = (props) => {
             </h3>
           </div>
         }
-        {props.graphs.length > 0 &&
+        {props.graph &&
           <div 
           className="" 
           data-cy="estateAudioGraph">
             <h2 className="text-stone-800 text-center max-w-screen-md text-lg sm:text-xl">
               Audio recorded in the property
             </h2>
-            {props.graphs}
+            {props.graph}
           </div>
         }
       </div>
