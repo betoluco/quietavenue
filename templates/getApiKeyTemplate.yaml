@@ -73,7 +73,7 @@ Resources:
       CodeUri: ../getApiKey/
       Handler: getApiKey.lambda_handler
       Role: !GetAtt GetApiKeyValueFunctionRole.Arn
-      Runtime: python3.8
+      Runtime: python3.10
       Timeout: 120
       Description: lambda funtion that gets the api key and pass it to cloudfront
       Environment:
