@@ -1,6 +1,4 @@
-### Node ###
-
-# Dependency directories
+# Node modules
 node_modules/
 
 # AWS SAM 
@@ -14,3 +12,9 @@ frontEndBundle/
 #pytest
 *.pyc
 *__pycache__/
+
+#playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
