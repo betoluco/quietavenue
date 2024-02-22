@@ -22,15 +22,15 @@
     "serialize-javascript": "^6.0.1"
   },
   "scripts": {
-    "start": "REACT_APP_DOMAIN_NAME=https://d2fogsfficgbjo.cloudfront.net react-scripts start",
+    "start": "REACT_APP_DOMAIN_NAME=https://d3d6un1tjol792.cloudfront.net react-scripts start",
     "unit-test": "jest",
-    "mirror": "NODE_ENV=development REACT_APP_DOMAIN_NAME=https://d2fogsfficgbjo.cloudfront.net npm run build && npm run upload-assets",
+    "mirror": "NODE_ENV=development REACT_APP_DOMAIN_NAME=https://d3d6un1tjol792.cloudfront.net npm run build && npm run upload-assets",
     "prod": "NODE_ENV=production REACT_APP_DOMAIN_NAME=https://quietavenue.com npm run build",
     "build": "rm -rf ./clientBuild && npm run client-build && npm run server-build",
     "client-build": "webpack --config webpack.client.js",
     "server-build": "webpack --config webpack.server.js",
-    "clear-assets": "aws s3 rm s3://dev-quietavenue-frontend-s3-bucket-02b4fc0c21d3/staticAssets --recursive",
-    "upload-assets": "aws s3 cp ../frontEndBundle/staticAssets s3://dev-quietavenue-frontend-s3-bucket-02b4fc0c21d3/staticAssets --recursive"
+    "clear-assets": "aws s3 rm s3://dev-quietavenue-frontend-s3-bucket-06f5a172f671/staticAssets --recursive",
+    "upload-assets": "aws s3 cp ../frontEndBundle/staticAssets s3://dev-quietavenue-frontend-s3-bucket-06f5a172f671/staticAssets --recursive"
   },
   "scriptsComments": {
     "start": "Sets up the api domain name and a development environment and starts a server, as well as hot module reloading",
