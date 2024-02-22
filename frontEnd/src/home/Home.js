@@ -100,7 +100,7 @@ const Home = (props) =>{
                 you can see and hear out what it is like to live in that area.
               </p>
               <Link to="/mission" className="text-center underline text-blue-600 hover:text-blue-800 mb-3">
-                lear more
+                learn more
               </Link>
             </div>
           </div>
