@@ -1,12 +1,16 @@
-import React, {useLayoutEffect, useRef, useState} from "react";
+import React, {useLayoutEffect, useRef, useState, Fragment} from "react";
 import {scaleTime, scaleLinear} from "d3-scale";
 
+import AudioPlayer from "./AudioPlayer";
+
 const Graph = props =>{
+  const dataList = Object.keys(props.audioData);
   const ref = useRef(null);
   
   const svgWidth = 260;
   //scale is used to size the text
   const [scale, setScale] = useState(1);
+  const [selectedDay, setSelectedDay] = useState(dataList[0]);
   
   let remSize = 16;
   useLayoutEffect(() => {
@@ -31,7 +35,7 @@ const Graph = props =>{
   .range([graphHeight - margin.bottom , 0]);
   
   // Ploting
-  const ridgeline = Object.keys(props.audioData).map((day, i) => {
+  const ridgeline = dataList.map((day, i) => {
     const today = new Date(day);
     const tomorrow = new Date(day).setHours(24, 0, 0);
     
@@ -81,11 +85,24 @@ const Graph = props =>{
     x2={timeScale(new Date(tomorrow))}  
     y2={loudnessScale(0)} 
     stroke="black" 
-    stroke-width=".1" />;
+    strokeWidth=".1" />;
+    
+    const graphTitle = (
+      <text 
+      y='10'
+      fontSize={`${fontSize}rem`}>
+        {today.toLocaleDateString("en-US", {weekday: 'short', month: 'short', day: 'numeric'})}
+      </text>
+    );
     
     const yTranslate = graphHeight * i;
     return (
-      <g transform={`translate(0, ${yTranslate})`}>
+      <g 
+      transform={`translate(0, ${yTranslate})`} 
+      key={i}
+      onClick={() => setSelectedDay(dataList[i])}
+      >
+        {graphTitle}
         <clipPath id={day}>
           {bars}
         </clipPath>
@@ -123,26 +140,40 @@ const Graph = props =>{
   // }
   
   const svgHeigh = (graphHeight + margin.bottom) * ridgeline.length
-  const xAxisTranslate = graphHeight * ridgeline.length 
+  const xAxisTranslate = graphHeight * ridgeline.length
   
+  console.log(selectedDay)
   return (
-    <svg 
-    ref={ref}
-    viewBox={`0 0 ${svgWidth} ${svgHeigh}`} 
-    className="w-full, mb-2">
-      <linearGradient id="barsGrad" x1="0%" x2="0%" y1="0%" y2="100%">
-        <stop offset="0%" stopColor="red" />
-        <stop offset="33%" stopColor="orange" />
-        <stop offset="66%" stopColor="purple" />
-        <stop offset="100%" stopColor="blue" />
-      </linearGradient>
+    <Fragment>
+      <h2 className="text-stone-800 text-center max-w-screen-md text-lg sm:text-xl">
+        Audio recorded in the property <br/>
+        {new Date(dataList[0])
+        .toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric'})}
+        <span> - </span>
+        {new Date(dataList.at(-1))
+        .toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric'})}
+      </h2>
       
-      {ridgeline}
+      <AudioPlayer mp3Link = {props.audioData[selectedDay].mp3Link} />
       
-      {/*{playingMinuteText &&
-        playingMinuteText
-      }*/}
-    </svg>
+      <svg 
+      ref={ref}
+      viewBox={`0 0 ${svgWidth} ${svgHeigh}`} 
+      className="w-full, mb-2">
+        <linearGradient id="barsGrad" x1="0%" x2="0%" y1="0%" y2="100%">
+          <stop offset="0%" stopColor="red" />
+          <stop offset="33%" stopColor="orange" />
+          <stop offset="66%" stopColor="purple" />
+          <stop offset="100%" stopColor="blue" />
+        </linearGradient>
+        
+        {ridgeline}
+        
+        {/*{playingMinuteText &&
+          playingMinuteText
+        }*/}
+      </svg>
+    </Fragment>
   );
 };
 
