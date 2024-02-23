@@ -13,7 +13,7 @@ const HamburgerMenu = props =>{
   
   return (
     <Fragment>
-      <button onClick={onClickHandler} data-cy="openHamburgerMenu" className="mr-2">
+      <button onClick={onClickHandler}  className="mr-2">
         <span className="hidden">menu button</span>
         <span 
         className="block w-6 md:w-8 h-1 bg-stone-800 rounded-sm mb-1 md:mb-1.5">
@@ -28,15 +28,14 @@ const HamburgerMenu = props =>{
       { showMenu &&
         <div 
         onClick={onClickHandler}
-        className="fixed inset-0 z-10 w-full h-full bg-gray-400 bg-opacity-80"
-        data-cy="hamburgerMenu">
+        className="fixed inset-0 z-10 w-full h-full bg-gray-400 bg-opacity-80">
           <ul className="absolute right-0 w-5/6 sm:w-1/2 md:w-72 bg-white p-3 border-l 
           border-b border-green-600 rounded-l-md rounded-br-md">
             <li>
               <div 
               className="flex flex-row items-center justify-between pb-5 border-b border-green-200 mb-2">
                 <img src={logo} alt="company logo"   className="h-14"/>
-                <button onClick={onClickHandler} data-cy="closeHamburgerMenu">
+                <button onClick={onClickHandler}>
                   <span 
                   className="block bg-stone-800 w-6 h-1 rounded-sm -mb-[4px] -rotate-45">
                   </span>

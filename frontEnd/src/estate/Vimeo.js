@@ -4,7 +4,6 @@ const Vimeo = props => {
   return(
     <Fragment>
       <div 
-      data-cy="estateVideo"
       className="mb-12 w-full relative pb-[56.25%] ">
         <iframe 
           src={props.iframeSRC} 

@@ -29,7 +29,7 @@ const Search = props =>{
             suggestList.push(
               <li 
               className="p-1 bg-white text-base text-stone-500 w-full"
-              key={'estates'} data-cy="estateTitle">
+              key={'estates'}>
                 Estates
               </li>
             );
@@ -50,7 +50,7 @@ const Search = props =>{
             suggestList.push(
               <li 
               className="p-1 bg-white text-base text-stone-500 w-full"
-              key={'city'} data-cy="cityTitle">
+              key={'city'}>
                 City
               </li>
             );
@@ -71,7 +71,7 @@ const Search = props =>{
             suggestList.push(
               <li 
               className="p-1 bg-white text-base text-stone-500 w-full"
-              key={'zipCode'} data-cy="zipCodeTitle">
+              key={'zipCode'}>
                 Zip code
               </li>
             );
@@ -92,7 +92,7 @@ const Search = props =>{
             suggestList.push(
               <li 
               className="flex p-1 bg-white text-sm border-b-2 border-green-600 border-opacity-50"
-              key="No results" data-cy="noResults">
+              key="No results">
                 No results
               </li>
             );
@@ -149,8 +149,7 @@ const Search = props =>{
             onChange={onChangeHandler}
             value={searchInputText}
             type="text"
-            placeholder="zip code, city or address"
-            data-cy="inputField"/>
+            placeholder="zip code, city or address"/>
             <img 
             src={searchButton}
             alt="search button"
@@ -160,7 +159,7 @@ const Search = props =>{
         {showSuggest &&
           <ul
           className="absolute w-11/12 md:w-8/12 lg:w-6/12 xl:w-4/12 rounded-md 
-          border border border-green-600 overflow-hidden z-20" data-cy="resultsList">
+          border border border-green-600 overflow-hidden z-20">
             {suggest}
           </ul>
         }

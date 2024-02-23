@@ -8,7 +8,6 @@ const Mission = (props) =>{
         
         <div className="mb-12   flex flex-col items-center">
             <h2
-            data-cy="howItWorksPage"
             className="text-2xl px-3 sm:text-3xl md:text-4xl xl:text-5xl text-center mb-12 text-stone-800 font-semibold">
                 How it <span className="text-green-600" >works?</span>
             </h2>

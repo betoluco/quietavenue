@@ -55,7 +55,7 @@ const Home = (props) =>{
         `}
         sizes="100vw"
         src={neighborhoodLG} />
-        <Link to="/workFlow" className="" data-cy="callToAction">
+        <Link to="/workFlow" className="">
           <div className="flex justify-center my-8">
             <h2 className="drop-shadow-lg bg-green-600 rounded-md p-3 mb-3 text-2xl text-white text-center">
               Real estate professional? <br /> <span className="underline" >click here</span>

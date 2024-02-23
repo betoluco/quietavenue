@@ -14,7 +14,6 @@ const WorkFlow = (props) =>{
   return(
     <Fragment>
       <h2 
-      data-cy=""
       className="text-2xl sm:text-3xl md:text-4xl xl:text-5xl text-center mb-10 text-stone-800 font-semibold">
         Schedule your <span className="text-green-600" >free trial!</span>
       </h2>
