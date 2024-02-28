@@ -4,14 +4,16 @@ import {scaleTime, scaleLinear} from "d3-scale";
 import AudioPlayer from "./AudioPlayer";
 
 const Graph = props =>{
-  const dataList = Object.keys(props.audioData);
   const ref = useRef(null);
-  
-  const svgWidth = 260;
-  //scale is used to size the text
   const [scale, setScale] = useState(1);
-  const [selectedDay, setSelectedDay] = useState(dataList[0]);
+  const [elapsedTime, setElapsedTime] = useState(0);
   
+  const dataList = Object.keys(props.audioData);
+  const mp3LinksList = dataList.map( day => props.audioData[day].mp3Link);
+  const svgWidth = 260;
+  const graphHeight = 50;
+  
+  //scale is used to size the text
   let remSize = 16;
   useLayoutEffect(() => {
     setScale(svgWidth / ref.current.clientWidth);
@@ -19,7 +21,6 @@ const Graph = props =>{
     remSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
   }, []);
   
-  const graphHeight = 50;
   // 0.75 is the rem size of tailwind sm font size
   //mutiply rem size for the scale to get corret size
   const fontSize =  0.75 * scale;
@@ -28,6 +29,11 @@ const Graph = props =>{
   const playingMinuteTopHeight = scale * remSize *0.5;
   // 5 minutes per bar, 288 bar per day plus 1 to avoid white spaces
   const barWidth = 0.1 + svgWidth/288;
+  
+  const updateElapsedTime = (elapsedTime) =>{
+    setElapsedTime(elapsedTime);
+    console.log(elapsedTime)
+  };
   
   // Y Scale
   const loudnessScale = scaleLinear()
@@ -38,6 +44,8 @@ const Graph = props =>{
   const ridgeline = dataList.map((day, i) => {
     const today = new Date(day);
     const tomorrow = new Date(day).setHours(24, 0, 0);
+    const elapsedBars = []
+    const bars = []
     
     // X scale
     const timeScale = scaleTime()
@@ -65,18 +73,18 @@ const Graph = props =>{
       );
     });
     
-    const bars = props.audioData[day].graphData.map( (dataPoints, j) =>{
+    props.audioData[day].graphData.forEach( (dataPoints, j) =>{
       const xPosition = timeScale(new Date(dataPoints.time));
       const yPosition = loudnessScale(dataPoints.maxLoudness );
       const heigth = graphHeight - yPosition;
       //if (j <= props.index){ color = '#ff0000'; }
       // 5 minutes per bar 288 bar per graph
-      return <rect
+      bars.push( <rect
         key={xPosition}
         x={xPosition} 
         y={yPosition} 
         height={heigth - margin.bottom}
-        width={barWidth}/>;
+        width={barWidth}/>);
     });
     
     const xAxis = <line 
@@ -99,9 +107,7 @@ const Graph = props =>{
     return (
       <g 
       transform={`translate(0, ${yTranslate})`} 
-      key={i}
-      onClick={() => setSelectedDay(dataList[i])}
-      >
+      key={i}>
         {graphTitle}
         <clipPath id={day}>
           {bars}
@@ -118,8 +124,6 @@ const Graph = props =>{
       </g>
     );
   });
-  
-  
   
   //playingMinute
   // let playingMinuteText = undefined;
@@ -141,10 +145,9 @@ const Graph = props =>{
   const svgHeigh = (graphHeight + margin.bottom) * ridgeline.length
   const xAxisTranslate = graphHeight * ridgeline.length
   
-  console.log(selectedDay)
   return (
     <Fragment>
-      <h2 className="text-stone-800 text-center max-w-screen-md text-lg sm:text-xl">
+      <h2 className="text-stone-800 text-center max-w-screen-md text-lg sm:text-xl mb-3">
         Audio recorded in the property <br/>
         {new Date(dataList[0])
         .toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric'})}
@@ -153,7 +156,7 @@ const Graph = props =>{
         .toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric'})}
       </h2>
       
-      <AudioPlayer mp3Link = {props.audioData[selectedDay].mp3Link} />
+      <AudioPlayer mp3LinksList={mp3LinksList} updateElapsedTime={updateElapsedTime} />
       
       <svg 
       ref={ref}
@@ -161,9 +164,7 @@ const Graph = props =>{
       className="w-full, mb-2">
         <linearGradient id="barsGrad" x1="0%" x2="0%" y1="0%" y2="100%">
           <stop offset="0%" stopColor="red" />
-          <stop offset="33%" stopColor="orange" />
-          <stop offset="66%" stopColor="purple" />
-          <stop offset="100%" stopColor="blue" />
+          <stop offset="100%" stopColor="#a88080" />
         </linearGradient>
         
         {ridgeline}

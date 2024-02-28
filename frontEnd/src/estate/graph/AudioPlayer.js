@@ -1,15 +1,18 @@
 import React, {useRef, useEffect, useState} from "react";
+
 import playIcon from "./playOp.svg";
 import pauseIcon from "./pauseOp.svg";
+import playNextIcon from "./playNextOp.svg";
+import playPreviousIcon from "./playPreviousOp.svg";
 
 const AudioPlayer = props =>{
     const [isPlaying, setIsPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
     const [elapsedTime, setElapsedTime] = useState(0);
-    const [index, setIndex] = useState(undefined);
+    const [currentTrack, setCurrentTrack] = useState(0);
     const audio = useRef();
     
-//     useEffect(() =>{
+//    useEffect(() =>{
 //     let currentIndex
 //     if (elapsedTime > 0){
 //       for ( let i = 0; i < props.graphData.length-1; i++ ){
@@ -25,6 +28,14 @@ const AudioPlayer = props =>{
 //     }
 //   }, [elapsedTime]);
     
+    useEffect(() =>{
+        props.updateElapsedTime(elapsedTime)
+    }, [elapsedTime]);
+    
+    useEffect(() =>{
+        audio.current.setAttribute('src', 'd3d6un1tjol792.cloudfront.net' + props.mp3LinksList[currentTrack]);
+    }, []);
+    
     const changePlayTime = (event) => {
         audio.current.currentTime = event.target.value;
         setElapsedTime(event.target.value);
@@ -38,6 +49,12 @@ const AudioPlayer = props =>{
         const currentPercentage = `${(trackProgress / max) * 100}%`;
         return `-webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #a8a29e), 
         color-stop(${currentPercentage}, #fff))`;
+    };
+    
+    const changeTrack = (index) =>{
+        if(currentTrack + index < props.mp3LinksList.length && currentTrack + index >= 0 ){
+            setCurrentTrack(currentTrack + index);
+        }
     };
     
     const getDuration = () =>{
@@ -62,27 +79,26 @@ const AudioPlayer = props =>{
         setIsPlaying(false);
     };
     
-    useEffect(() =>{
-        console.log(props.mp3Link)
-        audio.current.setAttribute('src', props.mp3Link);
-    }, [props.mp3Link]);
-    
-    
     return(
-        <div className="flex flex-col items-center w-full mb-4">
-            <div className="w-full flex items-center">
+        <div className="sticky top-0 pt-3 flex flex-col items-center w-full mb-4 bg-white">
+            <div className="w-full flex justify-center mb-3">
+                <button onClick={() => changeTrack(-1)} className="w-10 mr-4" >
+                    <img src={playPreviousIcon} alt="Play Previous"/>
+                </button>
                 <button 
-                className="w-12 mr-3" 
-                data-cy="playButton"
+                className="w-12 mr-4"
                 onClick={play}>
                     {isPlaying
-                        ?<img data-cy="pauseIcon" src={pauseIcon} alt="Pause"/>
-                        :<img data-cy="playIcon" src={playIcon} alt="Play"/>
+                        ?<img src={pauseIcon} alt="Pause"/>
+                        :<img           src={playIcon} alt="Play"/>
                     }
                 </button>
-                
+                <button onClick={() => changeTrack(1)} className="w-10">
+                    <img src={playNextIcon} alt="Play Next"/>
+                </button>
+            </div>
+            <div className="w-full flex">
                 <input 
-                data-cy="seekbar"
                 className="w-full" 
                 style={{ 
                     background: updateTrack(elapsedTime, duration),  
@@ -95,15 +111,15 @@ const AudioPlayer = props =>{
             </div> 
             
             <div className="w-full flex justify-end">
-                <p className="text-stone-800 text-xs -mt-3">
-                    <span data-cy="progressTimer">{convertTime(Math.floor(elapsedTime))}</span>
+                <p className="text-stone-800 text-xs">
+                    <span>{convertTime(Math.floor(elapsedTime))}</span>
                     <span> / </span>
-                    <span data-cy="duration">{convertTime(duration)}</span>
+                    <span>{convertTime(duration)}</span>
                 </p>
             </div>
             <audio ref={audio} onPlay={onPlay} onPause={onPause} 
             onLoadedMetadata={getDuration} onTimeUpdate={onTimeUpdate}>
-                <source  type="audio/mp3" />
+                <source type="audio/mp3" />
                 Your browser does not support the audio element.
             </audio>
         </div>
