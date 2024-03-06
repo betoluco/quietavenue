@@ -10,7 +10,7 @@ const EstateTemplate = (props) => {
           <img 
           src={props.estate.profilePicture} 
           alt="Property" 
-          className="aspect-auto border border-strone-400 max-w-screen-sm w-full h-auto" />
+          className="aspect-auto border border-strone-400 max-w-screen-sm w-full h-auto rounded-md" />
         
           <div className="flex flex-col">
             <h2 
