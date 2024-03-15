@@ -18,8 +18,6 @@ const getAudioData = async (audioDataLink, item, estate) =>{
     
     try {
         const { Body } = await client.send(command);
-        item.sunrise = estate.sunrise;
-        item.sunset = estate.sunset;
         item.audioData = JSON.parse(await streamToString(Body));
         
     } catch (error) {
