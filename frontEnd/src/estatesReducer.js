@@ -4,7 +4,9 @@ import {createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 const initialState = {
   estates: [],
   status: 'idle',
-  error: null
+  error: null,
+  currentTrack: 0,
+  elapsedTime: 0,
 };
 
 export const fetchEstates = createAsyncThunk('estates/fetchEstates', async () =>{
@@ -14,12 +16,20 @@ export const fetchEstates = createAsyncThunk('estates/fetchEstates', async () =>
     } catch (error) {
         console.error(error);
     }
-    return
+    return;
 });
 
 export const estatesSlice = createSlice({
     name: 'estates',
     initialState,
+    reducers: {
+      currentTrackChanged(state, action){
+        state.currentTrack = action.payload;
+      },
+      elapsedTimeUpdated(state, action){
+        state.elapsedTime = action.payload;
+      }
+    },
     extraReducers(builder) {
       builder
         .addCase(fetchEstates.pending, (state, action) => {
@@ -36,5 +46,7 @@ export const estatesSlice = createSlice({
         });
     }
 });
+
+export const {currentTrackChanged, elapsedTimeUpdated} = estatesSlice.actions;
 
 export default estatesSlice.reducer;

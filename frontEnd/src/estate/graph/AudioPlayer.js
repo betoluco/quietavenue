@@ -1,60 +1,67 @@
 import React, {useRef, useEffect, useState} from "react";
+import { useSelector, useDispatch} from "react-redux";
 
+import {currentTrackChanged, elapsedTimeUpdated}  from "../../estatesReducer.js";
 import playIcon from "./playOp.svg";
 import pauseIcon from "./pauseOp.svg";
 import playNextIcon from "./playNextOp.svg";
 import playPreviousIcon from "./playPreviousOp.svg";
 
 const AudioPlayer = props =>{
+    const dispatch = useDispatch();
     const [isPlaying, setIsPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
-    const [elapsedTime, setElapsedTime] = useState(0);
-    const [currentTrack, setCurrentTrack] = useState(0);
     const audio = useRef();
     
-//    useEffect(() =>{
-//     let currentIndex
-//     if (elapsedTime > 0){
-//       for ( let i = 0; i < props.graphData.length-1; i++ ){
-//         if (props.graphData[i].hasOwnProperty("soundStart")){
-//           if (props.graphData[i].soundStart < elapsedTime){
-//             currentIndex = i;
-//           }
-//         }
-//       }
-//       setIndex(currentIndex);
-//     }else{
-//       setIndex(undefined);
-//     }
-//   }, [elapsedTime]);
+    const currentTrack= useSelector( (state) =>
+        state.estates.currentTrack
+    );
+    
+    const elapsedTime = useSelector( (state) =>
+        state.estates.elapsedTime
+    );
+    
+    const daysList = Object.keys(props.audioData);
+    const mp3LinksList = daysList.map( day => props.audioData[day].mp3Link);
+    
+    const getDateString = currentTrack =>{
+        return new Date(daysList[currentTrack]).toLocaleDateString(
+            "en-US",
+            {weekday: 'short', month: 'short', day: 'numeric'}
+        );
+    };
+    
+    const previousDay = daysList[currentTrack - 1] != undefined? 
+    getDateString(currentTrack - 1) 
+    :null;
+    const currentDay = getDateString(currentTrack);
+    const nextDay = daysList[currentTrack + 1] != undefined? 
+    getDateString(currentTrack + 1) 
+    :null;
     
     useEffect(() =>{
-        props.updateElapsedTime(elapsedTime)
-    }, [elapsedTime]);
-    
-    useEffect(() =>{
-        audio.current.setAttribute('src', 'd3d6un1tjol792.cloudfront.net' + props.mp3LinksList[currentTrack]);
-    }, []);
+        audio.current.setAttribute('src', 'https://d3d6un1tjol792.cloudfront.net' + mp3LinksList[currentTrack]);
+    }, [currentTrack]);
     
     const changePlayTime = (event) => {
         audio.current.currentTime = event.target.value;
-        setElapsedTime(event.target.value);
+        dispatch(elapsedTimeUpdated(event.target.value));
     };
     
     const onTimeUpdate = () => {
-        setElapsedTime(audio.current.currentTime);
-    };
+        if(Math.floor(audio.current.currentTime) !== Math.floor(elapsedTime))
+            dispatch(elapsedTimeUpdated(audio.current.currentTime));
+    };  
     
-    const updateTrack = (trackProgress, max) =>{
+    const updateProgressBar = (trackProgress, max) =>{
         const currentPercentage = `${(trackProgress / max) * 100}%`;
         return `-webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #a8a29e), 
         color-stop(${currentPercentage}, #fff))`;
     };
     
     const changeTrack = (index) =>{
-        if(currentTrack + index < props.mp3LinksList.length && currentTrack + index >= 0 ){
-            setCurrentTrack(currentTrack + index);
-        }
+        if(mp3LinksList[currentTrack + index] != undefined )
+            dispatch(currentTrackChanged(currentTrack + index));
     };
     
     const getDuration = () =>{
@@ -82,11 +89,11 @@ const AudioPlayer = props =>{
     return(
         <div className="sticky top-0 pt-3 flex flex-col items-center w-full mb-4 bg-white">
             <div className="w-full flex justify-center mb-3">
-                <button onClick={() => changeTrack(-1)} className="w-10 mr-4" >
+                <button onClick={() => changeTrack(-1)} className="w-10 " >
                     <img src={playPreviousIcon} alt="Play Previous"/>
                 </button>
                 <button 
-                className="w-12 mr-4"
+                className="w-12 mx-16"
                 onClick={play}>
                     {isPlaying
                         ?<img src={pauseIcon} alt="Pause"/>
@@ -97,11 +104,16 @@ const AudioPlayer = props =>{
                     <img src={playNextIcon} alt="Play Next"/>
                 </button>
             </div>
+            <div className="grid gap-10 grid-cols-3 grid-rows-1 items-center mb-3">
+                <p className="text-xs text-right">{previousDay}</p>
+                <p className="font-medium">{currentDay}</p>
+                <p className="text-xs text-left">{nextDay}</p>
+            </div>
             <div className="w-full flex">
                 <input 
                 className="w-full" 
                 style={{ 
-                    background: updateTrack(elapsedTime, duration),  
+                    background: updateProgressBar(elapsedTime, duration),  
                     border: '0.2px solid #292524',
                     borderRadius: '4px',
                     height: '10px'
