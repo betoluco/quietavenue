@@ -6,6 +6,7 @@ import { matchPath } from "react-router";
 import renderer from "./renderer";
 import routes from "./routes";
 import estatesReducer from './estatesReducer';
+import playerReducer from './playerReducer';
 
 const app = express();
 
@@ -14,7 +15,8 @@ app.use(awsServerlessExpressMiddleware.eventContext());
 app.get("*", async (req, res) =>{
     const store = configureStore({
         reducer:{
-            estates: estatesReducer
+            estates: estatesReducer,
+            player: playerReducer
         }
     });
     

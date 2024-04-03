@@ -6,12 +6,14 @@ import { Provider } from "react-redux";
 import { configureStore } from '@reduxjs/toolkit';
 
 import estatesReducer from "./estatesReducer";
+import playerReducer from './playerReducer';
 import routes from "./routes";
 import "./style.css";
 
 const store = configureStore({
   reducer:{
-    estates: estatesReducer
+    estates: estatesReducer,
+    player: playerReducer
   }
 });
 

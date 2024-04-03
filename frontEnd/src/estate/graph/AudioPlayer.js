@@ -1,7 +1,7 @@
 import React, {useRef, useEffect, useState} from "react";
 import { useSelector, useDispatch} from "react-redux";
 
-import {currentTrackChanged, elapsedTimeUpdated}  from "../../estatesReducer.js";
+import {currentTrackChanged, elapsedTimeUpdated, playingStateChanged}  from "../../playerReducer.js";
 import playIcon from "./playOp.svg";
 import pauseIcon from "./pauseOp.svg";
 import playNextIcon from "./playNextOp.svg";
@@ -9,17 +9,31 @@ import playPreviousIcon from "./playPreviousOp.svg";
 
 const AudioPlayer = props =>{
     const dispatch = useDispatch();
-    const [isPlaying, setIsPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
     const audio = useRef();
     
     const currentTrack= useSelector( (state) =>
-        state.estates.currentTrack
+        state.player.currentTrack
     );
     
     const elapsedTime = useSelector( (state) =>
-        state.estates.elapsedTime
+        state.player.elapsedTime
     );
+    
+    const isPlaying = useSelector( (state) =>
+        state.player.isPlaying
+    );
+    
+    useEffect(() =>{
+        return () => {
+            dispatch(elapsedTimeUpdated(0));
+            dispatch(currentTrackChanged(0));
+        };
+    }, []);
+    
+    useEffect(() =>{
+        audio.current.setAttribute('src', 'https://d3d6un1tjol792.cloudfront.net' + mp3LinksList[currentTrack]);
+    }, [currentTrack]);
     
     const daysList = Object.keys(props.audioData);
     const mp3LinksList = daysList.map( day => props.audioData[day].mp3Link);
@@ -39,10 +53,6 @@ const AudioPlayer = props =>{
     getDateString(currentTrack + 1) 
     :null;
     
-    useEffect(() =>{
-        audio.current.setAttribute('src', 'https://d3d6un1tjol792.cloudfront.net' + mp3LinksList[currentTrack]);
-    }, [currentTrack]);
-    
     const changePlayTime = (event) => {
         audio.current.currentTime = event.target.value;
         dispatch(elapsedTimeUpdated(event.target.value));
@@ -50,8 +60,13 @@ const AudioPlayer = props =>{
     
     const onTimeUpdate = () => {
         if(Math.floor(audio.current.currentTime) !== Math.floor(elapsedTime))
-            dispatch(elapsedTimeUpdated(audio.current.currentTime));
-    };  
+            if(audio.current.networkState === 3){
+                audio.current.currentTime = elapsedTime;
+                if(isPlaying) audio.current.play();
+            }else{
+                dispatch(elapsedTimeUpdated(audio.current.currentTime)); // 3 = NETWORK_NO_SOURCE, when changing source
+            }
+    };
     
     const updateProgressBar = (trackProgress, max) =>{
         const currentPercentage = `${(trackProgress / max) * 100}%`;
@@ -62,6 +77,7 @@ const AudioPlayer = props =>{
     const changeTrack = (index) =>{
         if(mp3LinksList[currentTrack + index] != undefined )
             dispatch(currentTrackChanged(currentTrack + index));
+            if(isPlaying) audio.current.play();
     };
     
     const getDuration = () =>{
@@ -79,11 +95,11 @@ const AudioPlayer = props =>{
     };
     
     const onPlay = () => {
-        setIsPlaying(true);
+        dispatch(playingStateChanged(true));
     };
     
     const onPause = () => {
-        setIsPlaying(false);
+        dispatch(playingStateChanged(false));
     };
     
     return(

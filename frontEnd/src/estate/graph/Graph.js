@@ -2,43 +2,39 @@ import React, {useLayoutEffect, useRef, useState, Fragment} from "react";
 import {scaleTime, scaleLinear} from "d3-scale";
 import { useSelector, useDispatch} from "react-redux";
 
-import {elapsedTimeUpdated}  from "../../estatesReducer.js";
+import {currentTrackChanged, elapsedTimeUpdated, playingStateChanged}  from "../../playerReducer.js";
 import AudioPlayer from "./AudioPlayer";
 import XAxis from "./XAxis";
 
 const Graph = props =>{
   const dispatch = useDispatch();
   const ref = useRef(null);
-  const [scale, setScale] = useState(1);
+  const [fontSize, setFontSize] = useState(1);
   
   const currentTrack = useSelector( (state) =>
-    state.estates.currentTrack
+    state.player.currentTrack
   );
   
   const elapsedTime = useSelector( (state) =>
-    state.estates.elapsedTime
+    state.player.elapsedTime
   ); 
   
-  const svgWidth = 260;
-  const graphHeight = 50;
+  const svgWidth = 360;
+  const graphHeight = 30;
   
-  //scale is used to size the text
-  let remSize = 16;
+  
   useLayoutEffect(() => {
-    setScale(svgWidth / ref.current.clientWidth);
-    // gets the root
-    remSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    // 0.75 is the rem size of tailwind sm font size
+    setFontSize(0.75 * svgWidth / ref.current.clientWidth);
   }, []);
   
-  // 0.75 is the rem size of tailwind sm font size
-  //mutiply rem size for the scale to get corret size
-  const fontSize =  0.75 * scale;
-  const margin = {right: 4, bottom: scale * remSize, left: 4};
+  const margin = {right: 4, bottom: fontSize, left: 4};
   // 5 minutes per bar, 288 bar per day plus 1 to avoid white spaces
   const barWidth = 0.1 + svgWidth/288;
   
   // onCLick listener
   const onRectClicked = (track, bar) => {
+    dispatch(currentTrackChanged(track));
     const currentDay = Object.keys(props.audioData)[track];
     for (let i = bar;  i >= 0; i--){
       if(props.audioData[currentDay].graphData[i].hasOwnProperty("soundStart")){
@@ -46,6 +42,7 @@ const Graph = props =>{
         break;
       }
     }
+    dispatch(playingStateChanged(true));
   };
   
   // Y Scale
@@ -113,12 +110,11 @@ const Graph = props =>{
         fill={fillColor}/>; 
     });
     
-    
     const yTranslate = graphHeight * i;
     return (
       <g transform={`translate(0, ${yTranslate})`} key={i}>
         {graphHighlight}
-        <text x="3" y='10' fontSize={`${fontSize}rem`}>
+        <text x="3" y="7" fontSize={`${fontSize}rem`}>
         {today.toLocaleDateString("en-US", {weekday: 'short', month: 'short', day: 'numeric'})}
         </text>
         {bars}
@@ -130,12 +126,14 @@ const Graph = props =>{
         fill="url(#barsGrad)"
         clipPath={`url(#${day})`}/>
         {currentMinute}
-        <XAxis 
-        timeScale={timeScale}
-        loudnessScale={loudnessScale}
-        height={graphHeight}
-        fontSize={fontSize}
-        />
+        {i%3 == 0 &&
+          <XAxis 
+          timeScale={timeScale}
+          loudnessScale={loudnessScale}
+          height={graphHeight}
+          fontSize={fontSize}
+          />
+        }
       </g>
     );
   });
