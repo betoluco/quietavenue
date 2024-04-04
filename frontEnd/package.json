@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "REACT_APP_DOMAIN_NAME=https://d3d6un1tjol792.cloudfront.net react-scripts start",
-    "unit-test": "jest",
+    "test": "react-scripts test",
     "mirror": "NODE_ENV=development REACT_APP_DOMAIN_NAME=https://d3d6un1tjol792.cloudfront.net npm run build && npm run upload-assets",
     "prod": "NODE_ENV=production REACT_APP_DOMAIN_NAME=https://quietavenue.com npm run build",
     "build": "rm -rf ./clientBuild && npm run client-build && npm run server-build",
@@ -47,6 +47,7 @@
     "@babel/core": "^7.23.7",
     "@babel/preset-env": "^7.23.8",
     "@babel/preset-react": "^7.12.10",
+    "@testing-library/react": "^14.2.2",
     "babel-jest": "^29.7.0",
     "babel-loader": "^9.1.3",
     "copyfiles": "^2.4.1",

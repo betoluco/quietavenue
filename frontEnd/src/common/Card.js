@@ -10,7 +10,7 @@ const Card = props =>{
         className="w-full border-b border-stone-300 h-64 object-cover rounded-t-md" 
         src={props.estate.profilePicture} 
         alt="Estate" />
-        <div key={props.estate.estateId} className="m-2 ml-6">
+        <div className="m-2 ml-6">
           <h2
           className="text-xl text-stone-800 font-semibold">
             {props.estate.address1}
