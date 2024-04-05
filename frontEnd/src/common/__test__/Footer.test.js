@@ -3,7 +3,7 @@ import {BrowserRouter} from 'react-router-dom';
 
 import Footer from '../Footer';
 
-it('Footer home links have href property', () =>{
+it('Footer links have the correct href property', () =>{
     render(<Footer/>, {wrapper:BrowserRouter});
     expect(screen.getByRole('link', {name:'Home'}).href).toMatch(new RegExp('http://[^\/]*/'));
     expect(screen.getByRole('link', {name:'Schedule your free trial'}).href).toMatch(new RegExp('http://[^\/]*/workFlow'));
