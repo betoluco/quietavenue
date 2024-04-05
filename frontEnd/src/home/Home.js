@@ -22,7 +22,7 @@ const Home = (props) =>{
     if ( estateStatus === "idle" ) dispatch( fetchEstates() );
   }, [estateStatus, dispatch]);
   
-  const estates = useSelector( state => state.estates.estates)
+  const estates = useSelector( state => state.estates.estates);
   
   let content;
 
