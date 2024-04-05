@@ -1,7 +1,7 @@
 import {render, screen} from '@testing-library/react';
 import {BrowserRouter} from 'react-router-dom';
 
-import CardTemplate from '../CardTemplate';
+import Card from '../Card';
 
 const estate = {
     "url": "/estate/2/CA/-Foster-City/2141-Mills-Ave",
@@ -11,8 +11,8 @@ const estate = {
 };
 
 it('link should have href', () =>{
-    render(<CardTemplate estate={estate} />, {wrapper:BrowserRouter});
-    expect(screen.getByRole('link').href).toMatch(new RegExp('http://[^\/]*/estate/2/CA/-Foster-City/2141-Mills-Ave'));
+    render(<Card estate={estate} />, {wrapper:BrowserRouter});
+expect(screen.getByRole('link').href).toMatch(new RegExp('http://[^\/]*/estate/2/CA/-Foster-City/2141-Mills-Ave'));
 });
 
 it('Image should have src', () =>{
