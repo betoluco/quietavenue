@@ -36,6 +36,7 @@ const HamburgerMenu = props =>{
               className="flex flex-row items-center justify-between pb-5 border-b border-green-200 mb-2">
                 <img src={logo} alt="company logo"   className="h-14"/>
                 <button onClick={onClickHandler}>
+                  <span className="hidden">close menu</span>
                   <span 
                   className="block bg-stone-800 w-6 h-1 rounded-sm -mb-[4px] -rotate-45">
                   </span>
