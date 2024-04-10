@@ -32,7 +32,7 @@ const AudioPlayer = props =>{
     }, []);
     
     useEffect(() =>{
-        audio.current.setAttribute('src', 'https://d3d6un1tjol792.cloudfront.net' + mp3LinksList[currentTrack]);
+        audio.current.setAttribute('src', mp3LinksList[currentTrack]);
     }, [currentTrack]);
     
     const daysList = Object.keys(props.audioData);
