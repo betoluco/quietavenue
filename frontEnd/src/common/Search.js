@@ -16,8 +16,7 @@ const Search = props =>{
       let didCancel = false;
       
       const filterSearch = async () => {
-        const url = `${process.env.REACT_APP_DOMAIN_NAME}/api/search?filter=${searchInputText}`;
-        const response = await axios.get(url);
+        const response = await axios.get('/api/search?filter=${searchInputText}');
         
         if (!didCancel) { // Ignore if we started fetching something else
           let suggestList = [];
@@ -101,7 +100,7 @@ const Search = props =>{
           setSuggest(suggestList);
           setShowSuggest(true);
         }
-      }
+      };
       
       filterSearch();
       return () => { didCancel = true; }; // Remember if we start fetching something else
@@ -143,6 +142,7 @@ const Search = props =>{
           <div className="flex">
             <input 
             id="search"
+            aria-label="search-input"
             autoComplete="off"
             className="w-full p-3 pr-7 rounded-md placeholder-stone-400 focus:ring 
             focus:ring-green-600 ring-inset focus:outline-none border border-stone-400"

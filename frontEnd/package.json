@@ -22,10 +22,10 @@
     "serialize-javascript": "^6.0.1"
   },
   "scripts": {
-    "start": "REACT_APP_DOMAIN_NAME=https://d3d6un1tjol792.cloudfront.net react-scripts start",
+    "start": "react-scripts start",
     "test": "react-scripts test",
-    "mirror": "NODE_ENV=development REACT_APP_DOMAIN_NAME=https://d3d6un1tjol792.cloudfront.net npm run build && npm run upload-assets",
-    "prod": "NODE_ENV=production REACT_APP_DOMAIN_NAME=https://quietavenue.com npm run build",
+    "mirror": "NODE_ENV=development npm run build && npm run upload-assets",
+    "prod": "NODE_ENV=production npm run build",
     "build": "rm -rf ./clientBuild && npm run client-build && npm run server-build",
     "client-build": "webpack --config webpack.client.js",
     "server-build": "webpack --config webpack.server.js",
