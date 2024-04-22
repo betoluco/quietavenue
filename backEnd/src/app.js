@@ -9,13 +9,17 @@ const app = express();
 
 app.use(awsServerlessExpressMiddleware.eventContext());
 
-app.get("/api/estates", cors({origin: `${process.env.CORS}`}), async (req, res) =>{
+if(process.env.NODE_ENV == 'development'){
+    app.use(cors());
+}
+
+app.get("/api/estates", async (req, res) =>{
     const response = await estates(req, res);
     res.contentType('application/json');
     res.send(JSON.stringify(response));
 });
 
-app.get("/api/search", cors({origin: `${process.env.CORS}`}), async (req, res) =>{
+app.get("/api/search", async (req, res) =>{
     const response = await search(req, res);
     res.contentType('application/json');
     res.send(JSON.stringify(response));

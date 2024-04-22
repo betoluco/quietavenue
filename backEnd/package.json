@@ -14,7 +14,8 @@
   },
   "scripts": {
     "//": "VERIFY THAT THE CORRECT BUCKER IS USED",
-    "build-backend": "NODE_ENV=production webpack --config webpack.backEnd.js",
+    "prod-backend": "NODE_ENV=production webpack --config webpack.backEnd.js",
+    "dev-backend": "NODE_ENV=development webpack --config webpack.backEnd.js",
     "upload-test-data": "aws s3 cp ../tests/bucket s3://dev-quietavenue-backend-s3-bucket-06bf86a6f0a9 --recursive"
   },
   "scriptsComments": {
