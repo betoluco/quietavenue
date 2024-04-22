@@ -16,7 +16,7 @@ const Search = props =>{
       let didCancel = false;
       
       const filterSearch = async () => {
-        const response = await axios.get('/api/search?filter=${searchInputText}');
+        const response = await axios.get(`/api/search?filter=${searchInputText}`);
         
         if (!didCancel) { // Ignore if we started fetching something else
           let suggestList = [];
