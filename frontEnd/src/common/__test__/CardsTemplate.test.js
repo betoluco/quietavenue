@@ -23,6 +23,6 @@ it('CardsTemplate renders two cards', () =>{
     render(<CardsTemplate estates={estates} />, {wrapper:BrowserRouter});
     const links = screen.getAllByRole('link');
     expect(links).toHaveLength(2);
-    expect(links[0].href).toMatch('http://localhost:3000/estate/1/CA/-Foster-City/1020-Helm-Ln');
-    expect(links[1].href).toMatch('http://localhost:3000/estate/2/CA/-Foster-City/2141-Mills-Ave');
+    expect(links[0].href).toBe('http://localhost:3000/estate/1/CA/-Foster-City/1020-Helm-Ln');
+    expect(links[1].href).toBe('http://localhost:3000/estate/2/CA/-Foster-City/2141-Mills-Ave');
 });
