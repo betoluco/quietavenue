@@ -19,6 +19,7 @@ it('HamburegerMenu links are diplayed and have the correct href property', async
 
 it('HamburgerMenu button toggles to clossing button', async() =>{
     render(<HamburgerMenu/>, {wrapper:BrowserRouter});
+    expect(screen.queryByRole('button', {name: 'close menu'})).not.toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', {name: 'open menu'}));
     expect(screen.queryByRole('button', {name: 'close menu'})).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', {name: 'close menu'}));
