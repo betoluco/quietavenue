@@ -1,5 +1,6 @@
 import requests
 import json
+import pytest
 
 BASE_URL = "https://d3d6un1tjol792.cloudfront.net/"
 CITY_SEARCH = BASE_URL + "/api/search?filter=fos"
@@ -8,10 +9,11 @@ ADDRESS_SEARCH = BASE_URL + "/api/search?filter=hel"
 
 
 def test_no_CORS_header_is_present():
-    response = requests.get(ENPOINT)
+    response = requests.get(ADDRESS_SEARCH)
     with pytest.raises(KeyError) as key_error:
         response.headers['access-control-allow-origin']
     assert key_error.value.args[0] == 'access-control-allow-origin'
+    assert response.status_code == 200
 
 def test_city_search():
     response = requests.get(CITY_SEARCH)
