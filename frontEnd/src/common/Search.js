@@ -34,13 +34,14 @@ const Search = props =>{
             );
             estateSuggestions.forEach( element =>{
               suggestList.push(
-                <Link 
-                to={element.url}
-                key={element.key}
+                <li
+                key={element.url}
                 onClick={onSuggestClick}
                 className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
-                  {element.name}
-                </Link>
+                  <Link to={element.url}>
+                    {element.name}
+                  </Link>
+                </li>
               );
             });
           }
@@ -55,13 +56,14 @@ const Search = props =>{
             );
             citySuggestions.forEach( element =>{
               suggestList.push(
-                <Link
-                to={element.url}
-                key={element.key}
+                <li
+                key={element.url}
                 onClick={onSuggestClick}
                 className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
-                  {element.name}
-                </Link>
+                  <Link to={element.url}>
+                    {element.name}
+                  </Link>
+                </li>
               );
             });
           }
@@ -76,13 +78,14 @@ const Search = props =>{
             );
             zipCodeSuggestions.forEach( element =>{
               suggestList.push(
-                <Link
-                to={element.url}
-                key={element.key}
+                <li
+                key={element.url}
                 onClick={onSuggestClick}
                 className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
-                  {element.name}
-                </Link>
+                  <Link to={element.url}>
+                    {element.name}
+                  </Link>
+                </li>
               );
             });
           }
@@ -110,7 +113,6 @@ const Search = props =>{
       setShowSuggest(false);
     }
   }, [searchInputText]);
-  
   
   const onChangeHandler = event =>{
     setSearchInputText(event.target.value);

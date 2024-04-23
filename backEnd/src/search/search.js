@@ -41,31 +41,27 @@ const search = async (req, res) =>{
             response.addresses =  addressSearch.rows.map( estate => {
                 const url = `/estate/${estate.estate_id}/${estate.state_abbreviation}/
                 ${estate.city}/${estate.address_1}`.replace(/\s+/g, '-');
-                const name = `${estate.address_1} ${estate.city} ${estate.state_abbreviation} ${estate.zip_code}`
+                const name = `${estate.address_1} ${estate.city} ${estate.state_abbreviation} ${estate.zip_code}`;
                 return {
                     'name': name,
-                    'url': url,
-                    'key': estate.estate_id
+                    'url': url
                 };
             });
             response.cities =  citiesSearch.rows.map( city => {
                 const url = `/city/${city.city_id}/${city.state_abbreviation}/${city.city}`.replace(/\s+/g, '-');
-                const name = `${city.city}, ${city.state_abbreviation}`
+                const name = `${city.city}, ${city.state_abbreviation}`;
                 return {
                     'name': name,
-                    'url': url,
-                    'key': city.city_id
+                    'url': url
                 };
             });
             response.zip_codes =  zipCodesSearch.rows.map( zipCode => {
                 const url = `/zipCode/${zipCode.zip_code}/${zipCode.zip_code_id}`.replace(/\s+/g, '-');
                  return {
                     'name': zipCode.zip_code,
-                    'url': `/zipCode/${zipCode.zip_code_id}/${zipCode.zip_code}`,
-                    'key': zipCode.zip_code_id
+                    'url': url
                 };
             });
-            console.log(response)
             res.status(200);
             return response;
             
