@@ -9,7 +9,7 @@ import Search from '../Search';
 
 it('Can write on form input element', async () =>{
     render(<Search/>, {wrapper:BrowserRouter});
-    const input = screen.getByRole('textbox', {name: /search-input/i})
+    const input = screen.getByRole('textbox', {name: /search-input/i});
     expect(input).toHaveClass('focus:ring', 'focus:ring-green-600', 'focus:outline-none');
     await userEvent.type(input, 'ts');
     expect(input).toHaveProperty('value', 'ts');

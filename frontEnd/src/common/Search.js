@@ -13,100 +13,97 @@ const Search = props =>{
   useEffect( () => {
     //The search in the database is done using trigrams that's why it need 3 chars
     if (searchInputText.length > 2) { 
-      let didCancel = false;
       
       const filterSearch = async () => {
         const response = await axios.get(`/api/search?filter=${searchInputText}`);
         
-        if (!didCancel) { // Ignore if we started fetching something else
-          let suggestList = [];
-          const estateSuggestions = response.data.addresses;
-          const citySuggestions = response.data.cities;
-          const zipCodeSuggestions = response.data.zip_codes;
-          
-          if(estateSuggestions.length){
+        let suggestList = [];
+        const estateSuggestions = response.data.addresses;
+        const citySuggestions = response.data.cities;
+        const zipCodeSuggestions = response.data.zip_codes;
+        
+        if(estateSuggestions.length){
+          suggestList.push(
+            <li 
+            className="p-1 bg-white text-base text-stone-500 w-full"
+            key={'estates'}>
+              Estates
+            </li>
+          );
+          estateSuggestions.forEach( element =>{
             suggestList.push(
-              <li 
-              className="p-1 bg-white text-base text-stone-500 w-full"
-              key={'estates'}>
-                Estates
+              <li
+              key={element.url}
+              onClick={onSuggestClick}
+              className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
+                <Link to={element.url}>
+                  {element.name}
+                </Link>
               </li>
             );
-            estateSuggestions.forEach( element =>{
-              suggestList.push(
-                <li
-                key={element.url}
-                onClick={onSuggestClick}
-                className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
-                  <Link to={element.url}>
-                    {element.name}
-                  </Link>
-                </li>
-              );
-            });
-          }
-          
-          if(citySuggestions.length){
-            suggestList.push(
-              <li 
-              className="p-1 bg-white text-base text-stone-500 w-full"
-              key={'city'}>
-                City
-              </li>
-            );
-            citySuggestions.forEach( element =>{
-              suggestList.push(
-                <li
-                key={element.url}
-                onClick={onSuggestClick}
-                className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
-                  <Link to={element.url}>
-                    {element.name}
-                  </Link>
-                </li>
-              );
-            });
-          }
-          
-          if(zipCodeSuggestions.length){
-            suggestList.push(
-              <li 
-              className="p-1 bg-white text-base text-stone-500 w-full"
-              key={'zipCode'}>
-                Zip code
-              </li>
-            );
-            zipCodeSuggestions.forEach( element =>{
-              suggestList.push(
-                <li
-                key={element.url}
-                onClick={onSuggestClick}
-                className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
-                  <Link to={element.url}>
-                    {element.name}
-                  </Link>
-                </li>
-              );
-            });
-          }
-            
-          if(suggestList.length === 0){
-            suggestList.push(
-              <li 
-              className="flex p-1 bg-white text-sm border-b-2 border-green-600 border-opacity-50"
-              key="No results">
-                No results
-              </li>
-            );
-          }
-          
-          setSuggest(suggestList);
-          setShowSuggest(true);
+          });
         }
+        
+        if(citySuggestions.length){
+          suggestList.push(
+            <li 
+            className="p-1 bg-white text-base text-stone-500 w-full"
+            key={'city'}>
+              City
+            </li>
+          );
+          citySuggestions.forEach( element =>{
+            suggestList.push(
+              <li
+              key={element.url}
+              onClick={onSuggestClick}
+              className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
+                <Link to={element.url}>
+                  {element.name}
+                </Link>
+              </li>
+            );
+          });
+        }
+        
+        if(zipCodeSuggestions.length){
+          suggestList.push(
+            <li 
+            className="p-1 bg-white text-base text-stone-500 w-full"
+            key={'zipCode'}>
+              Zip code
+            </li>
+          );
+          zipCodeSuggestions.forEach( element =>{
+            suggestList.push(
+              <li
+              key={element.url}
+              onClick={onSuggestClick}
+              className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
+                <Link to={element.url}>
+                  {element.name}
+                </Link>
+              </li>
+            );
+          });
+        }
+          
+        if(suggestList.length === 0){
+          suggestList.push(
+            <li 
+            className="flex p-1 bg-white text-sm border-b-2 border-green-600 border-opacity-50"
+            key="No results">
+              No results
+            </li>
+          );
+        }
+        
+        setSuggest(suggestList);
+        setShowSuggest(true);
+        
       };
       
       filterSearch();
-      return () => { didCancel = true; }; // Remember if we start fetching something else
       
     }else{
       setSuggest([]);
