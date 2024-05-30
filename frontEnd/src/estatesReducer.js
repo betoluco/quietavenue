@@ -8,13 +8,8 @@ const initialState = {
 };
 
 export const fetchEstates = createAsyncThunk('estates/fetchEstates', async () =>{
-    try {
-        const response = await axios.get('/api/estates');
-        return response.data;
-    } catch (error) {
-        console.error(error);
-    }
-    return;
+  const response = await axios.get('/api/estates');
+  return response.data;
 });
 
 export const estatesSlice = createSlice({
@@ -33,8 +28,8 @@ export const estatesSlice = createSlice({
         .addCase(fetchEstates.rejected, (state, action) => {
           state.status = 'failed';
           state.error = action.error.message;
-        });
-    }
+        })
+    },
 });
 
 export const {currentTrackChanged, elapsedTimeUpdated} = estatesSlice.actions;
