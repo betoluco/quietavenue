@@ -3,7 +3,7 @@ import {screen, within} from "@testing-library/react";
 import  '@testing-library/jest-dom/vitest';
 import axios from 'axios';
 
-import renderWithProviders from '../../__test__/renderWithProviders'
+import renderWithProviders from '../../__test__/renderWithProviders';
 import Home from '../Home';
 
 it('Home renders a spinner while results are fetch', () =>{
