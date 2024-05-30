@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Card = props =>{
   return (
     <div className="shadow-lg border-b-2 border-green-600 rounded-md">
-      <Link to={props.estate.url}>
+      <Link aria-label={`go to ${props.estate.address1} ${props.estate.address2}`} to={props.estate.url}>
         <img
         className="w-full border-b border-stone-300 h-64 object-cover rounded-t-md" 
         src={props.estate.profilePicture} 

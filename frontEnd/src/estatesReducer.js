@@ -28,7 +28,7 @@ export const estatesSlice = createSlice({
         .addCase(fetchEstates.rejected, (state, action) => {
           state.status = 'failed';
           state.error = action.error.message;
-        })
+        });
     },
 });
 
