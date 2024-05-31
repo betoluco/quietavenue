@@ -26,8 +26,8 @@ const FilterTemplate = (props) =>{
                 rounded-full border border-stone-400 bg-green-600 font-medium">
                     <h2 className="text-lg text-white pr-2.5">{props.filter}</h2>
                     <Link to="/">
-                    <img className="w-6" src={deleteFilter} alt="delete filter"/>
-                </Link>
+                        <img className="w-6" src={deleteFilter} alt="delete filter"/>
+                    </Link>
                 </div>
             </div>
             {content}
