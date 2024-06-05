@@ -1,5 +1,6 @@
 import {it, expect } from 'vitest';
 import {render, screen} from "@testing-library/react";
+import  '@testing-library/jest-dom/vitest';
 import {BrowserRouter} from 'react-router-dom';
 
 import CardsTemplate from '../CardsTemplate';
@@ -25,4 +26,9 @@ it('CardsTemplate renders two cards', () =>{
     expect(links).toHaveLength(2);
     expect(links[0]).toHaveProperty('href', 'http://localhost:3000/estate/1/CA/-Foster-City/1020-Helm-Ln');
     expect(links[1]).toHaveProperty('href', 'http://localhost:3000/estate/2/CA/-Foster-City/2141-Mills-Ave');
+});
+
+it('CardsTemplate renders error message if no estates', () =>{
+    render(<CardsTemplate estates={[]} />, {wrapper:BrowserRouter});
+    expect(screen.getByRole('heading', {name: "No results found"})).toBeInTheDocument();
 });
