@@ -2,22 +2,9 @@ import React, { Fragment, useEffect } from "react";
 import {Link} from 'react-router-dom';
 
 import Search from "../common/Search";
-import CardsTemplate from "../common/CardsTemplate";
-import InternalServerError from "../common/InternalServerError";
-import Spinner from "../common/Spinner";
 import deleteFilter from "./deleteFilter.svg";
 
 const FilterTemplate = (props) =>{
-    let content;
-
-    if (props.estateStatus === 'loading') {
-        content = <Spinner/>;
-    } else if (props.estateStatus === 'succeeded') {
-        content = <CardsTemplate estates={props.estates}/>;
-    } else if (props.estateStatus === 'failed') {
-        content = <InternalServerError />;
-    }
-    
     return (
         <Fragment>
             <Search/>
@@ -30,7 +17,7 @@ const FilterTemplate = (props) =>{
                     </Link>
                 </div>
             </div>
-            {content}
+            {props.content}
         </Fragment>
     );
 };

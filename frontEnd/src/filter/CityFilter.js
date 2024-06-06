@@ -1,29 +1,23 @@
-import React, { Fragment, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 
 import { fetchEstates } from "../estatesReducer";
+import {selectStatus, selectContent} from "../selectors";
 import FilterTemplate from "./FilterTemplate";
 
 const CityFilter = (props) =>{
     const dispatch = useDispatch();
-    const estateStatus = useSelector( state => state.estates.status );
-    const {filterId} = useParams();
-    const {city} = useParams();
+    const fetchStatus = useSelector(state => selectStatus(state));
+    const {filterId, city} = useParams();
     
     useEffect( () => {
-        if ( estateStatus === "idle" ) dispatch( fetchEstates() );
-    }, [estateStatus, dispatch]);
+        if ( fetchStatus === "idle" ) dispatch( fetchEstates() );
+    }, [fetchStatus, dispatch]);
     
-    const estates = useSelector( state => {
-        if (filterId !== undefined){
-            return state.estates.estates.filter(estate => parseInt(filterId) === estate.cityId);
-        }else {
-            return state.estates.estates;
-        }
-    });
+    const content = useSelector(state => selectContent(state, filterId, "cityId"));
     
-    return <FilterTemplate estateStatus={estateStatus} estates={estates} filter={city}/>;
+    return <FilterTemplate content={content} filter={city} />;
 };
 
 const loadData = (store, req) => {

@@ -1,12 +1,10 @@
 import React, { Fragment, useEffect } from "react";
-import { useParams, Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import Search from "../common/Search";
 import { fetchEstates } from "../estatesReducer";
-import CardsTemplate from "../common/CardsTemplate";
-import InternalServerError from "../common/InternalServerError";
-import Spinner from "../common/Spinner";
+import { selectStatus, selectContent } from "../selectors";
 import neighborhoodLG from "./neighborhoodLG.jpg";
 import neighborhoodMD from "./neighborhoodMD.jpg";
 import audioAndVideoMD from "./audioAndVideoMD.png";
@@ -16,24 +14,14 @@ import noisyNeighborSM from "./noisyNeighborSM.jpg";
 
 const Home = (props) =>{
   const dispatch = useDispatch();
-  const estateStatus = useSelector( state => state.estates.status );
+  const fetchStatus = useSelector(state => selectStatus(state));
   
   useEffect( () => {
-    if ( estateStatus === "idle" ) dispatch( fetchEstates() );
-  }, [estateStatus, dispatch]);
+        if ( fetchStatus === "idle" ) dispatch( fetchEstates() );
+  }, [fetchStatus, dispatch]);
   
-  const estates = useSelector( state => state.estates.estates);
+  const content = useSelector(state => selectContent(state));
   
-  let content;
-
-  if (estateStatus === 'loading') {
-    content = <Spinner/>;
-  } else if (estateStatus === 'succeeded') {
-    content = <CardsTemplate estates={estates}/>;
-  } else if (estateStatus === 'failed') {
-    content = <InternalServerError />;
-  }
-    
   return (
     <Fragment>
       <div className="">

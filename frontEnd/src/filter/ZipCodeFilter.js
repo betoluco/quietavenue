@@ -3,27 +3,22 @@ import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 
 import { fetchEstates } from "../estatesReducer";
+import {selectStatus, selectContent} from "../selectors";
 import FilterTemplate from "./FilterTemplate";
 
 const ZipCodeFilter = (props) =>{
     const dispatch = useDispatch();
-    const estateStatus = useSelector( state => state.estates.status );
-    const {filterId} = useParams();
-    const {zipCode} = useParams();
+    const fetchStatus = useSelector(state => selectStatus(state));
+    const {filterId, zipCode} = useParams();
     
     useEffect( () => {
-        if ( estateStatus === "idle" ) dispatch( fetchEstates() );
-    }, [estateStatus, dispatch]);
+        if ( fetchStatus === "idle" ) dispatch( fetchEstates() );
+    }, [fetchStatus, dispatch]);
     
-    const estates = useSelector( state => {
-        if (filterId !== undefined){
-            return state.estates.estates.filter(estate => parseInt(filterId) === estate.cityId);
-        }else {
-            return state.estates.estates;
-        }
-    });
+    const content = useSelector(state => selectContent(state, filterId, "zipCodeId"));
     
-    return <FilterTemplate estateStatus={estateStatus} estates={estates} filter={zipCode}/>;
+    console.log(zipCode)
+    return <FilterTemplate content={content} filter={zipCode} />;
 };
 
 const loadData = (store, req) => {
