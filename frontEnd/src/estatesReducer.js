@@ -8,8 +8,8 @@ const initialState = {
 };
 
 export const fetchEstates = createAsyncThunk('estates/fetchEstates', async () =>{
-  const response = await axios.get('/api/estates');
-  return response.data;
+    const response = await axios.get('/api/estates');
+    return response.data;
 });
 
 export const estatesSlice = createSlice({
@@ -31,7 +31,5 @@ export const estatesSlice = createSlice({
         });
     },
 });
-
-export const {currentTrackChanged, elapsedTimeUpdated} = estatesSlice.actions;
 
 export default estatesSlice.reducer;
