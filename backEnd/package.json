@@ -19,8 +19,9 @@
     "upload-test-data": "aws s3 cp ../tests/bucket s3://dev-quietavenue-backend-s3-bucket-06bf86a6f0a9 --recursive"
   },
   "scriptsComments": {
-    "build-backend": "Creates the backEndBundle file that contains the code for the backEnd, and stores it on backEndBundle folder",
-    "upload-test-data": "Uploads all the files and folders in the tests/bucket folder that are used for testing purposes"
+    "prod-backend": "Using a production environment, builds the backEndBundel file that contains the code for the backEnd. The file is stored on backEndBundle folder",
+    "dev-backend": "Using a development environment, builds the backEndBundel file that contains the code for the backEnd. The file is stored on backEndBundle folder",
+    "upload-test-data": "Uploads all the files and folders in the tests/bucket folder. This files are used for testing purposes"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.4",
