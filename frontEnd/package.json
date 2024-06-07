@@ -24,23 +24,22 @@
   "scripts": {
     "start": "react-scripts start",
     "test": "vitest",
-    "mirror": "NODE_ENV=development npm run build && npm run upload-assets",
-    "prod": "NODE_ENV=production npm run build",
-    "build": "rm -rf ./clientBuild && npm run client-build && npm run server-build",
+    "prod": "NODE_ENV=production npm run client-build && npm run server-build",
+    "mirror": "NODE_ENV=development npm run client-build && npm run server-build && npm run upload-assets",
     "client-build": "webpack --config webpack.client.js",
     "server-build": "webpack --config webpack.server.js",
     "clear-assets": "aws s3 rm s3://dev-quietavenue-frontend-s3-bucket-06f5a172f671/staticAssets --recursive",
     "upload-assets": "aws s3 cp ../frontEndBundle/staticAssets s3://dev-quietavenue-frontend-s3-bucket-06f5a172f671/staticAssets --recursive"
   },
   "scriptsComments": {
-    "start": "Sets up the api domain name and a development environment and starts a server, as well as hot module reloading",
-    "mirror": "Sets up the api domain name, runs the build script setting webpack environment to developmen and runs the upload-assets script",
-    "prod": "Sets up the api domain to quietavenue.com, runs the build script setting webpack environment to production",
-    "build": "Runs cliend build and server build consecutive. Server build need some resources from clien build",
-    "client-build": "Create a folder with the images, css and js bundle that is used for the site rendering using webpack",
-    "server-build": "Builds js a bundle for the backend lambda function using webpack",
-    "clear-assets": "deletes all the files in the S3 root/staticAssets folder",
-    "upload-assets": "uploads all the files in ../frontEndBundle/staticAssets local folder to S3 root/staticAssets"
+    "start": "Starts the react application and runs it on the browser (react-script start)",
+    "test": "Runs all frontEnd test using vitest",
+    "prod": "Runs client-build and server-build scripts consecutively in a production environment",
+    "mirror": "Does the same as prod script but using a test environment, also runs upload-assets script",
+    "client-build": "Build a css and js bundle files for the browser and grabs and hash and all the images required. The files are stored on clientBuild folder",
+    "server-build": "Builds a js bundle file and and grabs and hash all the file from clientBuild folder  that the bundle requires (css, js , images). The files are stored in frontEndBundle folder",
+    "clear-assets": "Deletes all the files inside the S3 root/staticAssets folder",
+    "upload-assets": "Uploads all the files located in quietavenue/frontEndBundle/staticAssets to S3 root/staticAssets folder"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
