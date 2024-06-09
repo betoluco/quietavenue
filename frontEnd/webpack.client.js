@@ -3,7 +3,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const webpack = require("webpack");
 
-// Client side bundle for hydration
+// Creates a css and js bundle for the client
 module.exports = function(env, argv) {
     
     const config = {
@@ -20,7 +20,7 @@ module.exports = function(env, argv) {
         module: {
             rules: [
                 {
-                    test: /.(js|jsx)$/,
+                    test: /\.js?$/,
                     exclude: /node_modules/,
                     use: {
                         loader: "babel-loader",
@@ -29,7 +29,7 @@ module.exports = function(env, argv) {
                                 ["@babel/preset-env", {
                                     "targets": ">0.25%, not dead, not ie 11"
                                 }],
-                                "@babel/preset-react",
+                                ["@babel/preset-react", {"runtime": "automatic"}],
                             ]
                         }
                     }
@@ -80,6 +80,6 @@ module.exports = function(env, argv) {
         config.devtool =  'source-map';
     }
     
-    return config
+    return config;
 };
 

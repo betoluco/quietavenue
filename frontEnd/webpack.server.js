@@ -1,9 +1,8 @@
 const path = require("path");
 const webpack = require("webpack");
 const TerserPlugin = require('terser-webpack-plugin');
-//const nodeExternals = require('webpack-node-externals');
 
-// Client side bundle for hydration
+//Creates a js bundle for the server side
 module.exports = function(env, argv) {
     
     const config = {
@@ -29,9 +28,7 @@ module.exports = function(env, argv) {
                         options: {
                             presets: [
                                 ["@babel/preset-env", {
-                                    "targets":{
-                                        "node":"18"
-                                    }
+                                    "targets": {"node":"18"}
                                 }],
                                 ["@babel/preset-react", {"runtime": "automatic"}]
                             ]
@@ -49,15 +46,13 @@ module.exports = function(env, argv) {
             extensions: [".js", ".jsx", ".json"],
         },
         
-         plugins: [
+        plugins: [
             new webpack.DefinePlugin({
-                'process.env.REACT_APP_DOMAIN_NAME': JSON.stringify(process.env.REACT_APP_DOMAIN_NAME),
+                'process.env.REACT_APP_DOMAIN_NAME': JSON.stringify(process.env.REACT_APP_DOMAIN_NAME)
             }),
         ],
         
         target: "node",
-        
-        //externals: [nodeExternals()],
     };
     
     if (process.env.NODE_ENV === 'development') {
@@ -75,10 +70,7 @@ module.exports = function(env, argv) {
                 }
             })],
         };
-        
     }
-        
-            
     
     return config;
 };
