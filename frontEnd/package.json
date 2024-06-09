@@ -22,10 +22,11 @@
     "serialize-javascript": "^6.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "REACT_APP_DOMAIN_NAME=https://d3d6un1tjol792.cloudfront.net react-scripts start",
     "test": "vitest",
-    "prod": "NODE_ENV=production npm run client-build && npm run server-build",
-    "mirror": "NODE_ENV=development npm run client-build && npm run server-build && npm run upload-assets",
+    "prod": "NODE_ENV=production REACT_APP_DOMAIN_NAME=https://quietavenue.com npm run build",
+    "mirror": "NODE_ENV=development REACT_APP_DOMAIN_NAME=https://d3d6un1tjol792.cloudfront.net npm run build && npm run upload-assets",
+    "build": "npm run client-build && npm run server-build",
     "client-build": "webpack --config webpack.client.js",
     "server-build": "webpack --config webpack.server.js",
     "clear-assets": "aws s3 rm s3://dev-quietavenue-frontend-s3-bucket-06f5a172f671/staticAssets --recursive",
@@ -36,6 +37,7 @@
     "test": "Runs all frontEnd test using vitest",
     "prod": "Runs client-build and server-build scripts consecutively in a production environment",
     "mirror": "Does the same as prod script but using a test environment, also runs upload-assets script",
+    "build": "Runs client-build followed by server-build, this script allows to share enviromental variables between the process",
     "client-build": "Build a css and js bundle files for the browser and grabs and hash and all the images required. The files are stored on clientBuild folder",
     "server-build": "Builds a js bundle file and and grabs and hash all the file from clientBuild folder  that the bundle requires (css, js , images). The files are stored in frontEndBundle folder",
     "clear-assets": "Deletes all the files inside the S3 root/staticAssets folder",
