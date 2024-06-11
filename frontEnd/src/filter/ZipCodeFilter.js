@@ -16,8 +16,6 @@ const ZipCodeFilter = (props) =>{
     }, [fetchStatus, dispatch]);
     
     const content = useSelector(state => selectContent(state, filterId, "zipCodeId"));
-    
-    console.log(zipCode)
     return <FilterTemplate content={content} filter={zipCode} />;
 };
 
