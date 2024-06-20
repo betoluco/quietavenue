@@ -3,22 +3,16 @@ import express from "express";
 import { configureStore } from '@reduxjs/toolkit';
 import { matchPath } from "react-router";
 
+import { setupStore } from './store'
 import renderer from "./renderer";
 import routes from "./routes";
-import estatesReducer from './estatesReducer';
-import playerReducer from './playerReducer';
 
 const app = express();
 
 app.use(awsServerlessExpressMiddleware.eventContext());
 
 app.get("*", async (req, res) =>{
-    const store = configureStore({
-        reducer:{
-            estates: estatesReducer,
-            player: playerReducer
-        }
-    });
+    const store = setupStore();
     
     //const path = req.apiGateway.event.path;
     const path = "/"

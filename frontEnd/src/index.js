@@ -5,17 +5,11 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from '@reduxjs/toolkit';
 
-import estatesReducer from "./estatesReducer";
-import playerReducer from './playerReducer';
+import { setupStore } from './store'
 import routes from "./routes";
 import "./style.css";
 
-const store = configureStore({
-  reducer:{
-    estates: estatesReducer,
-    player: playerReducer
-  }
-});
+const store = setupStore();
 
 const browserRouter =  createBrowserRouter(routes);
 
