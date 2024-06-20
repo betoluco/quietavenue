@@ -55,17 +55,24 @@ const AudioPlayer = props =>{
     
     const changePlayTime = (event) => {
         audio.current.currentTime = event.target.value;
-        dispatch(elapsedTimeUpdated(event.target.value));
+        dispatch(elapsedTimeUpdated(audio.current.currentTime));
     };
     
     const onTimeUpdate = () => {
-        if(Math.floor(audio.current.currentTime) !== Math.floor(elapsedTime))
+        if(Math.floor(audio.current.currentTime) !== Math.floor(elapsedTime)){
             if(audio.current.networkState === 3){
-                audio.current.currentTime = elapsedTime;
+                // 3 = NETWORK_NO_SOURCE, No HTMLMediaElement src found.
+                // this happens when useEffect changes audio src attribute
+                // trigerred by a change of track.
+                // Changing the .src attribute triggers the media element load algorithm.
+                // Part of this alogrithm (the resource selection algorithm) requires to change the playback position:
+                // This change will trigger an timeupdate event:
                 if(isPlaying) audio.current.play();
-            }else{
-                dispatch(elapsedTimeUpdated(audio.current.currentTime)); // 3 = NETWORK_NO_SOURCE, when changing source
+                // if the track was playing, the next track should start playing too
+                
             }
+            dispatch(elapsedTimeUpdated(audio.current.currentTime)); // 3 = NETWORK_NO_SOURCE, when changing source
+        }
     };
     
     const updateProgressBar = (trackProgress, max) =>{
@@ -77,7 +84,6 @@ const AudioPlayer = props =>{
     const changeTrack = (index) =>{
         if(mp3LinksList[currentTrack + index] != undefined )
             dispatch(currentTrackChanged(currentTrack + index));
-            if(isPlaying) audio.current.play();
     };
     
     const getDuration = () =>{
@@ -121,9 +127,9 @@ const AudioPlayer = props =>{
                 </button>
             </div>
             <div className="grid gap-10 grid-cols-3 grid-rows-1 items-center mb-3">
-                <p className="text-xs text-right">{previousDay}</p>
-                <p className="font-medium">{currentDay}</p>
-                <p className="text-xs text-left">{nextDay}</p>
+                <h5 className="text-xs text-right">{previousDay}</h5>
+                <h5 className="font-medium">{currentDay}</h5>
+                <h5 className="text-xs text-left">{nextDay}</h5>
             </div>
             <div className="w-full flex">
                 <input 
@@ -139,14 +145,13 @@ const AudioPlayer = props =>{
             </div> 
             
             <div className="w-full flex justify-end">
-                <p className="text-stone-800 text-xs">
-                    <span>{convertTime(Math.floor(elapsedTime))}</span>
-                    <span> / </span>
-                    <span>{convertTime(duration)}</span>
-                </p>
+                <h5 className="text-stone-800 text-xs">
+                    {convertTime(Math.floor(elapsedTime))} / {convertTime(duration)}
+                </h5>
             </div>
-            <audio ref={audio} onPlay={onPlay} onPause={onPause} 
-            onLoadedMetadata={getDuration} onTimeUpdate={onTimeUpdate}>
+            <audio data-testid="html-audio" ref={audio} onPlay={onPlay} 
+            onPause={onPause} onLoadedMetadata={getDuration} 
+            onTimeUpdate={onTimeUpdate}>
                 <source type="audio/mp3" />
                 Your browser does not support the audio element.
             </audio>
@@ -154,4 +159,4 @@ const AudioPlayer = props =>{
     );
 };
 
-export default AudioPlayer;
+export default AudioPlayer; 
