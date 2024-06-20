@@ -3,21 +3,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from "react-redux";
 import {BrowserRouter} from 'react-router-dom';
 
-import estatesReducer from '../estatesReducer';
-import playerReducer from '../playerReducer';
-
+import { setupStore } from '../store'
 
 const renderWithProviders = (
   ui,
   {
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
-    store = configureStore({
-        reducer:{
-          estates: estatesReducer,
-          player: playerReducer
-        }
-      }),
+    store = setupStore(preloadedState),
     ...renderOptions
   } = {}
 ) => {
