@@ -4,7 +4,7 @@ import { Navigate, useParams } from "react-router-dom";
 
 import EstateTemplate from "./EstateTemplate";
 import { fetchEstates } from "../estatesReducer";
-import Graph from "./graph/Graph";
+import AudioPlayer from "./graph/AudioPlayer";
 
 
 
@@ -30,9 +30,9 @@ const Estate = (props) =>{
         price = money.format(parseFloat(estate.price));
     }
     
-    let graph = undefined
+    let graph = undefined;
     if (estate.audioData){
-        graph = <Graph audioData={estate.audioData} />
+        graph = <AudioPlayer audioData={estate.audioData} />;
     }
     
      

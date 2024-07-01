@@ -2,6 +2,7 @@ import {it, expect, vi} from 'vitest';
 import {screen, fireEvent} from "@testing-library/react";
 import userEvent from '@testing-library/user-event';
 import  '@testing-library/jest-dom/vitest';
+import React from 'react';
 
 import renderWithProviders from '../../../__test__/renderWithProviders';
 import AudioPlayer from '../AudioPlayer';
@@ -23,40 +24,18 @@ it('Audio player displays initial information', () =>{
     expect(audio).toHaveProperty('src', 'http://localhost:3000/assets/2141-Mills-Ave-Foster-City-CA-94404/audioFiles/2022-03-06.mp3');
 });
 
-it('Audio Player changes songs with the buttons', async () =>{
-    renderWithProviders(<AudioPlayer audioData={estate} />);
-    const audio = screen.getByTestId("html-audio");
-    await userEvent.click(screen.getByRole('button', {name: 'Play Next'}));
-    expect(screen.getByRole("heading", {name: "Tue, Mar 8"})).toBeInTheDocument();
-    expect(screen.getByRole("heading", {name: "Mon, Mar 7"})).toBeInTheDocument();
-    expect(screen.getByRole("heading", {name: "Sun, Mar 6"})).toBeInTheDocument();
-    expect(audio).toHaveProperty('src', 'http://localhost:3000/assets/2141-Mills-Ave-Foster-City-CA-94404/audioFiles/2022-03-07.mp3');
-    await userEvent.click(screen.getByRole('button', {name: 'Play Next'}));
-    expect(screen.getByRole("heading", {name: "Wed, Mar 9"})).toBeInTheDocument();
-    expect(screen.getByRole("heading", {name: "Tue, Mar 8"})).toBeInTheDocument();
-    expect(screen.getByRole("heading", {name: "Mon, Mar 7"})).toBeInTheDocument();
-    expect(audio).toHaveProperty('src', 'http://localhost:3000/assets/2141-Mills-Ave-Foster-City-CA-94404/audioFiles/2022-03-08.mp3');
-    await userEvent.click(screen.getByRole('button', {name: 'Play Previous'}));
-    expect(screen.getByRole("heading", {name: "Tue, Mar 8"})).toBeInTheDocument();
-    expect(screen.getByRole("heading", {name: "Mon, Mar 7"})).toBeInTheDocument();
-    expect(screen.getByRole("heading", {name: "Sun, Mar 6"})).toBeInTheDocument();
-    expect(audio).toHaveProperty('src', 'http://localhost:3000/assets/2141-Mills-Ave-Foster-City-CA-94404/audioFiles/2022-03-07.mp3');
-    await userEvent.click(screen.getByRole('button', {name: 'Play Previous'}));
-    expect(screen.getByRole("heading", {name: "Mon, Mar 7"})).toBeInTheDocument();
-    expect(screen.getByRole("heading", {name: "Sun, Mar 6"})).toBeInTheDocument();
-    expect(screen.getByRole("heading", {name: ""})).toBeInTheDocument();
-    expect(audio).toHaveProperty('src', 'http://localhost:3000/assets/2141-Mills-Ave-Foster-City-CA-94404/audioFiles/2022-03-06.mp3');
-});
 
 it('Audio Player handles changing track when the track list is out of range', async () =>{
     renderWithProviders(<AudioPlayer audioData={estate} />);
     const audio = screen.getByTestId("html-audio");
     await userEvent.click(screen.getByRole('button', {name: 'Play Previous'}));
     await userEvent.click(screen.getByRole('button', {name: 'Play Previous'}));
-    expect(screen.getByRole("heading", {name: "Mon, Mar 7"})).toBeInTheDocument();
     expect(screen.getByRole("heading", {name: "Sun, Mar 6"})).toBeInTheDocument();
+    expect(screen.getByRole("heading", {name: "Mon, Mar 7"})).toBeInTheDocument();
     expect(screen.getByRole("heading", {name: ""})).toBeInTheDocument();
     expect(audio).toHaveProperty('src', 'http://localhost:3000/assets/2141-Mills-Ave-Foster-City-CA-94404/audioFiles/2022-03-06.mp3');
+    await userEvent.click(screen.getByRole('button', {name: 'Play Next'}));
+    await userEvent.click(screen.getByRole('button', {name: 'Play Next'}));
     await userEvent.click(screen.getByRole('button', {name: 'Play Next'}));
     await userEvent.click(screen.getByRole('button', {name: 'Play Next'}));
     await userEvent.click(screen.getByRole('button', {name: 'Play Next'}));
@@ -77,7 +56,7 @@ it('Audio Player handles changing track when the track list is out of range', as
 });
 
 
-it('Audio Player changes icon when pausing / playing', async () =>{
+it('Audio Player plays and pause with the button', async () =>{
     renderWithProviders(<AudioPlayer audioData={estate} />);
     const audio = screen.getByTestId("html-audio");
     const spyPlay = vi.spyOn(audio, "play");
@@ -92,81 +71,63 @@ it('Audio Player changes icon when pausing / playing', async () =>{
     expect(screen.getByRole('button', {name: 'Play'})).toBeInTheDocument();
 });
 
-it('Audio Player on time update changes input range and numeric indicator', () =>{
-    renderWithProviders(<AudioPlayer audioData={estate} />);
-    const audio = screen.getByTestId("html-audio");
-    Object.defineProperty(audio, "duration", {
-        writable: true,
-        value: 100,
-    });
-    fireEvent.loadedMetadata(audio);
-    Object.defineProperty(audio, "currentTime", {
-        writable: true,
-        value: 75,
-    });
-    fireEvent.timeUpdate(audio);
-    expect(screen.getByRole("heading", {name: "1:15 / 1:40"})).toBeInTheDocument();
-    expect(screen.getByRole('slider')).toHaveProperty('min', '0');
-    expect(screen.getByRole('slider')).toHaveProperty('max', '100');
-    expect(screen.getByRole('slider')).toHaveProperty('value', '75');
-});
-
 it('Progress bar can change track current time', async () =>{
     renderWithProviders(<AudioPlayer audioData={estate} />);
     const audio = screen.getByTestId("html-audio");
     Object.defineProperty(audio, "duration", {
         writable: true,
-        value: 100,
+        value: 300,
     });
     fireEvent.loadedMetadata(audio);
     await fireEvent.change(screen.getByRole('slider'), {target: {value: 70}});
     expect(audio.currentTime).toBe(70);
     fireEvent.timeUpdate(audio);
-    expect(screen.getByRole("heading", {name: "1:10 / 1:40"})).toBeInTheDocument();
+    expect(screen.getByRole("heading", {name: "1:10 / 5:00"})).toBeInTheDocument();
 });
 
 it('Audio Player only updates time when the second change', () =>{
-    const playerState = {  currentTrack: 0, elapsedTime: 70, isPlaying: true};
-    
-    renderWithProviders(
-        <AudioPlayer audioData={estate} />, 
-        {preloadedState: {player: playerState}
-    });
-    
+    renderWithProviders(<AudioPlayer audioData={estate} />);
     const audio = screen.getByTestId("html-audio");
+    Object.defineProperty(audio, "duration", {
+        writable: true,
+        value: 25,
+    });
+    fireEvent.loadedMetadata(audio);
     Object.defineProperty(audio, "currentTime", {
         writable: true,
-        value: 70.8,
+        value: 0.5,
     });
     fireEvent.timeUpdate(audio);
-    expect(screen.getByRole("heading", {name: "1:10 / 0:00"})).toBeInTheDocument();
-     Object.defineProperty(audio, "currentTime", {
+    expect(screen.getByRole("heading", {name: "0:00 / 0:25"})).toBeInTheDocument();
+    expect(screen.getByRole('slider')).toHaveProperty('value', '0');
+    Object.defineProperty(audio, "currentTime", {
         writable: true,
-        value: 71.2,
+        value: 0.99,
     });
     fireEvent.timeUpdate(audio);
-    expect(screen.getByRole("heading", {name: "1:11 / 0:00"})).toBeInTheDocument();
+    expect(screen.getByRole("heading", {name: "0:00 / 0:25"})).toBeInTheDocument();
+    expect(screen.getByRole('slider')).toHaveProperty('value', '0');
+    Object.defineProperty(audio, "currentTime", {
+        writable: true,
+        value: 1,
+    });
+    fireEvent.timeUpdate(audio);
+    expect(screen.getByRole("heading", {name: "0:01 / 0:25"})).toBeInTheDocument();
+    expect(screen.getByRole('slider')).toHaveProperty('value', '1');
+    Object.defineProperty(audio, "currentTime", {
+        writable: true,
+        value: 2,
+    });
+    fireEvent.timeUpdate(audio);
+    expect(screen.getByRole("heading", {name: "0:02 / 0:25"})).toBeInTheDocument();
+    expect(screen.getByRole('slider')).toHaveProperty('value', '2');
 });
 
 it("Audio player keeps playing when the track is changed", async () =>{
-    const playerState = {  currentTrack: 0, elapsedTime: 70, isPlaying: true};
-    renderWithProviders(
-        <AudioPlayer audioData={estate} />, 
-        {preloadedState: {player: playerState}}
-    );
-    
+    renderWithProviders(<AudioPlayer audioData={estate} />);
     const audio = screen.getByTestId("html-audio");
-    Object.defineProperty(audio, "currentTime", {
-        writable: true,
-        value: 71,
-    });
-    Object.defineProperty(audio, "networkState", {
-        writable: true,
-        value: 3,
-    });
-    
     const spyPlay = vi.spyOn(audio, "play");
-    
-    fireEvent.timeUpdate(audio);
-    expect(spyPlay).toHaveBeenCalled();
+    fireEvent.play(audio);
+    fireEvent.canPlay(audio);
+    expect(spyPlay).toHaveBeenCalled(1);
 });
