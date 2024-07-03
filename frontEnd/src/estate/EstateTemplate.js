@@ -24,29 +24,29 @@ const EstateTemplate = (props) => {
               </h2>
             }
             
-            <ul className="flex items-center space-x-5 mb-10">
+            <div className="flex items-center space-x-5 mb-10">
               {props.estate.bathroom &&
                 <Fragment>
-                  <li className="text-stone-800 ">
+                  <h5 className="text-stone-800 ">
                     {props.estate.bathroom} bath
-                  </li>
+                  </h5>
                   <li><span className="block bg-green-600 w-0.5 h-5"></span></li>
                 </Fragment>
               }
               {props.estate.bedroom &&
                 <Fragment>
-                  <li className="text-stone-800">
+                  <h5 className="text-stone-800">
                      {props.estate.bedroom} bed
-                  </li>
+                  </h5>
                   <li><span className="block bg-green-600 w-0.5 h-5"></span></li>
                 </Fragment>
               }
               {props.estate.lotArea &&
-                <li className="text-stone-800">
+                <h5 className="text-stone-800">
                   {props.estate.lotArea} sq.ft. lot
-                </li>
+                </h5>
               }
-            </ul>
+            </div>
           </div>
         </div>
         
