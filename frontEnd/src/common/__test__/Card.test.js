@@ -12,18 +12,10 @@ const estate = {
     "address2": "Foster City CA 94044"
 };
 
-it('link should have href', () =>{
+it('Card render all correnctly', () =>{
     render(<Card estate={estate} />, {wrapper:BrowserRouter});
     expect(screen.getByRole('link')).toHaveProperty('href', 'http://localhost:3000/estate/2/CA/-Foster-City/2141-Mills-Ave');
-});
-
-it('Image should have src', () =>{
-    render(<Card estate={estate} />, {wrapper:BrowserRouter});
-    expect(screen.getByRole('img')).toHaveProperty('src', 'http://localhost:3000/assets/2141-Mills-Ave-Foster-City-CA-9440/2141-Mills-Ave-Foster-City-CA-94404-main-pic.jpg');
-});
-    
-it('Card componet renders all required information', () =>{
-    render(<Card estate={estate} />, {wrapper:BrowserRouter});
     expect(screen.getByRole('heading', {name: "2141 Mills Ave"})).toBeInTheDocument();
     expect(screen.getByRole('heading', {name: "Foster City CA 94044"})).toBeInTheDocument();
+    expect(screen.getByRole('img')).toHaveProperty('src', 'http://localhost:3000/assets/2141-Mills-Ave-Foster-City-CA-9440/2141-Mills-Ave-Foster-City-CA-94404-main-pic.jpg');
 });
