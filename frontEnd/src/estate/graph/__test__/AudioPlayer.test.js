@@ -6,10 +6,10 @@ import React from 'react';
 
 import renderWithProviders from '../../../__test__/renderWithProviders';
 import AudioPlayer from '../AudioPlayer';
-import estate from './audioData.json';
+import audioData from './audioData.json';
 
 it('Audio player displays initial information', () =>{
-    renderWithProviders(<AudioPlayer audioData={estate} />);
+    renderWithProviders(<AudioPlayer audioData={audioData} />);
     const audio = screen.getByTestId("html-audio");
     Object.defineProperty(audio, "duration", {
         writable: true,
@@ -26,7 +26,7 @@ it('Audio player displays initial information', () =>{
 
 
 it('Audio Player handles changing track when the track list is out of range', async () =>{
-    renderWithProviders(<AudioPlayer audioData={estate} />);
+    renderWithProviders(<AudioPlayer audioData={audioData} />);
     const audio = screen.getByTestId("html-audio");
     await userEvent.click(screen.getByRole('button', {name: 'Play Previous'}));
     await userEvent.click(screen.getByRole('button', {name: 'Play Previous'}));
@@ -57,7 +57,7 @@ it('Audio Player handles changing track when the track list is out of range', as
 
 
 it('Audio Player plays and pause with the button', async () =>{
-    renderWithProviders(<AudioPlayer audioData={estate} />);
+    renderWithProviders(<AudioPlayer audioData={audioData} />);
     const audio = screen.getByTestId("html-audio");
     const spyPlay = vi.spyOn(audio, "play");
     const spyPause = vi.spyOn(audio, "pause");
@@ -72,7 +72,7 @@ it('Audio Player plays and pause with the button', async () =>{
 });
 
 it('Progress bar can change track current time', async () =>{
-    renderWithProviders(<AudioPlayer audioData={estate} />);
+    renderWithProviders(<AudioPlayer audioData={audioData} />);
     const audio = screen.getByTestId("html-audio");
     Object.defineProperty(audio, "duration", {
         writable: true,
@@ -86,7 +86,7 @@ it('Progress bar can change track current time', async () =>{
 });
 
 it('Audio Player only updates time when the second change', () =>{
-    renderWithProviders(<AudioPlayer audioData={estate} />);
+    renderWithProviders(<AudioPlayer audioData={audioData} />);
     const audio = screen.getByTestId("html-audio");
     Object.defineProperty(audio, "duration", {
         writable: true,
@@ -124,7 +124,7 @@ it('Audio Player only updates time when the second change', () =>{
 });
 
 it("Audio player keeps playing when the track is changed", async () =>{
-    renderWithProviders(<AudioPlayer audioData={estate} />);
+    renderWithProviders(<AudioPlayer audioData={audioData} />);
     const audio = screen.getByTestId("html-audio");
     const spyPlay = vi.spyOn(audio, "play");
     fireEvent.play(audio);
