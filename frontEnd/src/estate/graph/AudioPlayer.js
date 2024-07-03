@@ -30,7 +30,7 @@ const AudioPlayer = props =>{
     
     const onTimeUpdate = () => {
         if(Math.floor(audio.current.currentTime) !== Math.floor(elapsedTime)){
-            if(audio.current.currentTime.isNaN) 
+            if(!audio.current.duration.isNaN) 
                 setElapsedTime(Math.floor(audio.current.currentTime)); 
         }
     };
