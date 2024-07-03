@@ -12,7 +12,6 @@ const PlayButton = props =>{
                 props.audio.current.play();
             }catch (error){
                 console.error(error);
-                props.changeTrack(1);
             }
         } 
     };

@@ -131,3 +131,12 @@ it("Audio player keeps playing when the track is changed", async () =>{
     fireEvent.canPlay(audio);
     expect(spyPlay).toHaveBeenCalled(1);
 });
+
+it("Audio changes track when an erro is throw", async () =>{
+    renderWithProviders(<AudioPlayer audioData={audioData} />);
+    const audio = screen.getByTestId("html-audio");
+    fireEvent.error(audio);
+    expect(screen.getByRole("heading", {name: "Sun, Mar 6"})).toBeInTheDocument();
+    expect(screen.getByRole("heading", {name: "Mon, Mar 7"})).toBeInTheDocument();
+    expect(screen.getByRole("heading", {name: "Tue, Mar 8"})).toBeInTheDocument();
+});

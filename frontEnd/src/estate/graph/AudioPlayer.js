@@ -59,7 +59,8 @@ const AudioPlayer = props =>{
                 duration={trackDuration} 
                 elapsedTime={elapsedTime} 
                 audio={audio}/>
-                <audio data-testid="html-audio" ref={audio} 
+                <audio data-testid="html-audio" ref={audio}
+                onError={() => changeTrack(1)}
                 onPlay={() => setIsPlaying(true)} 
                 onPause={() => setIsPlaying(false)}
                 onCanPlay={() => isPlaying&& audio.current.play()}
