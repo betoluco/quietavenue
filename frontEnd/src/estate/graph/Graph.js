@@ -1,62 +1,35 @@
-import React, {useLayoutEffect, useRef, useState, Fragment} from "react";
+import React, {Fragment, useRef} from "react";
 import {scaleTime, scaleLinear} from "d3-scale";
-import { useSelector, useDispatch} from "react-redux";
-
-import {currentTrackChanged, elapsedTimeUpdated, playingStateChanged}  from "../../playerReducer.js";
-import AudioPlayer from "./AudioPlayer";
-import XAxis from "./XAxis";
 
 const Graph = props =>{
-  const dispatch = useDispatch();
   const ref = useRef(null);
-  const [fontSize, setFontSize] = useState(1);
-  
-  const currentTrack = useSelector( (state) =>
-    state.player.currentTrack
-  );
-  
-  const elapsedTime = useSelector( (state) =>
-    state.player.elapsedTime
-  ); 
-  
   const svgWidth = 360;
-  const graphHeight = 30;
+  const graphHeight = 60;
+  const margin = {right: 4, left: 4, };
   
-  
-  useLayoutEffect(() => {
-    // 0.75 is the rem size of tailwind sm font size
-    setFontSize(0.75 * svgWidth / ref.current.clientWidth);
-  }, []);
-  
-  const margin = {right: 4, bottom: fontSize, left: 4};
-  // 5 minutes per bar, 288 bar per day plus 1 to avoid white spaces
+  // 5 minutes per bar, 288 bar per day plus 0.1 to avoid white spaces
   const barWidth = 0.1 + svgWidth/288;
   
   // onCLick listener
   const onRectClicked = (track, bar) => {
-    dispatch(currentTrackChanged(track));
-    const currentDay = Object.keys(props.audioData)[track];
+    props.setCurrentTrack(track);
+    const currentDay = props.daysList[track];
     for (let i = bar;  i >= 0; i--){
       if(props.audioData[currentDay].graphData[i].hasOwnProperty("soundStart")){
-        dispatch(elapsedTimeUpdated(props.audioData[currentDay].graphData[i].soundStart));
+        props.setElapsedTime(props.audioData[currentDay].graphData[i].soundStart);
         break;
       }
     }
-    dispatch(playingStateChanged(true));
   };
   
   // Y Scale
-  const loudnessScale = scaleLinear()
-  .domain([0, 1])
-  .range([0, graphHeight - margin.bottom]);
+  const loudnessScale = scaleLinear().domain([0, 1]).range([0, graphHeight]);
   
   // Color Scale
-  const colorScale = scaleLinear()
-  .domain([0, 1])
-  .range(["#c9939b", "red"]);
+  const colorScale = scaleLinear().domain([0, 1]).range(["#c9939b", "red"]);
   
   //Looping through the days
-  const ridgeline = Object.keys(props.audioData).map((day, i) => {
+  const ridgeline = props.daysList.map((day, i) => {
     const today = new Date(day);
     const tomorrow = new Date(day).setHours(24, 0, 0);
     
@@ -65,16 +38,11 @@ const Graph = props =>{
     .domain([today, tomorrow])
     .range([ margin.left, svgWidth - margin.right ]);
     
-    //Highlight current graph
-    const graphHighlight = currentTrack === i?
-    <rect x="0" y="0" height={graphHeight - margin.bottom } width={svgWidth} rx="4" fill="#d4d4d4"/>     
-    :null;
-    
     let currentIndex = undefined;
-    if (currentTrack === i){
+    if (props.currentTrack === i){
       props.audioData[day].graphData.forEach( (dataPoint, i) => {
         if(dataPoint.hasOwnProperty("soundStart") &&
-        dataPoint.soundStart < elapsedTime){
+        dataPoint.soundStart < props.elapsedTime){
           currentIndex = i;
         }
       });
@@ -84,24 +52,25 @@ const Graph = props =>{
     let currentMinute = null;
     const bars = props.audioData[day].graphData.map( (dataPoint, j) =>{
       const height = loudnessScale(dataPoint.maxLoudness);
-      const yPosition = (graphHeight - height - margin.bottom) / 2;
+      const yPosition = (graphHeight - height) / 2;
       const xPosition = timeScale(new Date(dataPoint.time));
       let fillColor = colorScale(dataPoint.maxLoudness);
-      if(currentTrack === i && j <= currentIndex){
+      if(props.currentTrack === i && j <= currentIndex){
         fillColor="#166534";
         if(j === currentIndex){
+          // 0.75 is the rem size of tailwind sm font size
+          const fontSize = 0.75 * (svgWidth / ref.current.clientWidth);
           currentMinute = <text 
           fontSize={`${fontSize}rem`}
           textAnchor="middle"
           x={xPosition} 
-          y={yPosition}>
+          y="20">
             {new Date(dataPoint.time)
             .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
           </text>;
         }
       } 
-      return <rect
-        onClick={() => onRectClicked(i, j)}
+      return <rect onClick={() => onRectClicked(i, j)}
         key={dataPoint.time}
         x={xPosition} 
         y={yPosition} 
@@ -110,55 +79,39 @@ const Graph = props =>{
         fill={fillColor}/>; 
     });
     
-    const yTranslate = graphHeight * i;
     return (
-      <g transform={`translate(0, ${yTranslate})`} key={i}>
-        {graphHighlight}
-        <text x="3" y="7" fontSize={`${fontSize}rem`}>
-        {today.toLocaleDateString("en-US", {weekday: 'short', month: 'short', day: 'numeric'})}
-        </text>
-        {bars}
-        <rect 
-        x={margin.left} 
-        y={0} 
-        width={svgWidth - margin.left - margin.right}
-        height={graphHeight} 
-        fill="url(#barsGrad)"
-        clipPath={`url(#${day})`}/>
-        {currentMinute}
-        {i%3 == 0 &&
-          <XAxis 
-          timeScale={timeScale}
-          loudnessScale={loudnessScale}
-          height={graphHeight}
-          fontSize={fontSize}
-          />
+      <div key={i} className="w-full h-full mt-4">
+        <h5 className="text-stone-800 text-xs relative -mb-4 ml-3">
+          {today.toLocaleDateString("en-US", {weekday: 'short', day: 'numeric'})}
+        </h5>
+        <svg viewBox={`0 0 ${svgWidth} ${graphHeight}`} ref={ref}>
+          {props.currentTrack === i &&
+            <rect x="0" y="0" height={graphHeight} 
+            width={svgWidth} rx="4" fill="#d4d4d4"/>
+          }
+          {bars}
+          {currentMinute}
+        </svg>
+        {/*
+        <rect x={margin.left} y={0} width={svgWidth - margin.left - margin.right}
+        height={graphHeight} fill="url(#barsGrad)"clipPath={`url(#${day})`}/>
+        */}
+        {i%2 == 0 &&
+        <div className="w-full flex justify-between">
+          <h5 className="text-stone-800 text-xs">0:00</h5>
+          <h5 className="text-stone-800 text-xs">8:00</h5>
+          <h5 className="text-stone-800 text-xs">16:00</h5>
+          <h5 className="text-stone-800 text-xs">24:00</h5>
+        </div>
         }
-      </g>
+      </div>
     );
   });
   
-  const svgHeigh = (graphHeight + margin.bottom) * ridgeline.length;
   
   return (
     <Fragment>
-      <h2 className="text-stone-800 text-center max-w-screen-md text-lg sm:text-xl mb-3">
-        Audio recorded in the property <br/>
-        {new Date(Object.keys(props.audioData)[0])
-        .toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric'})}
-        <span> - </span>
-        {new Date(Object.keys(props.audioData).at(-1))
-        .toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric'})}
-      </h2>
-      
-      <AudioPlayer audioData={props.audioData} />
-      
-      <svg 
-      ref={ref}
-      viewBox={`0 0 ${svgWidth} ${svgHeigh}`} 
-      className="w-full, mb-2">
-        {ridgeline}
-      </svg>
+      {ridgeline}
     </Fragment>
   );
 };

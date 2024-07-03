@@ -5,6 +5,7 @@ import PlayButton from "./PlayButton";
 import TrackIndicator from "./TrackIndicator";
 import SkipButton from "./SkipButton";
 import BackButton from "./BackButton";
+import Graph from './Graph';
 
 
 const AudioPlayer = props =>{
@@ -29,7 +30,8 @@ const AudioPlayer = props =>{
     
     const onTimeUpdate = () => {
         if(Math.floor(audio.current.currentTime) !== Math.floor(elapsedTime)){
-            setElapsedTime(Math.floor(audio.current.currentTime)); 
+            if(audio.current.currentTime.isNaN) 
+                setElapsedTime(Math.floor(audio.current.currentTime)); 
         }
     };
     
@@ -43,7 +45,7 @@ const AudioPlayer = props =>{
                 {new Date(daysList.at(-1))
                 .toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric'})}
             </h2>
-            <div className="sticky top-0 pt-3 flex flex-col items-center w-full mb-4 bg-white">
+            <div className="sticky top-0 pt-3 flex flex-col items-center w-full mb-4 bg-white z-10">
                 <div className="w-full flex justify-center mb-3">
                     <BackButton changeTrack={changeTrack} />
                     <PlayButton 
@@ -69,6 +71,13 @@ const AudioPlayer = props =>{
                     Your browser does not support the audio element.
                 </audio>
             </div>
+                <Graph 
+                daysList={daysList}
+                audioData={props.audioData}
+                currentTrack={currentTrack}
+                setCurrentTrack={setCurrentTrack}
+                elapsedTime={elapsedTime}
+                setElapsedTime={setElapsedTime}/>
         </Fragment>
     );
 };
