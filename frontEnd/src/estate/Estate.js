@@ -7,16 +7,13 @@ import { fetchEstates } from "../estatesReducer";
 import AudioPlayer from "./graph/AudioPlayer";
 
 
-
 const Estate = (props) =>{
     const { estateId } = useParams();
     const estate = useSelector( (state) =>
         state.estates.estates.find( estate => estate.estateId === parseInt(estateId))
     );
     
-    if( !estate ){
-        return <Navigate to="/notFound" />;
-    }
+    if( !estate ) return <Navigate to="/notFound" />;
     
     const moneyOptions = {
         style: 'currency',
@@ -26,16 +23,10 @@ const Estate = (props) =>{
     const money = new Intl.NumberFormat('en-US', moneyOptions);
     
     let price = undefined;
-    if(estate.price){
-        price = money.format(parseFloat(estate.price));
-    }
+    if(estate.price) price = money.format(parseFloat(estate.price));
     
     let graph = undefined;
-    if (estate.audioData){
-        graph = <AudioPlayer audioData={estate.audioData} />;
-    }
-    
-     
+    if (estate.audioData) graph = <AudioPlayer audioData={estate.audioData} />;
     
     return <EstateTemplate estate={estate} price={price} graph={graph}/>;
 };
