@@ -80,22 +80,18 @@ const Graph = props =>{
     });
     
     return (
-      <div key={i} className="w-full h-full mt-4">
+      <div key={i} className="w-full h-full mt-4" data-testid={today.toLocaleDateString()}>
         <h5 className="text-stone-800 text-xs relative -mb-4 ml-3">
           {today.toLocaleDateString("en-US", {weekday: 'short', day: 'numeric'})}
         </h5>
         <svg viewBox={`0 0 ${svgWidth} ${graphHeight}`} ref={ref}>
           {props.currentTrack === i &&
-            <rect x="0" y="0" height={graphHeight} 
+            <rect x="0" y="0" height={graphHeight} data-testid="selected-inicator"
             width={svgWidth} rx="4" fill="#d4d4d4"/>
           }
           {bars}
           {currentMinute}
         </svg>
-        {/*
-        <rect x={margin.left} y={0} width={svgWidth - margin.left - margin.right}
-        height={graphHeight} fill="url(#barsGrad)"clipPath={`url(#${day})`}/>
-        */}
         {i%2 == 0 &&
         <div className="w-full flex justify-between">
           <h5 className="text-stone-800 text-xs">0:00</h5>
