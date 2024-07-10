@@ -20,3 +20,4 @@ region = "us-west-1"
 capabilities = "CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND"
 s3_bucket = "production-sam-source-bucket"
 confirm_changeset = true
+parameter_overrides = "Env=\"prod\""
