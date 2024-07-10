@@ -56,7 +56,7 @@ const search = async (req, res) =>{
                 };
             });
             response.zip_codes =  zipCodesSearch.rows.map( zipCode => {
-                const url = `/zipCode/${zipCode.zip_code}/${zipCode.zip_code_id}`.replace(/\s+/g, '-');
+                const url = `/zipCode/${zipCode.zip_code_id}/${zipCode.zip_code}`.replace(/\s+/g, '-');
                  return {
                     'name': zipCode.zip_code,
                     'url': url
