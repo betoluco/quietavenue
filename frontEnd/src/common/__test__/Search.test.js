@@ -199,24 +199,3 @@ it('Renders estate, city, and zip code results', async() =>{
     expect(screen.getByRole('link', {name:'94044'})).toHaveProperty('href', 'http://localhost:3000/zipCode/1/94044');
     expect(screen.getByRole('link', {name:'94356'})).toHaveProperty('href', 'http://localhost:3000/zipCode/2/94356');
 });
-
-it('When clicking on a results the input is cleared', async() =>{
-    const spy = vi.spyOn(axios, "get").mockImplementation(() =>{
-        return Promise.resolve({
-            data: {
-                addresses: [
-                    {
-                        'name': '1020 Helm Ln Foster City CA 94044',
-                        'url': '/estate/1/CA/Foster-City/1020-Helm-Ln'
-                    }
-                ],
-                cities: [],
-                zip_codes: []
-            }
-        });
-    });
-    render(<Search/>, {wrapper:BrowserRouter});
-    await userEvent.type(screen.getByRole('textbox', {name: /search-input/i}), 'address');
-    await userEvent.click(screen.getByRole('link', {name:'1020 Helm Ln Foster City CA 94044'}));
-    expect(screen.getByRole('textbox', {name: /search-input/i})).toHaveProperty('value', '');
-});

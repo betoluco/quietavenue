@@ -15,7 +15,7 @@ const Search = props =>{
     if (searchInputText.length > 2) { 
       
       const filterSearch = async () => {
-        const response = await axios.get(`/api/search?filter=${searchInputText}`);
+        const response = await axios.get(`https://d3d6un1tjol792.cloudfront.net/api/search?filter=${searchInputText}`);
         
         let suggestList = [];
         const estateSuggestions = response.data.addresses;
@@ -32,14 +32,13 @@ const Search = props =>{
           );
           estateSuggestions.forEach( element =>{
             suggestList.push(
-              <li
-              key={element.url}
-              onClick={onSuggestClick}
-              className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
-                <Link to={element.url}>
+              <Link to={element.url}>
+                <li
+                key={element.url}
+                className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
                   {element.name}
-                </Link>
-              </li>
+                </li>
+              </Link>
             );
           });
         }
@@ -54,14 +53,13 @@ const Search = props =>{
           );
           citySuggestions.forEach( element =>{
             suggestList.push(
-              <li
-              key={element.url}
-              onClick={onSuggestClick}
-              className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
-                <Link to={element.url}>
+              <Link to={element.url}>
+                <li
+                key={element.url}
+                className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
                   {element.name}
-                </Link>
-              </li>
+                </li>
+              </Link>
             );
           });
         }
@@ -76,14 +74,13 @@ const Search = props =>{
           );
           zipCodeSuggestions.forEach( element =>{
             suggestList.push(
-              <li
-              key={element.url}
-              onClick={onSuggestClick}
-              className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
-                <Link to={element.url}>
+              <Link to={element.url}>
+                <li
+                key={element.url}
+                className="flex p-1 pl-3 bg-white text-lg text-stone-800 hover:bg-green-200">
                   {element.name}
-                </Link>
-              </li>
+                </li>
+              </Link>
             );
           });
         }
@@ -113,10 +110,6 @@ const Search = props =>{
   
   const onChangeHandler = event =>{
     setSearchInputText(event.target.value);
-  };
-  
-  const onSuggestClick = link =>{
-    setSearchInputText("");
   };
   
   const onFormFocus = event => {
