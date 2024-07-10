@@ -15,7 +15,7 @@ const Search = props =>{
     if (searchInputText.length > 2) { 
       
       const filterSearch = async () => {
-        const response = await axios.get(`https://d3d6un1tjol792.cloudfront.net/api/search?filter=${searchInputText}`);
+        const response = await axios.get(`/api/search?filter=${searchInputText}`);
         
         let suggestList = [];
         const estateSuggestions = response.data.addresses;
