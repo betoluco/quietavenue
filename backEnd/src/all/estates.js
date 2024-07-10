@@ -13,9 +13,9 @@ var pool = new pg.Pool({
 const estates = async (req, res) =>{
     try {
         const databaseResponse = await pool.query(`
-            SELECT estate_id, address_1, audio_data_link, audio_description, bathroom, 
-            bedroom, lot_area, price, profile_picture, video_link,
-            cities.city, cities.city_id, states.state_abbreviation,
+            SELECT estate_id, address_1, audio_data_link, audio_description, 
+            audio_score, bathroom, bedroom, lot_area, price, profile_picture, 
+            video_link, cities.city, cities.city_id, states.state_abbreviation,
             zip_codes.zip_code, zip_codes.zip_code_id
             FROM estates
             INNER JOIN cities

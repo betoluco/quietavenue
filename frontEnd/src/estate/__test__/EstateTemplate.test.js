@@ -24,7 +24,7 @@ it('Renders all elements', () =>{
         "bedroom": 3,
         "lotArea": 1346,
         "videoLink": "https://player.vimeo.com/video/826411325?h=3b090b7149&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479",
-        "soundScore": 8,
+        "audioScore": 8,
         "audioDescription": "Some exaple text"
     };
     

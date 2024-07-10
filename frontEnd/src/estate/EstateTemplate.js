@@ -59,11 +59,11 @@ const EstateTemplate = (props) => {
           </div>
         }
         
-        {props.estate.soundScore &&
+        {props.estate.audioScore &&
           <div className="w-full mb-6 flex items-center">
             <h2 className="text-2xl text-white font-semibold bg-green-600 rounded-full mr-4"
             style={{padding: "0.5rem 0.5rem 0.7rem 0.5rem"}}>
-              {props.estate.soundScore}<span className="text-sm font-normal">/10</span>
+              {props.estate.audioScore}<span className="text-sm font-normal">/10</span>
             </h2>
             <p className="text-2xl text-stone-800 font-semibold">Noise Score</p>
           </div>

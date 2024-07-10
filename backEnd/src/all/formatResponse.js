@@ -37,6 +37,10 @@ const formatResults = async (estate) =>{
         item.audioDescription = estate.audio_description;
     }
     
+    if (estate.audio_score !== null) {
+        item.audioScore = estate.audio_score;
+    }
+    
     if (estate.bathroom !== null) {
         item.bathroom = estate.bathroom;
     }
