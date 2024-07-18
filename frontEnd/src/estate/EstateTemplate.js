@@ -30,7 +30,7 @@ const EstateTemplate = (props) => {
                   <h5 className="text-stone-800 ">
                     {props.estate.bathroom} bath
                   </h5>
-                  <li><span className="block bg-green-600 w-0.5 h-5"></span></li>
+                  <div><span className="block bg-green-600 w-0.5 h-5"></span></div>
                 </Fragment>
               }
               {props.estate.bedroom &&
@@ -38,7 +38,7 @@ const EstateTemplate = (props) => {
                   <h5 className="text-stone-800">
                      {props.estate.bedroom} bed
                   </h5>
-                  <li><span className="block bg-green-600 w-0.5 h-5"></span></li>
+                  <div><span className="block bg-green-600 w-0.5 h-5"></span></div>
                 </Fragment>
               }
               {props.estate.lotArea &&
