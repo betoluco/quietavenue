@@ -3,18 +3,18 @@ version = 0.1
 [default]
 [default.global.parameters]
 stack_name = "dev-quietavenue-1"
-region = "us-west-1"
+region = "us-east-1"
 
 [default.deploy.parameters]
 capabilities = "CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND"
-s3_bucket = "development-sam-source-buket"
+s3_bucket = "development-sam-source-bucket"
 confirm_changeset = false
 parameter_overrides = "Env=\"dev\""
 
 [production]
 [production.global.parameters]
 stack_name = "prod-quietavenue"
-region = "us-west-1"
+region = "us-east-1"
 
 [production.deploy.parameters]
 capabilities = "CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND"
