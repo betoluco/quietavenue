@@ -33,15 +33,15 @@
     "upload-assets": "aws s3 cp ../frontEndBundle/staticAssets s3://dev-quietavenue-frontend-s3-bucket-06f5a172f671/staticAssets --recursive"
   },
   "scriptsComments": {
-    "start": "Starts the react application and runs it on the browser (react-script start)",
-    "test": "Runs all frontEnd test using vitest",
-    "prod": "Runs client-build and server-build scripts consecutively in a production environment",
-    "mirror": "Does the same as prod script but using a test environment, also runs upload-assets script",
-    "build": "Runs client-build followed by server-build, this script allows to share enviromental variables between the process",
-    "client-build": "Build a css and js bundle files for the browser and grabs and hash and all the images required. The files are stored on clientBuild folder",
-    "server-build": "Builds a js bundle file and and grabs and hash all the file from clientBuild folder  that the bundle requires (css, js , images). The files are stored in frontEndBundle folder",
-    "clear-assets": "Deletes all the files inside the S3 root/staticAssets folder",
-    "upload-assets": "Uploads all the files located in quietavenue/frontEndBundle/staticAssets to S3 root/staticAssets folder"
+    "start": "Starts the React application and runs it in the browser (using react-scripts start). Set the REACT_APP_DOMAIN_NAME variable to the API endpoint.",
+    "test": "Runs all frontend tests using Vitest",
+    "prod": "Runs `client-build` and `server-build` scripts consecutively in a production environment",
+    "mirror": "Does the same as prod script but uses a test environment. Also runs the upload-assets script. Set the REACT_APP_DOMAIN_NAME variable to the API endpoint",
+    "build": "Runs client-build script followed by server-build script. This script allows sharing environmental variables between the processes",
+    "client-build": "Build a CSS and JS bundle files for the browser and grabs and hashes all the required images. The files are stored on `clientBuild` folder",
+    "server-build": "Builds a JS bundle file and grabs and hashes all the files from `clientBuild` folder that the bundle requires (CSS, JS , images). The files are stored in `frontEndBundle` folder",
+    "clear-assets": "Deletes all the files inside the S3 `root/staticAssets` folder. Set to the current bucket",
+    "upload-assets": "Uploads all the files located in `quietavenue/frontEndBundle/staticAssets` to S3 `root/staticAssets` folder. Set to the current bucket"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
