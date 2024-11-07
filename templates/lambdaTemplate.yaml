@@ -47,7 +47,7 @@ Parameters:
   
   Port:
     Type: Number
-    Description: The port used to access the database
+    Description: The port used to access the PostgreSQL database
   
   DBProxyPasswordSecret:
     Type: String
