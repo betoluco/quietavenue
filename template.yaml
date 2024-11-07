@@ -17,7 +17,7 @@ Parameters:
   Project:
     Type: String
     Default: quietavenue
-    Description: Name of the project for tags
+    Description: Name of the project used in the tags
     
   DomainName:
     Type: String
@@ -31,14 +31,52 @@ Parameters:
     
   DBUserName:
     Type: String
-    Default: read_user
     Description: Name for the user with read only permissions for the database
     
   DatabaseName:
     Type: String
-    Default: quietavenue
     Description: Postgres database name
-    
+  
+  AvailabilityZone1a:
+    Type: String
+    Description:
+      Avaliability zone 1a for public and private subnets
+      
+  AvailabilityZone1b:
+    Type: String
+    Description:
+      Avaliability zone 1b for public and private subnets 
+  
+  VPCCidrBlock:
+    Type: String
+    Description:
+      CidrBlock used in VPC
+      
+  PrivSub1aCidrBlock:
+    Type: String
+    Description:
+      CidrBlock used in public subnet 1a
+      
+  PrivSub1bCidrBlock:
+    Type: String
+    Description:
+      CidrBlock used in public subnet 1b
+  
+  PubSub1aCidrBlock:
+    Type: String
+    Description:
+      CidrBlock used in private subnet 1a
+      
+  PubSub1bCidrBlock:
+    Type: String
+    Description:
+      CidrBlock used in private subnet 1b
+      
+  DestinationPrefixListId:
+    Type: String
+    Description:
+      Gateway endpoint for Amazon S3. Allows access to S3 from your VPC
+  
 Conditions:
   IsProduction: !Equals [!Ref Env, prod]
     
@@ -75,6 +113,13 @@ Resources:
       Parameters:
         Project: !Ref Project
         Env: !Ref Env
+        AvailabilityZone1a: !Ref AvailabilityZone1a
+        AvailabilityZone1b: !Ref AvailabilityZone1b
+        VPCCidrBlock: !Ref VPCCidrBlock
+        PrivSub1aCidrBlock: !Ref PrivSub1aCidrBlock
+        PrivSub1bCidrBlock: !Ref PrivSub1bCidrBlock
+        PubSub1aCidrBlock: !Ref PubSub1aCidrBlock
+        PubSub1bCidrBlock: !Ref PubSub1bCidrBlock
   
   SecurityGroupsStack:
     Type: AWS::CloudFormation::Stack
@@ -85,6 +130,7 @@ Resources:
         Env: !Ref Env
         VPC: !GetAtt VPCStack.Outputs.VPC
         Port: !Ref Port
+        DestinationPrefixListId: !Ref DestinationPrefixListId
   
   DatabaseTemplate:
     Type: AWS::CloudFormation::Stack

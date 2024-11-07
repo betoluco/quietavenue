@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
   Creates a VPC with two public subnets and two private subnets
-  and a internet gateway to give access to internet to public
+  and an internet gateway to give access to the internet to public
   networks
 Transform:
 - AWS::Serverless-2016-10-31
@@ -19,28 +19,47 @@ Parameters:
   Project:
     Type: String
     Description: Name of the project for tags
-    
-Mappings:
-  EnvMapping:
-    dev:
-      VPCCidirBlock: 10.0.0.0/16
-      PubSub1a: 10.0.10.0/24
-      PubSub1b: 10.0.11.0/24
-      PrivSub1a: 10.0.20.0/24
-      PrivSub1b: 10.0.21.0/24
+  
+  AvailabilityZone1a:
+    Type: String
+    Description:
+      Avaliability zone 1a for public and private subnets
       
-    prod:
-      VPCCidirBlock: 10.200.0.0/16
-      PubSub1a: 10.200.10.0/24
-      PubSub1b: 10.200.11.0/24
-      PrivSub1a: 10.200.20.0/24
-      PrivSub1b: 10.200.21.0/24
-
+  AvailabilityZone1b:
+    Type: String
+    Description:
+      Avaliability zone 1b for public and private subnets 
+  
+  VPCCidrBlock:
+    Type: String
+    Description:
+      CidrBlock used in VPC
+  
+  PrivSub1aCidrBlock:
+    Type: String
+    Description:
+      CidrBlock used in public subnet 1a
+      
+  PrivSub1bCidrBlock:
+    Type: String
+    Description:
+      CidrBlock used in public subnet 1b
+      
+  PubSub1aCidrBlock:
+    Type: String
+    Description:
+      CidrBlock used in private subnet 1a
+      
+  PubSub1bCidrBlock:
+    Type: String
+    Description:
+      CidrBlock used in private subnet 1b
+  
 Resources:
   VPC:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: !FindInMap [EnvMapping, !Ref Env, VPCCidirBlock]
+      CidrBlock: !Ref VPCCidrBlock
       Tags:
       - Key: Name
         Value:
@@ -58,8 +77,8 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      AvailabilityZone: !Select [0, !GetAZs us-west-1]
-      CidrBlock: !FindInMap [EnvMapping, !Ref Env, PrivSub1a]
+      AvailabilityZone: !Ref AvailabilityZone1a
+      CidrBlock: !Ref PrivSub1aCidrBlock
       Tags:
       - Key: Name
         Value:
@@ -73,14 +92,14 @@ Resources:
       - Key: Environment
         Value: !Ref Env
       - Key: availability zone
-        Value: !Select [0, !GetAZs us-west-1]
+        Value: !Select [0, !GetAZs us-east-1]
   
   PrivateSubnet1b:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      AvailabilityZone: !Select [1, !GetAZs us-west-1]
-      CidrBlock: !FindInMap [EnvMapping, !Ref Env, PrivSub1b]
+      AvailabilityZone: !Ref AvailabilityZone1b
+      CidrBlock: !Ref PrivSub1bCidrBlock
       Tags:
       - Key: Name
         Value:
@@ -94,7 +113,7 @@ Resources:
       - Key: Environment
         Value: !Ref Env
       - Key: availability zone
-        Value: !Select [1, !GetAZs us-west-1]
+        Value: !Select [1, !GetAZs us-east-1]
         
   PrivateSubnetRouteTable:
     Type: AWS::EC2::RouteTable
@@ -129,8 +148,8 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      AvailabilityZone: !Select [0, !GetAZs us-west-1]
-      CidrBlock: !FindInMap [EnvMapping, !Ref Env, PubSub1a]
+      AvailabilityZone: !Ref AvailabilityZone1a
+      CidrBlock: !Ref PubSub1aCidrBlock
       Tags:
       - Key: Name
         Value:
@@ -144,14 +163,14 @@ Resources:
       - Key: Environment
         Value: !Ref Env
       - Key: availability zone
-        Value: !Select [0, !GetAZs us-west-1]
+        Value: !Select [0, !GetAZs us-east-1]
   
   PublicSubnet1b:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      AvailabilityZone: !Select [1, !GetAZs us-west-1]
-      CidrBlock: !FindInMap [EnvMapping, !Ref Env, PubSub1b]
+      AvailabilityZone: !Ref AvailabilityZone1b
+      CidrBlock: !Ref PubSub1bCidrBlock
       Tags:
       - Key: Name
         Value:
@@ -165,7 +184,7 @@ Resources:
       - Key: Environment
         Value: !Ref Env
       - Key: availability zone
-        Value: !Select [1, !GetAZs us-west-1]
+        Value: !Select [1, !GetAZs us-east-1]
         
   InternetGateway:
     Type: AWS::EC2::InternetGateway

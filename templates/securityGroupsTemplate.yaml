@@ -27,7 +27,12 @@ Parameters:
   Port:
     Type: Number
     Description: The port used to access the database
-
+  
+  DestinationPrefixListId:
+    Type: String
+    Description:
+      Gateway endpoint for Amazon S3. Allows access to S3 from your VPC
+  
 Resources:
   LambdaSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -43,7 +48,7 @@ Resources:
         to DB proxy, and S3 Enpoint. Modification could lead to connection loss.
       VpcId: !Ref VPC
       SecurityGroupEgress:
-        DestinationPrefixListId : pl-6ba54002
+        DestinationPrefixListId : !Ref DestinationPrefixListId
         IpProtocol : -1 
       Tags:
       - Key: Project

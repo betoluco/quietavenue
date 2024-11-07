@@ -9,7 +9,19 @@ region = "us-east-1"
 capabilities = "CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND"
 s3_bucket = "development-sam-source-bucket"
 confirm_changeset = false
-parameter_overrides = "Env=\"dev\""
+parameter_overrides = [
+    "Env=dev",
+    "DBUserName=read_user",
+    "DatabaseName=quietavenue",
+    "AvalibilityZone1a=us-east-1a", # The availability zones have to be in the same "region"
+    "AvalibilityZone1b=us-east-1b",
+    "VPCCidrBlock=10.0.0.0/16",
+    "PubSub1a=10.0.10.0/24", # Check if the ip addresses are available (if there is only one test environment)
+    "PubSub1b=10.0.11.0/24",
+    "PrivSub1a=10.0.20.0/24",
+    "PrivSub1b=10.0.21.0/24",
+    "DestinationPrefixListId=pl-63a5400a" #us-east-1 gateway endpoint for Amazon S3. Allows access to S3 from your VPC
+]
 
 [production]
 [production.global.parameters]
@@ -18,6 +30,18 @@ region = "us-east-1"
 
 [production.deploy.parameters]
 capabilities = "CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND"
-s3_bucket = "production-sam-source-bucket"
+s3_bucket = "prod-sam-source-bucket"
 confirm_changeset = true
-parameter_overrides = "Env=\"prod\""
+parameter_overrides = [
+    "Env=prod", 
+    "DBUserName=read_user",
+    "DatabaseName=quietavenue",
+    "AvailabilityZone1a=us-east-1a", # The availability zones have to be in the same "region"
+    "AvailabilityZone1b=us-east-1b",
+    "VPCCidrBlock=10.200.0.0/16",
+    "PubSub1aCidrBlock=10.200.10.0/24",
+    "PubSub1bCidrBlock=10.200.11.0/24",
+    "PrivSub1aCidrBlock=10.200.20.0/24",
+    "PrivSub1bCidrBlock=10.200.21.0/24",
+    "DestinationPrefixListId=pl-63a5400a" #us-east-1 gateway endpoint for Amazon S3. Allows access to S3 from your VPC
+]
