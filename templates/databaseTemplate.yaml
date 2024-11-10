@@ -31,7 +31,7 @@ Parameters:
     
   Port:
     Type: Number
-    Description: The port used to access the database
+    Description: The port used to access the PostgreSQL database
     
   DBSecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
@@ -76,20 +76,20 @@ Resources:
       - Key: Environment
         Value: !Ref Env
   
-  DBCluster:
-    Type: AWS::RDS::DBCluster
+  DBInstance:
+    Type: AWS::RDS::DBInstance
     DeletionPolicy: !If [IsProduction, Retain, Delete]
     Properties:
-      DBClusterIdentifier:
+      AllocatedStorage: 50
+      DBInstanceIdentifier:
         !Sub
-        - ${Environment}-${Project}-database-cluster-${Id}
+        - ${Environment}-${Project}-database-instance-${Id}
         - Project: !Ref Project
           Environment: !Ref Env
           Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
       DBSubnetGroupName: !Ref PrivateSubnetGroup
-      Engine: aurora-postgresql
-      EngineVersion: '14.6'
-      Port: !Ref Port
+      DBInstanceClass: db.t3.micro
+      Engine: postgres
       MasterUsername:
         !Sub
         - '{{resolve:secretsmanager:${secretName}:SecretString:username}}'
@@ -98,32 +98,9 @@ Resources:
         !Sub
         - '{{resolve:secretsmanager:${secretName}:SecretString:password}}'
         - secretName: !Ref DBSuperuserPasswordSecret
-      ServerlessV2ScalingConfiguration:
-        MinCapacity: 0.5
-        MaxCapacity: 4
-      DeletionProtection: !If [IsProduction, true, false]
-      VpcSecurityGroupIds:
-      - Ref: DBSecurityGroup
-      Tags:
-      - Key: Project
-        Value: !Ref Project
-      - Key: Environment
-        Value: !Ref Env
-  
-  DBInstance:
-    Type: AWS::RDS::DBInstance
-    DeletionPolicy: !If [IsProduction, Retain, Delete]
-    Properties:
-      DBInstanceIdentifier:
-        !Sub
-        - ${Environment}-${Project}-database-instance-${Id}
-        - Project: !Ref Project
-          Environment: !Ref Env
-          Id: !Select [4, !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]]] 
-      DBSubnetGroupName: !Ref PrivateSubnetGroup
-      Engine: aurora-postgresql
-      DBClusterIdentifier: !Ref DBCluster
-      DBInstanceClass: db.serverless
+      Port: !Ref Port
+      VPCSecurityGroups:
+        - Ref: DBSecurityGroup
       Tags:
       - Key: Project
         Value: !Ref Project
@@ -131,6 +108,6 @@ Resources:
         Value: !Ref Env
 
 Outputs:
-   DBCluster:
-    Description: Id for the database cluster
-    Value: !Ref DBCluster
+   DBInstance:
+    Description: Id for the database instance
+    Value: !Ref DBInstance

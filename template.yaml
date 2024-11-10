@@ -154,7 +154,7 @@ Resources:
         VPCPrivateSubnet1a: !GetAtt VPCStack.Outputs.VPCPrivateSubnet1a
         VPCPrivateSubnet1b: !GetAtt VPCStack.Outputs.VPCPrivateSubnet1b
         DBProxySecurityGroup: !GetAtt SecurityGroupsStack.Outputs.DBProxySecurityGroup
-        DBCluster: !GetAtt DatabaseTemplate.Outputs.DBCluster
+        DBInstance: !GetAtt DatabaseTemplate.Outputs.DBInstance
         DBProxyPasswordSecret: !Ref DBProxyPasswordSecret
   
   BackEndS3BucketStack:

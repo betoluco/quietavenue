@@ -32,9 +32,9 @@ Parameters:
     Type: AWS::EC2::SecurityGroup::Id
     Description: Id of the security group that allows ingress the database proxy to the database
   
-  DBCluster:
+  DBInstance:
     Type: String
-    Description: Id for the database cluster
+    Description: Id for the database instance
     
   DBProxyPasswordSecret:
     Type: String
@@ -122,8 +122,8 @@ Resources:
   DBProxyTargetGroup:
     Type: AWS::RDS::DBProxyTargetGroup
     Properties:
-      DBClusterIdentifiers:
-      - Ref: DBCluster
+      DBInstanceIdentifiers:
+      - Ref: DBInstance
       DBProxyName: !Ref DBProxy
       TargetGroupName: default
       
