@@ -26,9 +26,11 @@ Use "test" script inside `frontEnd/package.json`.
 ## Deployment:
 Before deployment, the backend and frontend bundles have to be created.
 The configuration for the deployment is in the `samconfig.toml` file. There are two deployment configuration options "**default**" for a testing environment and "**production**"
-The deployment for development or production requires the creation of the respective S3 buckets
+The deployment for development or production requires the creation of the respective S3 buckets in the region indicated in `samconfig.toml` file
 - `development-sam-source-bucket` 
 - `production-sam-source-bucket`
+
+The names of the buckets are determined by the "**s3_bucket**" deploy parameter in the `samconfig.toml` file
 
 Make sure to create the required bucket before attempting the deployment. 
 
