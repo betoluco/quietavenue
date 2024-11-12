@@ -81,7 +81,7 @@ Resources:
           - Sid: DecryptSecretValue
             Effect: Allow
             Action: kms:Decrypt
-            Resource: arn:aws:kms:us-west-1:750372547871:key/f279c113-6614-45ce-8a9f-422f84badb93
+            Resource: !Sub arn:aws:kms:${AWS::Region}:750372547871:key/f279c113-6614-45ce-8a9f-422f84badb93
             Condition:
               StringEquals:
                 kms: 'ViaService: secretsmanager.us-east-2.amazonaws.com'

@@ -369,7 +369,7 @@ Resources:
         Origins:
           - 
             Id: !Sub ${APIGateway}-origin
-            DomainName: !Sub ${APIGateway}.execute-api.us-west-1.amazonaws.com
+            DomainName: !Sub ${APIGateway}.execute-api.${AWS::Region}.amazonaws.com
             OriginPath: /Prod #name of the deployed stage
             CustomOriginConfig:
               OriginProtocolPolicy: https-only #again API-Gateway only supports https
