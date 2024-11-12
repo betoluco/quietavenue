@@ -9,7 +9,7 @@ const getAudioData = async (audioDataLink, item, estate) =>{
             stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
         });
         
-    const client = new S3Client({ region: 'us-west-1' });
+    const client = new S3Client({ region: process.env.REGION });
     const s3params = {
         Bucket: `${process.env.S3_BUCKET}`, 
         Key: audioDataLink 

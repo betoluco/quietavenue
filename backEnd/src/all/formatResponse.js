@@ -10,7 +10,7 @@ const formatResults = async (estate) =>{
     item.address1 = estate.address_1;
     
     try {
-        const client = new S3Client({ region: 'us-west-1' });
+        const client = new S3Client({ region: process.env.REGION });
         const s3params = {
             Bucket: `${process.env.S3_BUCKET}`, 
             Key: estate.profile_picture

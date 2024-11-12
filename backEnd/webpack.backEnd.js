@@ -48,6 +48,12 @@ module.exports = function(env, argv) {
             })],
         },
         
+        plugins: [
+            new webpack.DefinePlugin({
+                'process.env.REGION': JSON.stringify(process.env.REGION)
+            }),
+        ],
+        
         target: "node",
     };
 };

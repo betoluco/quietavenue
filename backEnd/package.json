@@ -14,14 +14,14 @@
   },
   "scripts": {
     "//": "VERIFY THAT THE CORRECT BUCKER IS USED",
-    "prod-backend": "NODE_ENV=production webpack --config webpack.backEnd.js",
-    "dev-backend": "NODE_ENV=development webpack --config webpack.backEnd.js",
+    "prod-backend": "NODE_ENV=production REGION=us-east-1 webpack --config webpack.backEnd.js",
+    "dev-backend": "NODE_ENV=development REGION=us-east-1 webpack --config webpack.backEnd.js",
     "upload-test-data": "aws s3 cp ../tests/bucket s3://dev-quietavenue-backend-s3-bucket-06bf86a6f0a9 --recursive"
   },
   "scriptsComments": {
-    "prod-backend": "Using a production environment, builds the backEndBundel file that contains the code for the backEnd. The file is stored on backEndBundle folder",
-    "dev-backend": "Using a development environment, builds the backEndBundel file that contains the code for the backEnd. The file is stored on backEndBundle folder",
-    "upload-test-data": "Uploads all the files and folders in the tests/bucket folder. This files are used for testing purposes"
+    "prod-backend": "In a production environment, builds the `backEndBundle.js` file which contains the code for the backend. The file is stored in the `backEndBundle` folder. Set the region variable to the AWS region being used.",
+    "dev-backend": "In a development environment, builds the `backEndBundle.js` file which contains the code for the backend. The file is stored in the `backEndBundle` folder. Set the region variable to the AWS region being used.",
+    "upload-test-data": "Uploads all files and folders from the `tests/bucket` folder. These files are used for testing purposes."
   },
   "devDependencies": {
     "@babel/cli": "^7.23.4",
