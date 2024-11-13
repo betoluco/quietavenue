@@ -1,4 +1,4 @@
-CREATE DATABASE quietavenue;
+CREATE DATABASE quietavenue; -- The database name (quietavenue) has to be the same used in the `samconfig.toml` file  `parameter_overrides` array
 \connect quietavenue
 
 CREATE TABLE public.states (
