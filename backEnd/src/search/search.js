@@ -1,11 +1,15 @@
 import pg from 'pg';
 
+import sslrootcert from '../us-east-1-bundle.pem'; //Get the certificate from https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html
+
 var pool = new pg.Pool({
         host: `${process.env.ENDPOINT}`,
         port: process.env.PORT,
         database: `${process.env.DATABASE_NAME}`,
         user: `${process.env.PROXY_USERNAME}`,
-        password: `${process.env.PROXY_PASSWORD}`
+        password: `${process.env.PROXY_PASSWORD}`,
+        sslrootcert: sslrootcert,
+        sslmode: "verify-full"
 });
 
 const search = async (req, res) =>{

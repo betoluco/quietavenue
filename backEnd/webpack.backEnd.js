@@ -34,6 +34,10 @@ module.exports = function(env, argv) {
                         }
                     }
                 },
+                {
+                    test: /\.pem/,
+                    type: 'asset/source',
+                },
             ]
         },
         
